@@ -15,8 +15,6 @@ intents.members = True
 intents.guilds = True
 bot = commands.Bot(command_prefix = '!ㅌ ', intents=intents)
 # bot = commands.Bot(command_prefix = '!', help_command= None)
-# token = "OTA1NDY3NDg2MjE5MTczOTI4.YYKgTw.Hcp7B-GFjqP4KiLCEZvkOzQo4Ic"
-token = "OTA1ODA0MzEzMjY2MzcyNjQ4.YYPaAQ.7BhPAiJ4b5FyW_ChKe2jTbesJtE"
 
 def CurTime():
     day = str(time.localtime().tm_mday)
