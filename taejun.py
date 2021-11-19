@@ -277,9 +277,9 @@ async def 인원정리(ctx):
             embed = discord.Embed(title="유령회원 목록",
                                     description=ghostList,
                                     color=0x00aaaa)
-            embed.set_author(name=ctx.author.display_name,
-                                icon_url=ctx.author.avatar_url,
-                                )
+            # embed.set_author(name=ctx.author.display_name,
+            #                     icon_url=ctx.author.avatar_url,
+            #                     )
             
             await ctx.channel.send(embed=embed)
                 # allmembers.append(member.id)
@@ -316,9 +316,9 @@ async def 벨튀(ctx, *args):
         embed = discord.Embed(title=channel + " 입장 기록",
                                 description=VoiceList,
                                 color=0x00aaaa)
-        embed.set_author(name=ctx.author.display_name,
-                        icon_url=ctx.author.avatar_url,
-                        )
+        # embed.set_author(name=ctx.author.display_name,
+        #                 icon_url=ctx.author.avatar_url,
+        #                 )
         await ctx.channel.send(embed=embed)
 
     return 
