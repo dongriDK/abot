@@ -193,9 +193,7 @@ async def 초기화(ctx):
 @bot.command()
 # async def 검색(ctx, name, tag):
 async def 검색(ctx, *args): 
-    print("BBB")
     for i in ctx.author.roles:
-        print(ctx.author.roles)
         if (i.name == "STAFF"):
             if len(args) == 2:
                 name = args[0]
@@ -204,9 +202,7 @@ async def 검색(ctx, *args):
                 embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
                 await ctx.channel.send(embed=embed)
                 return
-            print(name, tag)
             memberId = DbSearch_member(name, tag)
-            print(memberId)
             if (len(memberId) == 0):
                 embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                         description="없습니다.")
