@@ -1,1 +1,1 @@
-worker: python taejun.py
+worker: python "dbTest.py"

@@ -1,20 +1,26 @@
 # -*- coding:utf-8 -*-
-from asyncio.windows_events import NULL
-from discord.ext.commands import CommandNotFound
+# from asyncio.windows_events import NULL
+# import pdb
 import sqlite3
 import discord
-from discord import channel
+# from discord import channel
 from discord.ext import commands
 import time
-import os
-
 from discord.ext.commands.core import Command
+from discord.ext.commands.errors import CommandInvokeError
+from discord.ext.commands import CommandNotFound
 
 intents = discord.Intents.default()
 intents.members = True
 intents.guilds = True
 bot = commands.Bot(command_prefix = '!ㅌ ', intents=intents)
 # bot = commands.Bot(command_prefix = '!', help_command= None)
+# token = "OTA1NDY3NDg2MjE5MTczOTI4.YYKgTw.Hcp7B-GFjqP4KiLCEZvkOzQo4Ic"
+token = "OTA1ODA0MzEzMjY2MzcyNjQ4.YYPaAQ.Ubr4QPer_-EiBuM4X22Kks2SvQA"
+voiceChannels = {"수다방":"👥＿수다방＿٩( ᐛ )", "스트리밍1":"📺＿스트리밍1", "스트리밍2":"📺＿스트리밍2", "스트리밍3":"📺＿스트리밍3",
+                    "대기중":"👀＿대기중", "일반1":"⭐＿일반1", "일반2":"🌙＿일반2", "일반3":"🌕＿일반3", "랭크1":"⭐＿랭크1", "랭크2":"🌙＿랭크2",
+                    "랭크3":"🌕＿랭크3", "랭크4":"🪐＿랭크4", "랭크5":"🌎＿랭크5", "듀오1":"⭐＿듀오1", "듀오2":"🌙＿듀오2", "기타게임방1":"⭐＿기타게임방1",
+                    "기타게임방2":"🌙＿기타게임방2", "히드라전용감상":"🎧＿히드라전용＊감상", "하리보전용감상":"🎧＿하리보전용＊감상", "회의":"회의＿운영진맨날모여!쫄?"}
 
 def CurTime():
     day = str(time.localtime().tm_mday)
@@ -59,14 +65,35 @@ def DbModify_text(message):
     return 0
 
 def DbModify_voice(member, before, after):
-    con = sqlite3.connect("Test.db", isolation_level = None, timeout = 10)
-    cur = con.cursor()
-    
     beChannel = "없음" if before.channel == None else before.channel.name
     afChannel = "없음" if after.channel == None else after.channel.name
 
-    cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(?, ?, ?, ?)", (member.id, beChannel, afChannel, CurTime()))
+    # beChannel = beChannel.split("_")
+    beChannel = "".join(beChannel.split("_"))
+    afChannel = "".join(afChannel.split("_"))
+
+    if beChannel != afChannel:
+        con = sqlite3.connect("Test.db", isolation_level = None, timeout = 10)
+        cur = con.cursor()
+        
+        # DbSearch_bellrun(member, cur)
+
+
+        cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(?, ?, ?, ?)", (member.id, beChannel, afChannel, CurTime()))
     return 0
+
+# def DbSearch_bellrun(member, cur):
+#     cur.execute("SELECT time from Voice_info where id=? order by id desc limit 1", (member.id,))
+#     memberTime = cur.fetchall()
+
+#     beforeTime = int(memberTime[0][0].split(":")[1]) * 60 + int(memberTime[0][0].split(":")[2])
+#     curTime = CurTime()
+#     afterTime = int(curTime.split(":")[1]) * 60 + int(curTime.split(":")[2])
+#     if ((afterTime - beforeTime) < 6):
+
+
+#         print("A")
+#     return 1
 
 def DbSearch_member(name, tag):
     con = sqlite3.connect("Test.db", isolation_level = None, timeout = 10)
@@ -99,6 +126,16 @@ def DbSearchVoice_member(id):
     voiceList = cur.fetchall()
     return voiceList
 
+def DbSearchbellrun(channel, time):
+    con = sqlite3.connect("Test.db", isolation_level = None, timeout = 10)
+    cur = con.cursor()   
+
+    channelName = voiceChannels[channel]
+    cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like ? and (Voice_info.before_channel like ? or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channelName, channelName))
+    channelList = cur.fetchall()
+
+    return channelList
+
 @bot.event
 async def on_ready():
     print(f'부팅 성공:{bot.user.name}!')
@@ -108,6 +145,7 @@ async def on_ready():
 
 @bot.event
 async def on_voice_state_update(member, before, after):
+
     DbReturn = DbLogin(member.id, member.name, member.discriminator)
 
     DbReturn = DbModify_voice(member, before, after)
@@ -131,8 +169,12 @@ async def on_message(message):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
-        embed = discord.Embed(description="없는 명령어 입니다.")
-        ctx.channel.send(embed=embed)
+        embed = discord.Embed(description="없는 명령어입니다.")
+        await ctx.channel.send(embed=embed)
+
+    elif isinstance(error, CommandInvokeError):
+        embed = discord.Embed(description="없는 채널입니다.")
+        await ctx.channel.send(embed=embed)
     raise error
 
 @bot.command()
@@ -159,9 +201,7 @@ async def 검색(ctx, *args):
                 await ctx.channel.send(embed=embed)
                 return
 
-            # pdb.set_trace()
             memberId = DbSearch_member(name, tag)
-            # pdb.set_trace()
             if (len(memberId) == 0):
                 embed = discord.Embed(name=ctx.author.display_name, 
                                         title=name + "(" + tag + ")" + "님에 대한 기록",
@@ -181,21 +221,22 @@ async def 검색(ctx, *args):
                 voiceFlag = False
                 for j in textReturn:
                     textAnswer += j[3]
-                    textAnswer += "\t\t"
+                    textAnswer += " "
                     textAnswer += j[2]
-                    textAnswer += "\t\t"
+                    textAnswer += " ㅤ"
                     textAnswer += j[1] 
                     textAnswer += "\n"
                     textFlag = True
 
                 for j in voiceReturn:
                     voiceAnswer += j[3]
-                    voiceAnswer += "\t\t"
+                    voiceAnswer += "ㅤ"
                     voiceAnswer += j[1]
-                    voiceAnswer += "\t\t->\t\t"
+                    voiceAnswer += " -> "
                     voiceAnswer += j[2]
                     voiceAnswer += "\n"
                     voiceFlag = True
+
                 embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                         color=0x00aaaa)
                 embed.set_author(name=ctx.author.display_name,
@@ -223,12 +264,12 @@ async def 인원정리(ctx):
                         temp = DbSearch_member_byid(member.id)
                         if (len(temp) == 0):
                             ghostList += member.name
-                            ghostList += "\t\t"
+                            ghostList += "\t"
                             ghostList += member.discriminator
                             ghostList += "\n"
                         else:
                             ghostList += temp[0][0]
-                            ghostList += "\t\t"
+                            ghostList += "\t"
                             ghostList += temp[0][1]
                             ghostList += "\n"
 
@@ -241,10 +282,65 @@ async def 인원정리(ctx):
                                 )
             
             await ctx.channel.send(embed=embed)
+                # allmembers.append(member.id)
+                # print(member.id, member.name, member.discriminator)
 
             return
 
+@bot.command()
+async def 벨튀(ctx, *args):
+    try:
+        channel = args[0]
+    except:
+        channel = ""
+    try:
+        time = args[1]
+    except:
+        time = ""
 
-bot.run(os.environ['token'])
+    if channel == "" or time == "":
+        embed = discord.Embed(description="!ㅌ 벨튀 [채널이름] [날짜]\n ex) !ㅌ 벨튀 랭크1 11.15")
+        await ctx.channel.send(embed=embed)
+    else:
+        VoiceList = ""
+        DbReturn = DbSearchbellrun(channel, time)
+        for i in DbReturn:
+            VoiceList += i[3]
+            VoiceList += "ㅤ"
+            VoiceList += i[1]
+            VoiceList += " -> "
+            VoiceList += i[2]
+            VoiceList += "ㅤ"
+            VoiceList += i[0]
+            VoiceList += "\n"
+        embed = discord.Embed(title=channel + " 입장 기록",
+                                description=VoiceList,
+                                color=0x00aaaa)
+        embed.set_author(name=ctx.author.display_name,
+                        icon_url=ctx.author.avatar_url,
+                        )
+        await ctx.channel.send(embed=embed)
+
+    return 
+    # guild = bot.get_guild(875392692014694450)
+    # import pdb
+    # pdb.set_trace()
+    
+# @bot.command()
+# async def 
+# @bot.command(aliases=['안녕', '안녕하세요', 'ㅎㅇ'])
+# async def 하이(ctx):
+#     await ctx.send("안녕하세요")
+
+# @bot.command()
+# async def 자비스(ctx, *, text):
+#     await ctx.send(text)
+
+# @bot.command()
+# async def hi(ctx):
+#     await ctx.send("하이")
+
+
+bot.run(token)
 
 
