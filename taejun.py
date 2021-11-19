@@ -204,7 +204,7 @@ async def 검색(ctx, *args):
                 embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
                 await ctx.channel.send(embed=embed)
                 return
-            print("A")
+            print(name, tag)
             memberId = DbSearch_member(name, tag)
             print(memberId)
             if (len(memberId) == 0):
