@@ -23,15 +23,17 @@ voiceChannels = {"수다방":"👥＿수다방＿٩( ᐛ )", "스트리밍1":"�
                     "기타게임방2":"🌙＿기타게임방2", "히드라전용감상":"🎧＿히드라전용＊감상", "하리보전용감상":"🎧＿하리보전용＊감상", "회의":"회의＿운영진맨날모여!쫄?"}
 
 def CurTime():
-    day = str(time.localtime().tm_mday)
-    hour = str(time.localtime().tm_hour)
-    min = str(time.localtime().tm_min)
-    sec = str(time.localtime().tm_sec)
+    mon = str(time.localtime(time.time() + 32400).tm_mon)
+    day = str(time.localtime(time.time() + 32400).tm_mday)
+    hour = str(time.localtime(time.time() + 32400).tm_hour)
+    min = str(time.localtime(time.time() + 32400).tm_min)
+    sec = str(time.localtime(time.time() + 32400).tm_sec)
+    if (len(mon) == 1): mon = "0" + mon
     if (len(day) == 1): day = "0" + day
     if (len(hour) == 1): hour = "0" + hour
     if (len(min) == 1): min = "0" + min
     if (len(sec) == 1): sec = "0" + sec
-    strTime = str(time.localtime().tm_mon) + "." + day + " " + hour + ":" + min + ":" + sec
+    strTime = mon + "." + day + " " + hour + ":" + min + ":" + sec
     return strTime
 
 def DbLogin(id, name, tag):
