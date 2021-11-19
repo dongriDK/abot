@@ -341,6 +341,6 @@ async def 벨튀(ctx, *args):
 #     await ctx.send("하이")
 
 
-bot.run(os.environ["TOKEN"])
+bot.run(os.environ["token"])
 
 
