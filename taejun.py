@@ -239,8 +239,8 @@ async def 검색(ctx, *args):
 
                 embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                         color=0x00aaaa)
-                embed.set_author(name=ctx.author.display_name,
-                                    icon_url=ctx.author.avatar_url)
+                # embed.set_author(name=ctx.author.display_name,
+                #                     icon_url=ctx.author.avatar_url)
                 if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
                 if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
                 await ctx.channel.send(embed=embed)
