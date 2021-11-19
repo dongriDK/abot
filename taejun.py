@@ -1,11 +1,11 @@
 # -*- coding:utf-8 -*-
-# from asyncio.windows_events import NULL
 # import pdb
 import sqlite3
 import discord
 # from discord import channel
 from discord.ext import commands
 import time
+import os
 from discord.ext.commands.core import Command
 from discord.ext.commands.errors import CommandInvokeError
 from discord.ext.commands import CommandNotFound
@@ -341,6 +341,6 @@ async def 벨튀(ctx, *args):
 #     await ctx.send("하이")
 
 
-bot.run(token)
+bot.run(os.environ["TOKEN"])
 
 
