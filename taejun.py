@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 # import pdb
+# from discord import channel
 import sqlite3
 import discord
-# from discord import channel
 from discord.ext import commands
 import time
 import os
