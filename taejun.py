@@ -244,7 +244,7 @@ async def 인원정리(ctx):
         if (i.name == "STAFF"):
             await ctx.send("인원 정리중...")
 
-            guild = bot.get_guild(os.environ["guild_id"])
+            guild = bot.get_guild(875392692014694450)
             ghostList = ""
             for member in guild.members:
                 if (member.bot != True):
