@@ -67,8 +67,9 @@ def DbInit():
 def DbModify_text(message):
     con = mysql.connector.connect(**config)
     cur = con.cursor(prepared=True)
+    msg = message.channel.name.split("＿")[1]
 
-    cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content, message.channel.name.encode('utf-8'), CurTime()))
+    cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content, msg, CurTime()))
     con.commit()
     return 0
 
