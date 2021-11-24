@@ -45,7 +45,7 @@ def DbLogin(id, name, tag):
     con = mysql.connector.connect(**config)
     cur = con.cursor(prepared=True)
     try:
-        cur.execute("insert into User_info values(?, ?, ?)", (id, name, tag,))
+        cur.execute("insert into User_info values(%s, %s, %s)", (id, name, tag,))
         con.commit()
     except:
         return 1
@@ -56,11 +56,11 @@ def DbInit():
     cur = con.cursor(prepared=True)
 
     cur.execute("DROP TABLE Voice_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id VARCHAR(128), before_channel TEXT, after_channel TEXT, time TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id VARCHAR(128), before_channel TEXT, after_channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE Text_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE User_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), name TEXT, tag TEXT, PRIMARY KEY(id))")
+    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), name TEXT, tag TEXT, PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4")
     con.commit()
     return 0
 
@@ -68,22 +68,19 @@ def DbModify_text(message):
     con = mysql.connector.connect(**config)
     cur = con.cursor(prepared=True)
 
-    cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(?, ?, ?, ?)", (message.author.id, message.content, message.channel.name, CurTime()))
+    cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content, message.channel.name.encode('utf-8'), CurTime()))
     con.commit()
     return 0
 
 def DbModify_voice(member, before, after):
-    beChannel = "없음" if before.channel == None else before.channel.name
-    afChannel = "없음" if after.channel == None else after.channel.name
-
-    beChannel = "".join(beChannel.split("_"))
-    afChannel = "".join(afChannel.split("_"))
+    beChannel = "없음" if before.channel == None else before.channel.name.split("＿")[1]
+    afChannel = "없음" if after.channel == None else after.channel.name.split("＿")[1]
 
     if beChannel != afChannel:
         con = mysql.connector.connect(**config)
         cur = con.cursor(prepared=True)
         
-        cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(?, ?, ?, ?)", (member.id, beChannel, afChannel, CurTime()))
+        cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, CurTime()))
         con.commit()
     return 0
 
@@ -91,7 +88,7 @@ def DbSearch_member(name, tag):
     con = mysql.connector.connect(**config)
     cur = con.cursor(prepared=True)
 
-    cur.execute("SELECT id from User_info where name=? and tag=?", (name, tag))
+    cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
     memberId = cur.fetchall()
     return memberId
 
@@ -99,14 +96,14 @@ def DbSearch_member_byid(id):
     con = mysql.connector.connect(**config)
     cur = con.cursor(prepared=True)
 
-    cur.execute("SELECT name, tag from User_info where id=?", (id,))
+    cur.execute("SELECT name, tag from User_info where id=%s", (id,))
     return cur.fetchall()
 
 def DbSearchText_member(id):
     con = mysql.connector.connect(**config)
     cur = con.cursor(prepared=True)
 
-    cur.execute("SELECT * from Text_info where id=? order by time desc limit 10", (id,))
+    cur.execute("SELECT * from Text_info where id=%s order by time desc limit 10", (id,))
     textList = cur.fetchall()
     return textList
 
@@ -114,7 +111,7 @@ def DbSearchVoice_member(id):
     con = mysql.connector.connect(**config)
     cur = con.cursor(prepared=True)   
 
-    cur.execute("SELECT * from Voice_info where id=? order by time desc limit 10", (id,))
+    cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 10", (id,))
     voiceList = cur.fetchall()
     return voiceList
 
@@ -123,7 +120,7 @@ def DbSearchbellrun(channel, time):
     cur = con.cursor(prepared=True)   
 
     channelName = voiceChannels[channel]
-    cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like ? and (Voice_info.before_channel like ? or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channelName, channelName))
+    cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like %s and (Voice_info.before_channel like %s or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channel, channel))
     channelList = cur.fetchall()
 
     return channelList
@@ -131,7 +128,7 @@ def DbSearchbellrun(channel, time):
 @bot.event
 async def on_ready():
     print(f'부팅 성공:{bot.user.name}!')
-    game = discord.Game("Test")
+    game = discord.Game("탐지")
     await bot.change_presence(status = discord.Status.online, activity = game)
 
     return 0
@@ -139,7 +136,7 @@ async def on_ready():
 @bot.event
 async def on_voice_state_update(member, before, after):
     DbReturn = DbLogin(member.id, member.name, member.discriminator)
-    if (DbReturn == 1): DbModify_voice(member, before, after)
+    DbModify_voice(member, before, after)
 
     return 0
     
@@ -148,7 +145,7 @@ async def on_message(message):
     if (message.author.name != "태준이"):
         if("!ㅌ" not in message.content):
             DbReturn = DbLogin(message.author.id, message.author.name, message.author.discriminator)
-            if (DbReturn == 1): DbModify_text(message)
+            DbModify_text(message)
 
     await bot.process_commands(message)
     return 0
@@ -176,7 +173,6 @@ async def 초기화(ctx):
             return
 
 @bot.command()
-# async def 검색(ctx, name, tag):
 async def 검색(ctx, *args): 
     for i in ctx.author.roles:
         if (i.name == "STAFF"):
@@ -207,7 +203,7 @@ async def 검색(ctx, *args):
                 for j in textReturn:
                     textAnswer += j[3].decode()
                     textAnswer += " "
-                    textAnswer += j[2].decode()
+                    textAnswer += voiceChannels[j[2].decode()]
                     textAnswer += " ㅤ"
                     textAnswer += j[1].decode()
                     textAnswer += "\n"
@@ -216,9 +212,17 @@ async def 검색(ctx, *args):
                 for j in voiceReturn:
                     voiceAnswer += j[3].decode()
                     voiceAnswer += "ㅤ"
-                    voiceAnswer += j[1].decode()
+                    try:
+                        becha = voiceChannels[j[1].decode()]
+                    except:
+                        becha = "없음"
+                    voiceAnswer += becha
                     voiceAnswer += " -> "
-                    voiceAnswer += j[2].decode()
+                    try:
+                        afcha = voiceChannels[j[2].decode()]
+                    except:
+                        afcha = "없음"
+                    voiceAnswer += afcha
                     voiceAnswer += "\n"
                     voiceFlag = True
 
@@ -283,9 +287,17 @@ async def 벨튀(ctx, *args):
         for i in DbReturn:
             VoiceList += i[3].decode()
             VoiceList += "ㅤ"
-            VoiceList += i[1].decode()
+            try:
+                becha = voiceChannels[i[1].decode()]
+            except:
+                becha = "없음"
+            VoiceList += becha
             VoiceList += " -> "
-            VoiceList += i[2].decode()
+            try:    
+                afcha = voiceChannels[i[2].decode()]
+            except:
+                afcha = "없음"
+            VoiceList += afcha
             VoiceList += "ㅤ"
             VoiceList += i[0].decode()
             VoiceList += "\n"
