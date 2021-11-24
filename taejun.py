@@ -222,8 +222,7 @@ async def 검색(ctx, *args):
 
                 embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                         color=0x00aaaa)
-                embed.set_author(name=ctx.author.display_name,
-                                    icon_url=ctx.author.avatar_url)
+                embed.set_author(name=ctx.author.display_name)
                 if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
                 if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
                 await ctx.channel.send(embed=embed)
@@ -259,9 +258,7 @@ async def 인원정리(ctx):
             embed = discord.Embed(title="유령회원 목록",
                                     description=ghostList,
                                     color=0x00aaaa)
-            embed.set_author(name=ctx.author.display_name,
-                                icon_url=ctx.author.avatar_url,
-                                )
+            embed.set_author(name=ctx.author.display_name)
             
             await ctx.channel.send(embed=embed)
 
@@ -296,9 +293,7 @@ async def 벨튀(ctx, *args):
         embed = discord.Embed(title=channel + " 입장 기록",
                                 description=VoiceList,
                                 color=0x00aaaa)
-        embed.set_author(name=ctx.author.display_name,
-                        icon_url=ctx.author.avatar_url,
-                        )
+        embed.set_author(name=ctx.author.display_name)
         await ctx.channel.send(embed=embed)
 
     return 
