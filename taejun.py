@@ -28,15 +28,17 @@ config = {
 
 
 def CurTime():
-    day = str(time.localtime().tm_mday)
-    hour = str(time.localtime().tm_hour)
-    min = str(time.localtime().tm_min)
-    sec = str(time.localtime().tm_sec)
+    mon = str(time.localtime(time.time() + 32400).tm_mon)
+    day = str(time.localtime(time.time() + 32400).tm_mday)
+    hour = str(time.localtime(time.time() + 32400).tm_hour)
+    min = str(time.localtime(time.time() + 32400).tm_min)
+    sec = str(time.localtime(time.time() + 32400).tm_sec)
+    if (len(mon) == 1): mon = "0" + mon
     if (len(day) == 1): day = "0" + day
     if (len(hour) == 1): hour = "0" + hour
     if (len(min) == 1): min = "0" + min
     if (len(sec) == 1): sec = "0" + sec
-    strTime = str(time.localtime().tm_mon) + "." + day + " " + hour + ":" + min + ":" + sec
+    strTime = mon + "." + day + " " + hour + ":" + min + ":" + sec
     return strTime
 
 def DbLogin(id, name, tag):
@@ -222,7 +224,6 @@ async def 검색(ctx, *args):
 
                 embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                         color=0x00aaaa)
-                embed.set_author(name=ctx.author.display_name)
                 if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
                 if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
                 await ctx.channel.send(embed=embed)
@@ -257,9 +258,7 @@ async def 인원정리(ctx):
 
             embed = discord.Embed(title="유령회원 목록",
                                     description=ghostList,
-                                    color=0x00aaaa)
-            embed.set_author(name=ctx.author.display_name)
-            
+                                    color=0x00aaaa)            
             await ctx.channel.send(embed=embed)
 
             return
@@ -293,7 +292,6 @@ async def 벨튀(ctx, *args):
         embed = discord.Embed(title=channel + " 입장 기록",
                                 description=VoiceList,
                                 color=0x00aaaa)
-        embed.set_author(name=ctx.author.display_name)
         await ctx.channel.send(embed=embed)
 
     return 
