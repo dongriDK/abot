@@ -137,7 +137,7 @@ async def on_ready():
 @bot.event
 async def on_voice_state_update(member, before, after):
     DbReturn = DbLogin(member.id, member.name, member.discriminator)
-    if (DbReturn == 0): DbModify_voice(member, before, after)
+    if (DbReturn == 1): DbModify_voice(member, before, after)
 
     return 0
     
@@ -146,7 +146,7 @@ async def on_message(message):
     if (message.author.name != "태준이"):
         if("!ㅌ" not in message.content):
             DbReturn = DbLogin(message.author.id, message.author.name, message.author.discriminator)
-            if (DbReturn == 0): DbModify_text(message)
+            if (DbReturn == 1): DbModify_text(message)
 
     await bot.process_commands(message)
     return 0
