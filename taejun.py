@@ -54,11 +54,11 @@ def DbInit():
     cur = con.cursor(prepared=True)
 
     cur.execute("DROP TABLE Voice_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id TEXT, before_channel TEXT, after_channel TEXT, time TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id VARCHAR(128), before_channel TEXT, after_channel TEXT, time TEXT)")
     cur.execute("DROP TABLE Text_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id TEXT, text TEXT, channel TEXT, time TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT)")
     cur.execute("DROP TABLE User_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id TEXT, name TEXT, tag TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), name TEXT, tag TEXT, PRIMARY KEY(id))")
     con.commit()
     return 0
 
