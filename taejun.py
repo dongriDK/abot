@@ -194,8 +194,7 @@ async def 검색(ctx, *args):
 
             memberId = DbSearch_member(name, tag)
             if (len(memberId) == 0):
-                embed = discord.Embed(name=ctx.author.display_name, 
-                                        title=name + "(" + tag + ")" + "님에 대한 기록",
+                embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                         description="없습니다.")
                 await ctx.channel.send(embed=embed)
             else:
