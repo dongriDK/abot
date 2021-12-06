@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import sqlite3
+from types import prepare_class
 import discord
 from discord.ext import commands
 import time
@@ -128,11 +129,20 @@ def DbSearchbellrun(channel, time):
     con = mysql.connector.connect(**config)
     cur = con.cursor(prepared=True)   
 
-    channelName = voiceChannels[channel]
+    # channelName = voiceChannels[channel]
     cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like %s and (Voice_info.before_channel like %s or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channel, channel))
     channelList = cur.fetchall()
 
     return channelList
+
+def DbSearchChatList():
+    con = mysql.connector.connect(**config)
+    cur = con.cursor(prepared=True)
+
+    cur.execute("SELECT User_info.name, user_info.tag, count(text_info.text) FROM User_info left join text_info on User_info.id = text_info.id GROUP BY text_info.id ORDER BY user_info.name")
+    chatList = cur.fetchall()
+
+    return chatList
 
 @bot.event
 async def on_ready():
@@ -258,12 +268,12 @@ async def 인원정리(ctx):
                         temp = DbSearch_member_byid(member.id)
                         if (len(temp) == 0):
                             ghostList += member.name
-                            ghostList += "\t"
+                            ghostList += "ㅤ"
                             ghostList += member.discriminator
                             ghostList += "\n"
                         else:
                             ghostList += temp[0][0].decode()
-                            ghostList += "\t"
+                            ghostList += "ㅤ"
                             ghostList += temp[0][1].decode()
                             ghostList += "\n"
 
@@ -315,6 +325,35 @@ async def 벨튀(ctx, *args):
         await ctx.channel.send(embed=embed)
 
     return 
+
+@bot.event
+async def 채팅만(ctx):
+    for i in ctx.author.roles:
+        if (i.name == "STAFF"):
+            await ctx.send("채팅 기록 정리중...")
+            guild = bot.get_guild(875392692014694450)
+            chatList = ""
+            for member in guild.members:
+                if (member.bot != True):
+                    textReturn = DbSearchText_member(member.id)
+                    voiceReturn = DbSearchVoice_member(member.id)
+                    if (len(textReturn) != 0 and len(voiceReturn) == 0):
+                        temp = DbSearch_member_byid(member.id)
+                        if (len(temp) == 0):
+                            chatList += member.name
+                            chatList += "ㅤ"
+                            chatList += member.discriminator
+                            chatList += "\n"
+                        else:
+                            chatList += temp[0][0].decode()
+                            chatList += "ㅤ"
+                            chatList += temp[0][1].decode()
+                            chatList += "\n"
+
+            embed = discord.Embed(title="채팅만 친 유저",
+                                            description=chatList,
+                                            color=0x00aaaa)            
+            await ctx.channel.send(embed=embed)
 
 bot.run(os.environ["token"])
 
