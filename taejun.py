@@ -326,7 +326,7 @@ async def 벨튀(ctx, *args):
 
     return 
 
-@bot.event
+@bot.command()
 async def 채팅만(ctx):
     for i in ctx.author.roles:
         if (i.name == "STAFF"):
