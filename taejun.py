@@ -145,8 +145,6 @@ def DbSearchChatList():
     return chatList
 
 def WhiteList(ctx):
-    if (ctx.author.name == "노우리"):
-        return False
     for i in ctx.author.roles:
         if (i.name == "STAFF"):
             return True
@@ -256,11 +254,6 @@ async def 검색(ctx, *args):
             if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
             await ctx.channel.send(embed=embed)
         return 
-    else:
-        if (ctx.author.name == "노우리"):
-            embed = discord.Embed(description = "우리님은 뭐다? 태준이 권한이 없다~",
-                                color=0x00aaaa)
-            await ctx.channel.send(embed=embed)
 
 @bot.command()
 async def 인원정리(ctx):
@@ -294,12 +287,6 @@ async def 인원정리(ctx):
         await ctx.channel.send(embed=embed)
 
         return
-    
-    else:
-        if (ctx.author.name == "노우리"):
-            embed = discord.Embed(description = "우리님은 뭐다? 태준이 권한이 없다~",
-                                color=0x00aaaa)
-            await ctx.channel.send(embed=embed)
 
 @bot.command()
 async def 벨튀(ctx, *args):
@@ -341,11 +328,6 @@ async def 벨튀(ctx, *args):
                                     color=0x00aaaa)
             await ctx.channel.send(embed=embed)
         return 
-    else:
-        if (ctx.author.name == "노우리"):
-            embed = discord.Embed(description = "우리님은 뭐다? 태준이 권한이 없다~",
-                                color=0x00aaaa)
-            await ctx.channel.send(embed=embed)
 
 @bot.command()
 async def 채팅만(ctx):
@@ -374,11 +356,6 @@ async def 채팅만(ctx):
                                         description=chatList,
                                         color=0x00aaaa)            
         await ctx.channel.send(embed=embed)
-    else:
-        if (ctx.author.name == "노우리"):
-            embed = discord.Embed(description = "우리님은 뭐다? 태준이 권한이 없다~",
-                                color=0x00aaaa)
-            await ctx.channel.send(embed=embed)
 
 bot.run(os.environ["token"])
 
