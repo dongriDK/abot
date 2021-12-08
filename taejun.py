@@ -144,6 +144,14 @@ def DbSearchChatList():
 
     return chatList
 
+def WhiteList(ctx):
+    if (ctx.author.name == "노우리"):
+        return False
+    for i in ctx.author.roles:
+        if (i.name == "STAFF"):
+            return True
+    return False
+
 @bot.event
 async def on_ready():
     print(f'부팅 성공:{bot.user.name}!')
@@ -182,178 +190,175 @@ async def on_command_error(ctx, error):
 
 @bot.command()
 async def 초기화(ctx):
-    for i in ctx.author.roles:
-        if (i.name == "STAFF"):
-            embed = discord.Embed(description="초기화 중입니다... \n잠시만 기다려주세요...")
-            await ctx.send(embed=embed)
-            DbInit()
-            embed = discord.Embed(description="초기화가 완료되었습니다.")
-            await ctx.send(embed=embed)
-            return
+    if WhiteList(ctx):
+        embed = discord.Embed(description="초기화 중입니다... \n잠시만 기다려주세요...")
+        await ctx.send(embed=embed)
+        DbInit()
+        embed = discord.Embed(description="초기화가 완료되었습니다.")
+        await ctx.send(embed=embed)
+        return
 
 @bot.command()
 async def 검색(ctx, *args): 
-    for i in ctx.author.roles:
-        if (i.name == "STAFF"):
-            if len(args) == 2:
-                name = args[0]
-                tag = args[1]
-            else:
-                embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
-                await ctx.channel.send(embed=embed)
-                return
+    if WhiteList(ctx):
+        if len(args) == 2:
+            name = args[0]
+            tag = args[1]
+        else:
+            embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
+            await ctx.channel.send(embed=embed)
+            return
 
-            memberId = DbSearch_member(name, tag)
-            if (len(memberId) == 0):
-                embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
-                                        description="없습니다.")
-                await ctx.channel.send(embed=embed)
-            else:
-                textAnswer = ""
-                voiceAnswer = ""
+        memberId = DbSearch_member(name, tag)
+        if (len(memberId) == 0):
+            embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
+                                    description="없습니다.")
+            await ctx.channel.send(embed=embed)
+        else:
+            textAnswer = ""
+            voiceAnswer = ""
 
-                memberId = memberId[0][0].decode()
-                textReturn = DbSearchText_member(memberId)
-                voiceReturn = DbSearchVoice_member(memberId)
+            memberId = memberId[0][0].decode()
+            textReturn = DbSearchText_member(memberId)
+            voiceReturn = DbSearchVoice_member(memberId)
 
-                textFlag = False
-                voiceFlag = False
-                for j in textReturn:
-                    textAnswer += j[3].decode()
-                    textAnswer += " "
-                    textAnswer += voiceChannels[j[2].decode()]
-                    textAnswer += " ㅤ"
-                    textAnswer += j[1].decode()
-                    textAnswer += "\n"
-                    textFlag = True
+            textFlag = False
+            voiceFlag = False
+            for j in textReturn:
+                textAnswer += j[3].decode()
+                textAnswer += " "
+                textAnswer += voiceChannels[j[2].decode()]
+                textAnswer += " ㅤ"
+                textAnswer += j[1].decode()
+                textAnswer += "\n"
+                textFlag = True
 
-                for j in voiceReturn:
-                    voiceAnswer += j[3].decode()
-                    voiceAnswer += "ㅤ"
-                    try:
-                        becha = voiceChannels[j[1].decode()]
-                    except:
-                        becha = "없음"
-                    voiceAnswer += becha
-                    voiceAnswer += " -> "
-                    try:
-                        afcha = voiceChannels[j[2].decode()]
-                    except:
-                        afcha = "없음"
-                    voiceAnswer += afcha
-                    voiceAnswer += "\n"
-                    voiceFlag = True
+            for j in voiceReturn:
+                voiceAnswer += j[3].decode()
+                voiceAnswer += "ㅤ"
+                try:
+                    becha = voiceChannels[j[1].decode()]
+                except:
+                    becha = "없음"
+                voiceAnswer += becha
+                voiceAnswer += " -> "
+                try:
+                    afcha = voiceChannels[j[2].decode()]
+                except:
+                    afcha = "없음"
+                voiceAnswer += afcha
+                voiceAnswer += "\n"
+                voiceFlag = True
 
-                embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
-                                        color=0x00aaaa)
-                if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
-                if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
-                await ctx.channel.send(embed=embed)
-            return 
+            embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
+                                    color=0x00aaaa)
+            if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
+            if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
+            await ctx.channel.send(embed=embed)
+        return 
 
 @bot.command()
 async def 인원정리(ctx):
-    for i in ctx.author.roles:
-        if (i.name == "STAFF"):
-            await ctx.send("인원 정리중...")
+    if WhiteList(ctx):
+        await ctx.send("인원 정리중...")
 
-            guild = bot.get_guild(875392692014694450)
-            ghostList = ""
-            for member in guild.members:
-                if (member.bot != True):
-                    textReturn = DbSearchText_member(member.id)
-                    voiceReturn = DbSearchVoice_member(member.id)
+        guild = bot.get_guild(875392692014694450)
+        ghostList = ""
+        for member in guild.members:
+            if (member.bot != True):
+                textReturn = DbSearchText_member(member.id)
+                voiceReturn = DbSearchVoice_member(member.id)
 
-                    if (len(textReturn) == 0 and len(voiceReturn) == 0):
-                        temp = DbSearch_member_byid(member.id)
-                        if (len(temp) == 0):
-                            ghostList += member.name
-                            ghostList += "ㅤ"
-                            ghostList += member.discriminator
-                            ghostList += "\n"
-                        else:
-                            ghostList += temp[0][0].decode()
-                            ghostList += "ㅤ"
-                            ghostList += temp[0][1].decode()
-                            ghostList += "\n"
+                if (len(textReturn) == 0 and len(voiceReturn) == 0):
+                    temp = DbSearch_member_byid(member.id)
+                    if (len(temp) == 0):
+                        ghostList += member.name
+                        ghostList += "ㅤ"
+                        ghostList += member.discriminator
+                        ghostList += "\n"
+                    else:
+                        ghostList += temp[0][0].decode()
+                        ghostList += "ㅤ"
+                        ghostList += temp[0][1].decode()
+                        ghostList += "\n"
 
 
-            embed = discord.Embed(title="유령회원 목록",
-                                    description=ghostList,
-                                    color=0x00aaaa)            
-            await ctx.channel.send(embed=embed)
+        embed = discord.Embed(title="유령회원 목록",
+                                description=ghostList,
+                                color=0x00aaaa)            
+        await ctx.channel.send(embed=embed)
 
-            return
+        return
 
 @bot.command()
 async def 벨튀(ctx, *args):
-    try:
-        channel = args[0]
-    except:
-        channel = ""
-    try:
-        time = args[1]
-    except:
-        time = ""
+    if WhiteList(ctx):
+        try:
+            channel = args[0]
+        except:
+            channel = ""
+        try:
+            time = args[1]
+        except:
+            time = ""
 
-    if channel == "" or time == "":
-        embed = discord.Embed(description="!ㅌ 벨튀 [채널이름] [날짜]\n ex) !ㅌ 벨튀 랭크1 11.15")
-        await ctx.channel.send(embed=embed)
-    else:
-        VoiceList = ""
-        DbReturn = DbSearchbellrun(channel, time)
-        for i in DbReturn:
-            VoiceList += i[3].decode()
-            VoiceList += "ㅤ"
-            try:
-                becha = voiceChannels[i[1].decode()]
-            except:
-                becha = "없음"
-            VoiceList += becha
-            VoiceList += " -> "
-            try:    
-                afcha = voiceChannels[i[2].decode()]
-            except:
-                afcha = "없음"
-            VoiceList += afcha
-            VoiceList += "ㅤ"
-            VoiceList += i[0].decode()
-            VoiceList += "\n"
-        embed = discord.Embed(title=channel + " 입장 기록",
-                                description=VoiceList,
-                                color=0x00aaaa)
-        await ctx.channel.send(embed=embed)
+        if channel == "" or time == "":
+            embed = discord.Embed(description="!ㅌ 벨튀 [채널이름] [날짜]\n ex) !ㅌ 벨튀 랭크1 11.15")
+            await ctx.channel.send(embed=embed)
+        else:
+            VoiceList = ""
+            DbReturn = DbSearchbellrun(channel, time)
+            for i in DbReturn:
+                VoiceList += i[3].decode()
+                VoiceList += "ㅤ"
+                try:
+                    becha = voiceChannels[i[1].decode()]
+                except:
+                    becha = "없음"
+                VoiceList += becha
+                VoiceList += " -> "
+                try:    
+                    afcha = voiceChannels[i[2].decode()]
+                except:
+                    afcha = "없음"
+                VoiceList += afcha
+                VoiceList += "ㅤ"
+                VoiceList += i[0].decode()
+                VoiceList += "\n"
+            embed = discord.Embed(title=channel + " 입장 기록",
+                                    description=VoiceList,
+                                    color=0x00aaaa)
+            await ctx.channel.send(embed=embed)
 
-    return 
+        return 
 
 @bot.command()
 async def 채팅만(ctx):
-    for i in ctx.author.roles:
-        if (i.name == "STAFF"):
-            await ctx.send("채팅 기록 정리중...")
-            guild = bot.get_guild(875392692014694450)
-            chatList = ""
-            for member in guild.members:
-                if (member.bot != True):
-                    textReturn = DbSearchText_member(member.id)
-                    voiceReturn = DbSearchVoice_member(member.id)
-                    if (len(textReturn) != 0 and len(voiceReturn) == 0):
-                        temp = DbSearch_member_byid(member.id)
-                        if (len(temp) == 0):
-                            chatList += member.name
-                            chatList += "ㅤ"
-                            chatList += member.discriminator
-                            chatList += "\n"
-                        else:
-                            chatList += temp[0][0].decode()
-                            chatList += "ㅤ"
-                            chatList += temp[0][1].decode()
-                            chatList += "\n"
+    if WhiteList(ctx):
+        await ctx.send("채팅 기록 정리중...")
+        guild = bot.get_guild(875392692014694450)
+        chatList = ""
+        for member in guild.members:
+            if (member.bot != True):
+                textReturn = DbSearchText_member(member.id)
+                voiceReturn = DbSearchVoice_member(member.id)
+                if (len(textReturn) != 0 and len(voiceReturn) == 0):
+                    temp = DbSearch_member_byid(member.id)
+                    if (len(temp) == 0):
+                        chatList += member.name
+                        chatList += "ㅤ"
+                        chatList += member.discriminator
+                        chatList += "\n"
+                    else:
+                        chatList += temp[0][0].decode()
+                        chatList += "ㅤ"
+                        chatList += temp[0][1].decode()
+                        chatList += "\n"
 
-            embed = discord.Embed(title="채팅만 친 유저",
-                                            description=chatList,
-                                            color=0x00aaaa)            
-            await ctx.channel.send(embed=embed)
+        embed = discord.Embed(title="채팅만 친 유저",
+                                        description=chatList,
+                                        color=0x00aaaa)            
+        await ctx.channel.send(embed=embed)
 
 bot.run(os.environ["token"])
 
