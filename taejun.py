@@ -152,13 +152,6 @@ def WhiteList(ctx):
             return True
     return False
 
-async def We(ctx):
-    if (ctx.author.name == "노우리"):
-        embed = discord.Embed(description = "우리님은 뭐다? 태준이 권한이 없다~",
-                                color=0x00aaaa)
-        await ctx.channel.send(embed=embed)
-    return
-
 @bot.event
 async def on_ready():
     print(f'부팅 성공:{bot.user.name}!')
@@ -303,7 +296,10 @@ async def 인원정리(ctx):
         return
     
     else:
-        We(ctx)
+        if (ctx.author.name == "노우리"):
+            embed = discord.Embed(description = "우리님은 뭐다? 태준이 권한이 없다~",
+                                color=0x00aaaa)
+            await ctx.channel.send(embed=embed)
 
 @bot.command()
 async def 벨튀(ctx, *args):
@@ -346,7 +342,10 @@ async def 벨튀(ctx, *args):
             await ctx.channel.send(embed=embed)
         return 
     else:
-        We(ctx)
+        if (ctx.author.name == "노우리"):
+            embed = discord.Embed(description = "우리님은 뭐다? 태준이 권한이 없다~",
+                                color=0x00aaaa)
+            await ctx.channel.send(embed=embed)
 
 @bot.command()
 async def 채팅만(ctx):
@@ -376,7 +375,10 @@ async def 채팅만(ctx):
                                         color=0x00aaaa)            
         await ctx.channel.send(embed=embed)
     else:
-        We(ctx)
+        if (ctx.author.name == "노우리"):
+            embed = discord.Embed(description = "우리님은 뭐다? 태준이 권한이 없다~",
+                                color=0x00aaaa)
+            await ctx.channel.send(embed=embed)
 
 bot.run(os.environ["token"])
 
