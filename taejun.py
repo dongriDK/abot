@@ -48,6 +48,12 @@ def CurTime():
     strTime = mon + "." + day + " " + hour + ":" + min + ":" + sec
     return strTime
 
+def DbConnect():
+    con = mysql.connector.connect(**config)
+    cur = con.cursor(prepared=True)
+
+    return con, cur
+    
 def DbLogin(id, name, tag):
     con = mysql.connector.connect(**config)
     cur = con.cursor(prepared=True)
@@ -59,8 +65,7 @@ def DbLogin(id, name, tag):
     return 0
 
 def DbInit():
-    con = mysql.connector.connect(**config)
-    cur = con.cursor(prepared=True)
+    con, cur = DbConnect()
 
     cur.execute("DROP TABLE Voice_info")
     cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id VARCHAR(128), before_channel TEXT, after_channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
@@ -72,8 +77,7 @@ def DbInit():
     return 0
 
 def DbModify_text(message):
-    con = mysql.connector.connect(**config)
-    cur = con.cursor(prepared=True)
+    con, cur = DbConnect()
     try:
         msg = message.channel.name.split("＿")[1]
     except:
@@ -89,52 +93,46 @@ def DbModify_voice(member, before, after):
     print(beChannel)
     print(afChannel)
     if ("(" in beChannel):
-        beChannel = beChannel.split("(")[0]
+        beChannel = beChannel.split("(")[0][:-1]
     if ("(" in afChannel):
-        afChannel = afChannel.split("(")[0]
+        afChannel = afChannel.split("(")[0][:-1]
 
     if beChannel != afChannel:
-        con = mysql.connector.connect(**config)
-        cur = con.cursor(prepared=True)
+        con, cur = DbConnect()
         
         cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, CurTime()))
         con.commit()
     return 0
 
 def DbSearch_member(name, tag):
-    con = mysql.connector.connect(**config)
-    cur = con.cursor(prepared=True)
+    con, cur = DbConnect()
 
     cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
     memberId = cur.fetchall()
     return memberId
 
 def DbSearch_member_byid(id):
-    con = mysql.connector.connect(**config)
-    cur = con.cursor(prepared=True)
+    con, cur = DbConnect()
 
     cur.execute("SELECT name, tag from User_info where id=%s", (id,))
     return cur.fetchall()
 
 def DbSearchText_member(id):
-    con = mysql.connector.connect(**config)
-    cur = con.cursor(prepared=True)
+    con, cur = DbConnect()
 
     cur.execute("SELECT * from Text_info where id=%s order by time desc limit 10", (id,))
     textList = cur.fetchall()
     return textList
 
 def DbSearchVoice_member(id):
-    con = mysql.connector.connect(**config)
-    cur = con.cursor(prepared=True)   
+    con, cur = DbConnect() 
 
     cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 10", (id,))
     voiceList = cur.fetchall()
     return voiceList
 
 def DbSearchbellrun(channel, time):
-    con = mysql.connector.connect(**config)
-    cur = con.cursor(prepared=True)   
+    con, cur = DbConnect()  
 
     # channelName = voiceChannels[channel]
     cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like %s and (Voice_info.before_channel like %s or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channel, channel))
@@ -143,8 +141,7 @@ def DbSearchbellrun(channel, time):
     return channelList
 
 def DbSearchChatList():
-    con = mysql.connector.connect(**config)
-    cur = con.cursor(prepared=True)
+    con, cur = DbConnect()
 
     cur.execute("SELECT User_info.name, user_info.tag, count(text_info.text) FROM User_info left join text_info on User_info.id = text_info.id GROUP BY text_info.id ORDER BY user_info.name")
     chatList = cur.fetchall()
