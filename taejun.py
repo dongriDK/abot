@@ -85,9 +85,9 @@ def DbModify_text(message):
 def DbModify_voice(member, before, after):
     beChannel = "없음" if before.channel == None else before.channel.name.split("＿")[1]
     afChannel = "없음" if after.channel == None else after.channel.name.split("＿")[1]
-    if ("🚫" in beChannel):
+    if ("(" in beChannel):
         beChannel = beChannel.split("(")[0]
-    if ("🚫" in afChannel):
+    if ("(" in afChannel):
         afChannel = afChannel.split("(")[0]
 
     if beChannel != afChannel:
