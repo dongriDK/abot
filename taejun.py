@@ -109,7 +109,9 @@ def DbModify_voice(member, before, after):
 
         if (beChannel != "없음"):
             year = str(time.localtime(time.time() + 32400).tm_year)
-
+            print(member.id)
+            print(beChannel)
+            print(afChannel)
             cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
             ret = cur.fetchall()
 
