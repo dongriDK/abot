@@ -86,12 +86,13 @@ def DbModify_text(message):
     cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), msg, CurTime()))
     con.commit()
 
-    cur.execute("SELECT ttext FROM user_info where id=%s", (message.author.id))
+    cur.execute("SELECT ttext FROM user_info where id=%s", (message.author.id,))
     ttext = cur.fetchall()
 
     ttext += 1
 
     cur.execute("UPDATE user_info SET ttext=%s where id=%s", (ttext, message.author.id))
+    con.commit()
     return 0
 
 def DbModify_voice(member, before, after):
