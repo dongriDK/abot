@@ -89,7 +89,7 @@ def DbModify_text(message):
     cur.execute("SELECT ttext FROM user_info where id=%s", (message.author.id,))
     ttext = cur.fetchall()
 
-    ttext += 1
+    ttext = int(ttext) + 1
 
     cur.execute("UPDATE user_info SET ttext=%s where id=%s", (ttext, message.author.id))
     con.commit()
