@@ -86,7 +86,7 @@ def DbModify_text(message):
     cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), msg, CurTime()))
     con.commit()
 
-    cur.execute("UPDATE user_info SET ttext=ttext+1 where id=%s", (message.author.id))
+    cur.execute("UPDATE user_info SET ttext=ttext+1 where id=%s", (message.author.id,))
     con.commit()
     return 0
 
