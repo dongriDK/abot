@@ -84,8 +84,6 @@ def DbModify_text(message):
         msg = message.channel.name
 
     cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), msg, CurTime()))
-    con.commit()
-
     cur.execute("UPDATE user_info SET ttext=ttext+1 where id=%s", (message.author.id,))
     con.commit()
     return 0
@@ -104,9 +102,6 @@ def DbModify_voice(member, before, after):
 
         if (beChannel != "없음"):
             year = str(time.localtime(time.time() + 32400).tm_year)
-            print(member.id)
-            print(beChannel)
-            print(afChannel)
             cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
             ret = cur.fetchall()
 
@@ -119,12 +114,6 @@ def DbModify_voice(member, before, after):
 
             totalSeconds = newSec - oldSec
 
-            # cur.execute("SELECT ttime FROM user_info where id=%s", (member.id,))
-            # ret = cur.fetchall()
-            # oldSeconds = ret[0][0]
-
-            # newSeconds = oldSeconds + totalSeconds
-            # newSeconds = trunc(newSeconds)
             cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
             con.commit()
 
@@ -163,7 +152,6 @@ def DbSearchVoice_member(id):
 def DbSearchbellrun(channel, time):
     con, cur = DbConnect()  
 
-    # channelName = voiceChannels[channel]
     cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like %s and (Voice_info.before_channel like %s or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channel, channel))
     channelList = cur.fetchall()
 
@@ -181,8 +169,10 @@ def DbSearchtime(id, flag):
     con, cur = DbConnect()
 
     if (flag == 1):
+        print(id)
         cur.execute("SELECT ttime FROM user_info WHERE id=%s", (id,))
         ttime = cur.fetchall()
+        print(ttime)
         ttime = ttime[0][0]
 
         return ttime
