@@ -404,7 +404,7 @@ async def 벨튀(ctx, *args):
 @bot.command()
 async def 채팅만(ctx):
     if WhiteList(ctx):
-        await ctx.send("채팅 기록 정리중...")
+        await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = ""
         for member in guild.members:
