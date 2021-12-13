@@ -298,7 +298,7 @@ async def 검색(ctx, *args):
                 textAnswer += j[1].decode()
                 textAnswer += "\n"
                 textFlag = True
-            voiceAnswer += "음성채널 누적 시간 : " + str(ttime) + "\n"
+            voiceAnswer += "음성채널 누적 시간 : " + str(datetime.timedelta(seconds=int(ttime))) + "\n"
             for j in voiceReturn:
                 voiceAnswer += j[3].decode()
                 voiceAnswer += "ㅤ"
