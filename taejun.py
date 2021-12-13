@@ -75,8 +75,7 @@ def DbInit():
     con.commit()
     return 0
 
-def DbModify_text(message):
-    con, cur = DbConnect()
+def DbModify_text(message, con, cur):
     try:
         msg = message.channel.name.split("＿")[1]
     except:
@@ -209,10 +208,11 @@ async def on_voice_state_update(member, before, after):
     
 @bot.event
 async def on_message(message):
+    con, cur = DbConnect()
     if (message.author.name != "태준이"):
         if("!ㅌ" not in message.content):
-            DbReturn = DbLogin(message.author.id, message.author.name, message.author.discriminator)
-            DbModify_text(message)
+            DbReturn = DbLogin(message.author.id, message.author.name, message.author.discriminator, con, cur)
+            DbModify_text(message, con, cur)
 
     await bot.process_commands(message)
     return 0
