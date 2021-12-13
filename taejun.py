@@ -86,12 +86,7 @@ def DbModify_text(message):
     cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), msg, CurTime()))
     con.commit()
 
-    cur.execute("SELECT ttext FROM user_info where id=%s", (message.author.id,))
-    ttext = cur.fetchall()
-
-    ttext = ttext[0][0] + 1
-
-    cur.execute("UPDATE user_info SET ttext=%s where id=%s", (ttext, message.author.id))
+    cur.execute("UPDATE user_info SET ttext=ttext+1 where id=%s", (message.author.id))
     con.commit()
     return 0
 
@@ -117,20 +112,20 @@ def DbModify_voice(member, before, after):
 
             oldTime = ret[0][0].decode()
             oldTime = year + "." + oldTime
-            newTime = year + "." + newTime
+            new_Time = year + "." + newTime
 
             oldSec = time.mktime(datetime.datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
-            newSec = time.mktime(datetime.datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
+            newSec = time.mktime(datetime.datetime.strptime(new_Time, '%Y.%m.%d %H:%M:%S').timetuple())
 
             totalSeconds = newSec - oldSec
 
-            cur.execute("SELECT ttime FROM user_info where id=%s", (member.id,))
-            ret = cur.fetchall()
-            oldSeconds = ret[0][0]
+            # cur.execute("SELECT ttime FROM user_info where id=%s", (member.id,))
+            # ret = cur.fetchall()
+            # oldSeconds = ret[0][0]
 
-            newSeconds = oldSeconds + totalSeconds
-            newSeconds = trunc(newSeconds)
-            cur.execute("UPDATE user_info SET ttime=%s where id=%s", (newSeconds, member.id,))
+            # newSeconds = oldSeconds + totalSeconds
+            # newSeconds = trunc(newSeconds)
+            cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
             con.commit()
 
         cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
