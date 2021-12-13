@@ -55,8 +55,7 @@ def DbConnect():
 
     return con, cur
     
-def DbLogin(id, name, tag):
-    con, cur = DbConnect()
+def DbLogin(id, name, tag, con, cur):
     try:
         cur.execute("insert into User_info values(%s, %s, %s)", (id, name, tag,))
         con.commit()
@@ -88,7 +87,7 @@ def DbModify_text(message):
     con.commit()
     return 0
 
-def DbModify_voice(member, before, after):
+def DbModify_voice(member, before, after, con, cur):
     beChannel = "없음" if before.channel == None else before.channel.name.split("＿")[1]
     afChannel = "없음" if after.channel == None else after.channel.name.split("＿")[1]
     if ("(" in beChannel):
@@ -97,7 +96,7 @@ def DbModify_voice(member, before, after):
         afChannel = afChannel.split("(")[0][:-1]
 
     if beChannel != afChannel:
-        con, cur = DbConnect()
+        # con, cur = DbConnect()
         newTime = CurTime()
 
         if (beChannel != "없음"):
@@ -125,51 +124,43 @@ def DbModify_voice(member, before, after):
 
     return 0
 
-def DbSearch_member(name, tag):
-    con, cur = DbConnect()
+def DbSearch_member(name, tag, con, cur):
+    # con, cur = DbConnect()
 
     cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
     memberId = cur.fetchall()
     return memberId
 
-def DbSearch_member_byid(id):
-    con, cur = DbConnect()
+def DbSearch_member_byid(id, con, cur):
+    # con, cur = DbConnect()
 
     cur.execute("SELECT name, tag from User_info where id=%s", (id,))
     return cur.fetchall()
 
-def DbSearchText_member(id):
-    con, cur = DbConnect()
+def DbSearchText_member(id, con, cur):
+    # con, cur = DbConnect()
 
     cur.execute("SELECT * from Text_info where id=%s order by time desc limit 10", (id,))
     textList = cur.fetchall()
     return textList
 
-def DbSearchVoice_member(id):
-    con, cur = DbConnect() 
+def DbSearchVoice_member(id, con, cur):
+    # con, cur = DbConnect() 
 
     cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 10", (id,))
     voiceList = cur.fetchall()
     return voiceList
 
-def DbSearchbellrun(channel, time):
-    con, cur = DbConnect()  
+def DbSearchbellrun(channel, time, con, cur):
+    # con, cur = DbConnect()  
 
     cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like %s and (Voice_info.before_channel like %s or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channel, channel))
     channelList = cur.fetchall()
 
     return channelList
 
-def DbSearchChatList():
-    con, cur = DbConnect()
-
-    cur.execute("SELECT User_info.name, user_info.tag, count(text_info.text) FROM User_info left join text_info on User_info.id = text_info.id GROUP BY text_info.id ORDER BY user_info.name")
-    chatList = cur.fetchall()
-
-    return chatList
-
-def DbSearchtime(id, flag):
-    con, cur = DbConnect()
+def DbSearchtime(id, flag, con, cur):
+    # con, cur = DbConnect()
 
     if (flag == 1):
         cur.execute("SELECT ttime FROM user_info WHERE id=%s", (id,))
@@ -210,8 +201,9 @@ async def on_ready():
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    DbReturn = DbLogin(member.id, member.name, member.discriminator)
-    DbModify_voice(member, before, after)
+    con, cur = DbConnect()
+    DbReturn = DbLogin(member.id, member.name, member.discriminator, con, cur)
+    DbModify_voice(member, before, after, con, cur)
 
     return 0
     
@@ -255,6 +247,7 @@ async def 초기화(ctx):
 
 @bot.command()
 async def 검색(ctx, *args): 
+    con, cur = DbConnect()
     if WhiteList(ctx):
         if len(args) == 2:
             name = args[0]
@@ -263,8 +256,7 @@ async def 검색(ctx, *args):
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
             await ctx.channel.send(embed=embed)
             return
-
-        memberId = DbSearch_member(name, tag)
+        memberId = DbSearch_member(name, tag, con, cur)
         if (len(memberId) == 0):
             embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                     description="없습니다.")
@@ -274,9 +266,9 @@ async def 검색(ctx, *args):
             voiceAnswer = ""
 
             memberId = memberId[0][0].decode()
-            textReturn = DbSearchText_member(memberId)
-            voiceReturn = DbSearchVoice_member(memberId)
-            ttime, ttext = DbSearchtime(memberId, 3)
+            textReturn = DbSearchText_member(memberId, con, cur)
+            voiceReturn = DbSearchVoice_member(memberId, con, cur)
+            ttime, ttext = DbSearchtime(memberId, 3, con, cur)
 
             textFlag = False
             voiceFlag = False
@@ -322,6 +314,7 @@ async def 검색(ctx, *args):
 
 @bot.command()
 async def 인원정리(ctx):
+    con, cur = DbConnect()
     if WhiteList(ctx):
         await ctx.send("인원 정리중...")
 
@@ -329,11 +322,11 @@ async def 인원정리(ctx):
         ghostList = ""
         for member in guild.members:
             if (member.bot != True):
-                textReturn = DbSearchText_member(member.id)
-                voiceReturn = DbSearchVoice_member(member.id)
+                textReturn = DbSearchText_member(member.id, con, cur)
+                voiceReturn = DbSearchVoice_member(member.id, con, cur)
 
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
-                    temp = DbSearch_member_byid(member.id)
+                    temp = DbSearch_member_byid(member.id, con, cur)
                     if (len(temp) == 0):
                         ghostList += member.name
                         ghostList += "ㅤ"
