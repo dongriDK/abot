@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
-import sqlite3
-from types import prepare_class
 import discord
 from discord.ext import commands
+from datetime import datetime
+import datetime
+from math import trunc
 import time
-from discord.ext.commands.core import Command
+# from discord.ext.commands.core import Command
 from discord.ext.commands.errors import CommandInvokeError
 from discord.ext.commands import CommandNotFound
 import mysql.connector
@@ -55,8 +56,7 @@ def DbConnect():
     return con, cur
     
 def DbLogin(id, name, tag):
-    con = mysql.connector.connect(**config)
-    cur = con.cursor(prepared=True)
+    con, cur = DbConnect()
     try:
         cur.execute("insert into User_info values(%s, %s, %s)", (id, name, tag,))
         con.commit()
@@ -72,7 +72,7 @@ def DbInit():
     cur.execute("DROP TABLE Text_info")
     cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE User_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), name TEXT, tag TEXT, PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4")
+    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), name TEXT, tag TEXT, ttime MEDIUMINT(9) DEFAULT '0', PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4")
     con.commit()
     return 0
 
@@ -97,9 +97,36 @@ def DbModify_voice(member, before, after):
 
     if beChannel != afChannel:
         con, cur = DbConnect()
-        
-        cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, CurTime()))
+        newTime = CurTime()
+
+        if (beChannel != "없음"):
+            year = str(time.localtime(time.time() + 32400).tm_year)
+
+            cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
+            ret = cur.fetchall()
+
+            oldTime = ret[0][0].decode()
+            oldTime = year + "." + oldTime
+            newTime = year + "." + newTime
+
+            oldSec = time.mktime(datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
+            newSec = time.mktime(datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
+
+            totalSeconds = newSec - oldSec
+
+            cur.execute("SELECT ttime FROM user_info where id=%s", (member.id,))
+            ret = cur.fetchall()
+
+            oldSeconds = ret[0][0]
+
+            newSeconds = oldSeconds + totalSeconds
+            newSeconds = trunc(newSeconds)
+            cur.execute("UPDATE user_info SET ttime=%s where id=%s", (newSeconds, member.id,))
+            con.commit()
+
+        cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
         con.commit()
+
     return 0
 
 def DbSearch_member(name, tag):
@@ -235,9 +262,9 @@ async def 검색(ctx, *args):
             voiceFlag = False
             for j in textReturn:
                 textAnswer += j[3].decode()
-                textAnswer += " "
+                textAnswer += "ㅤ"
                 textAnswer += voiceChannels[j[2].decode()]
-                textAnswer += " ㅤ"
+                textAnswer += "ㅤ"
                 textAnswer += j[1].decode()
                 textAnswer += "\n"
                 textFlag = True
