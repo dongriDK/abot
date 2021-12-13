@@ -109,8 +109,8 @@ def DbModify_voice(member, before, after):
             oldTime = year + "." + oldTime
             newTime = year + "." + newTime
 
-            oldSec = time.mktime(datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
-            newSec = time.mktime(datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
+            oldSec = time.mktime(datetime.datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
+            newSec = time.mktime(datetime.datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
 
             totalSeconds = newSec - oldSec
 
@@ -172,6 +172,14 @@ def DbSearchChatList():
     chatList = cur.fetchall()
 
     return chatList
+
+def DbSearchVoicetime(id):
+    con, cur = DbConnect()
+
+    cur.execute("SELECT ttime FROM user_INFO where id=%s", (id,))
+    ttime = cur.fetchall()
+    ttime = ttime[0][0]
+    return str(datetime.timedelta(seconds=ttime))
 
 def WhiteList(ctx):
     # if (ctx.author.name == "노우리"):
