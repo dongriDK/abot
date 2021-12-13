@@ -185,7 +185,10 @@ def DbSearchVoicetime(id):
 
     cur.execute("SELECT ttime FROM user_INFO where id=%s", (id,))
     ttime = cur.fetchall()
-    ttime = ttime[0][0]
+    try:
+        ttime = ttime[0][0]
+    except:
+        ttime = 0
     return str(datetime.timedelta(seconds=ttime))
 
 def WhiteList(ctx):
