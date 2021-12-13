@@ -72,7 +72,7 @@ def DbInit():
     cur.execute("DROP TABLE Text_info")
     cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE User_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), name TEXT, tag TEXT, ttime MEDIUMINT(9) DEFAULT '0', PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4")
+    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), name TEXT, tag TEXT, ttext MEDIUMINT(9) DEFAULT '0', ttime MEDIUMINT(9) DEFAULT '0', PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4")
     con.commit()
     return 0
 
@@ -85,6 +85,13 @@ def DbModify_text(message):
 
     cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), msg, CurTime()))
     con.commit()
+
+    cur.execute("SELECT ttext FROM user_info where id=%s", (message.author.id))
+    ttext = cur.fetchall()
+
+    ttext += 1
+
+    cur.execute("UPDATE user_info SET ttext=%s where id=%s", (ttext, message.author.id))
     return 0
 
 def DbModify_voice(member, before, after):
@@ -116,7 +123,6 @@ def DbModify_voice(member, before, after):
 
             cur.execute("SELECT ttime FROM user_info where id=%s", (member.id,))
             ret = cur.fetchall()
-
             oldSeconds = ret[0][0]
 
             newSeconds = oldSeconds + totalSeconds
@@ -404,21 +410,27 @@ async def 채팅만(ctx):
         for member in guild.members:
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id)
-                voiceReturn = DbSearchVoice_member(member.id)
-                if (len(textReturn) != 0 and len(voiceReturn) == 0):
+                # voiceReturn = DbSearchVoice_member(member.id)
+                voiceReturn = DbSearchVoicetime(member.id)
+
+                if (len(textReturn) != 0 and int(voiceReturn.split(":")[1]) < 30):
                     temp = DbSearch_member_byid(member.id)
                     if (len(temp) == 0):
                         chatList += member.name
                         chatList += "ㅤ"
                         chatList += member.discriminator
+                        chatList += "ㅤ"
+                        chatList += voiceReturn
                         chatList += "\n"
                     else:
                         chatList += temp[0][0].decode()
                         chatList += "ㅤ"
                         chatList += temp[0][1].decode()
+                        chatList += "ㅤ"
+                        chatList += voiceReturn
                         chatList += "\n"
 
-        embed = discord.Embed(title="채팅만 친 유저",
+        embed = discord.Embed(title="채팅만, 음성 30분 미만 유저",
                                         description=chatList,
                                         color=0x00aaaa)            
         await ctx.channel.send(embed=embed)
