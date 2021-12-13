@@ -175,11 +175,9 @@ def DbSearchtime(id, flag):
         print(id)
         cur.execute("SELECT ttime FROM user_info WHERE id=%s", (id,))
         ttime = cur.fetchall()
-        print(ttime)
-        print(type(ttime))
-        if (ttime != None):
+        try:
             ttime = ttime[0][0]
-        else:
+        except:
             ttime = -1
 
         return ttime
