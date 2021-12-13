@@ -408,13 +408,34 @@ async def 벨튀(ctx, *args):
 @bot.command()
 async def 채팅만(ctx):
     if WhiteList(ctx):
+        await ctx.send("채팅기록 정리중...")
+        guild = bot.get_guild(875392692014694450)
+        chatList = ""
+        for member in guild.members:
+            if (member.bot != True):
+                textReturn = DbSearchText_member(member.id)
+                voiceReturn = DbSearchVoice_member(member.id)
+
+                if (len(textReturn) != 0 and len(voiceReturn) == 0):
+                    chatList += member.name
+                    chatList += "ㅤ"
+                    chatList += member.discriminator
+                    chatList += "\n"
+
+        embed = discord.Embed(title="채팅만 쓴 유저",
+                                        description=chatList,
+                                        color=0x00aaaa)            
+        await ctx.channel.send(embed=embed)
+    
+@bot.command()
+async def 채팅만2(ctx):
+    if WhiteList(ctx):
         await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = ""
         for member in guild.members:
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id)
-                # voiceReturn = DbSearchVoice_member(member.id)
                 voiceReturn = DbSearchVoicetime(member.id)
 
                 if (len(textReturn) != 0 and int(voiceReturn.split(":")[1]) < 30):
@@ -425,28 +446,11 @@ async def 채팅만(ctx):
                     chatList += voiceReturn
                     chatList += "\n"
 
-                # if (len(textReturn) != 0 and int(voiceReturn.split(":")[1]) < 30):
-                #     temp = DbSearch_member_byid(member.id)
-                #     if (len(temp) == 0):
-                #         chatList += member.name
-                #         chatList += "ㅤ"
-                #         chatList += member.discriminator
-                #         chatList += "ㅤ"
-                #         chatList += voiceReturn
-                #         chatList += "\n"
-                #     else:
-                #         chatList += temp[0][0].decode()
-                #         chatList += "ㅤ"
-                #         chatList += temp[0][1].decode()
-                #         chatList += "ㅤ"
-                #         chatList += voiceReturn
-                #         chatList += "\n"
-
         embed = discord.Embed(title="채팅만, 음성 30분 미만 유저",
                                         description=chatList,
                                         color=0x00aaaa)            
         await ctx.channel.send(embed=embed)
-    
+
     # else:
     #     if (ctx.author.name == "노우리"):
     #         embed = discord.Embed(description="우리님은 뭐다? 태준이 권한이 없다~",
