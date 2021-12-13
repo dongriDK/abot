@@ -180,16 +180,26 @@ def DbSearchChatList():
 
     return chatList
 
-def DbSearchVoicetime(id):
+def DbSearchtime(id, flag):
     con, cur = DbConnect()
 
-    cur.execute("SELECT ttime FROM user_INFO where id=%s", (id,))
-    ttime = cur.fetchall()
-    try:
+    if (flag == 1):
+        cur.execute("SELECT ttime FROM user_info WHERE id=%s", (id,))
+        ttime = cur.fetchall()
         ttime = ttime[0][0]
-    except:
-        ttime = 0
-    return str(datetime.timedelta(seconds=ttime))
+
+        return ttime
+
+    if (flag == 2):
+        cur.execute("SELECT ttext FROM user_info WHERE id=%s", (id,))
+        textime = cur.fetchall()
+        return textime[0][0] 
+    
+    if (flag == 3):
+        cur.execute("SELECT ttime, ttext FROM user_info WHERE id=%s", (id,))
+        ttime = cur.fetchall()
+        return ttime[0][0], ttime[0][1]
+
 
 def WhiteList(ctx):
     # if (ctx.author.name == "노우리"):
@@ -275,9 +285,11 @@ async def 검색(ctx, *args):
             memberId = memberId[0][0].decode()
             textReturn = DbSearchText_member(memberId)
             voiceReturn = DbSearchVoice_member(memberId)
+            ttime, ttext = DbSearchtime(memberId, 3)
 
             textFlag = False
             voiceFlag = False
+            textAnswer += "총 채팅 수 : " + ttext + "\n"
             for j in textReturn:
                 textAnswer += j[3].decode()
                 textAnswer += "ㅤ"
@@ -286,7 +298,7 @@ async def 검색(ctx, *args):
                 textAnswer += j[1].decode()
                 textAnswer += "\n"
                 textFlag = True
-
+            voiceAnswer += "음성채널 누적 시간 : " + ttime + "\n"
             for j in voiceReturn:
                 voiceAnswer += j[3].decode()
                 voiceAnswer += "ㅤ"
@@ -436,14 +448,14 @@ async def 채팅만2(ctx):
         for member in guild.members:
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id)
-                voiceReturn = DbSearchVoicetime(member.id)
+                voiceReturn = DbSearchtime(member.id, 1)
 
-                if (len(textReturn) != 0 and int(voiceReturn.split(":")[1]) < 30):
+                if (len(textReturn) != 0 and voiceReturn < 1800):
                     chatList += member.name
                     chatList += "ㅤ"
                     chatList += member.discriminator
                     chatList += "ㅤ"
-                    chatList += voiceReturn
+                    chatList += str(datetime.timedelta(seconds=int(voiceReturn)))
                     chatList += "\n"
 
         embed = discord.Embed(title="채팅만, 음성 30분 미만 유저",
