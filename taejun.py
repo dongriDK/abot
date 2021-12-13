@@ -418,21 +418,29 @@ async def 채팅만(ctx):
                 voiceReturn = DbSearchVoicetime(member.id)
 
                 if (len(textReturn) != 0 and int(voiceReturn.split(":")[1]) < 30):
-                    temp = DbSearch_member_byid(member.id)
-                    if (len(temp) == 0):
-                        chatList += member.name
-                        chatList += "ㅤ"
-                        chatList += member.discriminator
-                        chatList += "ㅤ"
-                        chatList += voiceReturn
-                        chatList += "\n"
-                    else:
-                        chatList += temp[0][0].decode()
-                        chatList += "ㅤ"
-                        chatList += temp[0][1].decode()
-                        chatList += "ㅤ"
-                        chatList += voiceReturn
-                        chatList += "\n"
+                    chatList += member.name
+                    chatList += "ㅤ"
+                    chatList += member.discriminator
+                    chatList += "ㅤ"
+                    chatList += voiceReturn
+                    chatList += "\n"
+
+                # if (len(textReturn) != 0 and int(voiceReturn.split(":")[1]) < 30):
+                #     temp = DbSearch_member_byid(member.id)
+                #     if (len(temp) == 0):
+                #         chatList += member.name
+                #         chatList += "ㅤ"
+                #         chatList += member.discriminator
+                #         chatList += "ㅤ"
+                #         chatList += voiceReturn
+                #         chatList += "\n"
+                #     else:
+                #         chatList += temp[0][0].decode()
+                #         chatList += "ㅤ"
+                #         chatList += temp[0][1].decode()
+                #         chatList += "ㅤ"
+                #         chatList += voiceReturn
+                #         chatList += "\n"
 
         embed = discord.Embed(title="채팅만, 음성 30분 미만 유저",
                                         description=chatList,
