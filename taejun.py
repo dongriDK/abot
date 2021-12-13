@@ -172,13 +172,12 @@ def DbSearchtime(id, flag):
     con, cur = DbConnect()
 
     if (flag == 1):
-        print(id)
         cur.execute("SELECT ttime FROM user_info WHERE id=%s", (id,))
         ttime = cur.fetchall()
         try:
             ttime = ttime[0][0]
         except:
-            ttime = -1
+            ttime = 0
 
         return ttime
 
@@ -442,7 +441,7 @@ async def 채팅만2(ctx):
                 textReturn = DbSearchText_member(member.id)
                 voiceReturn = DbSearchtime(member.id, 1)
 
-                if (len(textReturn) != 0 and voiceReturn < 1800 and voiceReturn != -1):
+                if (len(textReturn) != 0 and voiceReturn < 1800):
                     chatList += member.name
                     chatList += "ㅤ"
                     chatList += member.discriminator
