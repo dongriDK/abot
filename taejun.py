@@ -209,7 +209,7 @@ def MakePageList(channel, list_):
         disc_list[page] += "\n"
         count += 1
         if (count % 20 == 0 or count == len(list_)):
-            pages[page] = discord.Embed(title = channel + " 입장 기록" + str(page + 1) + "/" + str(total_page), 
+            pages[page] = discord.Embed(title = channel + " 입장 기록 " + str(page + 1) + "/" + str(total_page), 
                                         description=disc_list[page], 
                                         color=0x00aaaa)
             page += 1
@@ -429,7 +429,6 @@ async def 벨튀(ctx, *args):
                 previous_page = current
                 if reaction.emoji == u"\u23EA":
                     current = 0
-
                 elif reaction.emoji == u"\u25C0":
                     if current > 0:
                         current -= 1
