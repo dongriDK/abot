@@ -485,6 +485,7 @@ async def 벨튀(ctx, *args):
         else:
             DbReturn = DbSearchbellrun(channel, time, con, cur)
 
+        print(DbReturn)
         pages = MakePageList(channel, DbReturn, 1)
 
         await Pages(ctx, pages)
