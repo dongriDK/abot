@@ -180,7 +180,7 @@ def DbSearchtime(id, flag, con, cur):
         ttime = cur.fetchall()
         return ttime[0][0], ttime[0][1]
 
-def MakePageList(channel, list_):
+def MakePageList(channel, list_, flag):
     disc_list = []
     pages = []
     total_page = len(list_) // 20 + 1 if len(list_) / 20 > len(list_) // 20 else len(list_) // 20
@@ -190,31 +190,78 @@ def MakePageList(channel, list_):
 
     count = 0
     page = 0 
-    for i in list_:
-        disc_list[page] += i[3].decode()
-        disc_list[page] += "ㅤ"
-        try:
-            becha = voiceChannels[i[1].decode()]
-        except:
-            becha = "없음"
-        disc_list[page] += becha
-        disc_list[page] += " -> "
-        try:
-            afcha = voiceChannels[i[2].decode()]
-        except:
-            afcha = "없음"
-        disc_list[page] += afcha
-        disc_list[page] += "ㅤ"
-        disc_list[page] += i[0].decode()
-        disc_list[page] += "\n"
-        count += 1
-        if (count % 20 == 0 or count == len(list_)):
-            pages[page] = discord.Embed(title = channel + " 입장 기록 " + str(page + 1) + "/" + str(total_page), 
-                                        description=disc_list[page], 
-                                        color=0x00aaaa)
-            page += 1
+    if flag == 1: # 벨튀
+        for i in list_:
+            disc_list[page] += i[3].decode()
+            disc_list[page] += "ㅤ"
+            try:
+                becha = voiceChannels[i[1].decode()]
+            except:
+                becha = "없음"
+            disc_list[page] += becha
+            disc_list[page] += " -> "
+            try:
+                afcha = voiceChannels[i[2].decode()]
+            except:
+                afcha = "없음"
+            disc_list[page] += afcha
+            disc_list[page] += "ㅤ"
+            disc_list[page] += i[0].decode()
+            disc_list[page] += "\n"
+            count += 1
+            if (count % 20 == 0 or count == len(list_)):
+                pages[page] = discord.Embed(title = channel + " 입장 기록 " + str(page + 1) + "/" + str(total_page), 
+                                            description=disc_list[page], 
+                                            color=0x00aaaa)
+                page += 1
+
+    elif flag == 2: # 채팅만2
+        for i in list_:
+            disc_list[page] += i
+            count += 1
+            if (count % 20 == 0 or count == len(list_)):
+                pages[page] = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
+                                            description=disc_list[page],
+                                            color=0x00aaaa)
+                page += 1
 
     return pages
+
+async def Pages(ctx, pages):
+    buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
+    current = 0
+    msg = await ctx.send(embed=pages[current])
+    for button in buttons:
+        await msg.add_reaction(button)
+
+    while True:
+        try:
+            reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
+
+        except asyncio.TimeoutError:
+            embed = pages[current]
+            embed.set_footer(text="Timed Out.")
+            await msg.clear_reactions()
+
+        else:
+            previous_page = current
+            if reaction.emoji == u"\u23EA":
+                current = 0
+
+            elif reaction.emoji == u"\u25C0":
+                if current > 0:
+                    current -= 1
+            elif reaction.emoji == u"\u25B6":
+                if current < len(pages) -1:
+                    current += 1
+            elif reaction.emoji == u"\u23E9":
+                current = len(pages) -1
+
+            for button in buttons:
+                await msg.remove_reaction(button, ctx.author)
+            if current != previous_page:
+                await msg.edit(embed=pages[current])
+    return
 
 def WhiteList(ctx):
     # if (ctx.author.name == "노우리"):
@@ -406,13 +453,14 @@ async def 벨튀(ctx, *args):
             embed = discord.Embed(description="!ㅌ 벨튀 [채널이름] [날짜]\n ex) !ㅌ 벨튀 랭크1 11.15")
             await ctx.channel.send(embed=embed)
         else:
-            VoiceList = ""
             DbReturn = DbSearchbellrun(channel, time, con, cur)
-        pages = MakePageList(channel, DbReturn)
+
+        pages = MakePageList(channel, DbReturn, 1)
 
         buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
         current = 0
         msg = await ctx.send(embed=pages[current])
+        
         for button in buttons:
             await msg.add_reaction(button)
 
@@ -481,24 +529,28 @@ async def 채팅만2(ctx):
     if WhiteList(ctx):
         await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
-        chatList = ""
+        chatList = []
         for member in guild.members:
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchtime(member.id, 1, con, cur)
 
                 if (len(textReturn) != 0 and voiceReturn < 1800):
-                    chatList += member.name
-                    chatList += "ㅤ"
-                    chatList += member.discriminator
-                    chatList += "ㅤ"
-                    chatList += str(datetime.timedelta(seconds=int(voiceReturn)))
-                    chatList += "\n"
+                    chat = ""
+                    chat += member.name
+                    chat += "ㅤ"
+                    chat += member.discriminator
+                    chat += "ㅤ"
+                    chat += str(datetime.timedelta(seconds=int(voiceReturn)))
+                    chatList.append(chat)
 
-        embed = discord.Embed(title="채팅 + 음성 30분 미만 유저",
-                                        description=chatList,
-                                        color=0x00aaaa)            
-        await ctx.channel.send(embed=embed)
+        pages = MakePageList(0, chatList, 2)
+        
+        Pages(ctx, pages)
+        # embed = discord.Embed(title="채팅 + 음성 30분 미만 유저",
+        #                                 description=chatList,
+        #                                 color=0x00aaaa)            
+        # await ctx.channel.send(embed=embed)
 
     # else:
     #     if (ctx.author.name == "노우리"):
