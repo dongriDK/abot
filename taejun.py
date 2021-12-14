@@ -219,7 +219,7 @@ def MakePageList(channel, list_, flag):
                                                 description="총 " + count + "명",
                                                 color=0x00aaaa)
                 page += 1
-                
+
     return pages
 
 async def Pages(ctx, pages):
