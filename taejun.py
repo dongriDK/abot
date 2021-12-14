@@ -201,20 +201,25 @@ def MakePageList(channel, list_, flag):
             count += 1
             if (count % 20 == 0 or count == len(list_)):
                 pages[page] = discord.Embed(title = channel + " 입장 기록 " + str(page + 1) + "/" + str(total_page), 
-                                            description=disc_list[page], 
+                                            description="총 " + count + "명" + disc_list[page], 
                                             color=0x00aaaa)
                 page += 1
 
-    elif flag == 2: # 채팅만2
+    else:
         for i in list_:
             disc_list[page] += i
             count += 1
             if (count % 20 == 0 or count == len(list_)):
-                pages[page] = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
-                                            description=disc_list[page],
-                                            color=0x00aaaa)
+                if (flag == 2): # 채팅만2
+                    pages[page] = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
+                                                description="총 " + count + "명" + disc_list[page],
+                                                color=0x00aaaa)
+                elif (flag == 3): # 인원정리
+                    pages[page] = discord.Embed(title = "유령회원 목록",
+                                                description="총 " + count + "명",
+                                                color=0x00aaaa)
                 page += 1
-
+                
     return pages
 
 async def Pages(ctx, pages):
@@ -236,7 +241,6 @@ async def Pages(ctx, pages):
             previous_page = current
             if reaction.emoji == u"\u23EA":
                 current = 0
-
             elif reaction.emoji == u"\u25C0":
                 if current > 0:
                     current -= 1
@@ -387,32 +391,35 @@ async def 인원정리(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
         await ctx.send("인원 정리중...")
-
+        ghostList = []
         guild = bot.get_guild(875392692014694450)
-        ghostList = ""
         for member in guild.members:
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
 
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
-                    temp = DbSearch_member_byid(member.id, con, cur)
-                    if (len(temp) == 0):
-                        ghostList += member.name
-                        ghostList += "ㅤ"
-                        ghostList += member.discriminator
-                        ghostList += "\n"
-                    else:
-                        ghostList += temp[0][0].decode()
-                        ghostList += "ㅤ"
-                        ghostList += temp[0][1].decode()
-                        ghostList += "\n"
+                    ghost = ""
+                    # temp = DbSearch_member_byid(member.id, con, cur)
+                    # if (len(temp) == 0):
+                    ghost += member.name
+                    ghost += "ㅤ"
+                    ghost += member.discriminator
+                    ghost += "\n"
+                    ghostList.append(ghost)
+                    # else:
+                    #     ghostList += temp[0][0].decode()
+                    #     ghostList += "ㅤ"
+                    #     ghostList += temp[0][1].decode()
+                    #     ghostList += "\n"
+        pages = MakePageList(member, ghostList, 3)
 
+        await pages(ctx, pages)
 
-        embed = discord.Embed(title="유령회원 목록",
-                                description=ghostList,
-                                color=0x00aaaa)            
-        await ctx.channel.send(embed=embed)
+        # embed = discord.Embed(title="유령회원 목록",
+        #                         description=ghostList,
+        #                         color=0x00aaaa)            
+        # await ctx.channel.send(embed=embed)
 
         return
     
@@ -444,38 +451,7 @@ async def 벨튀(ctx, *args):
 
         pages = MakePageList(channel, DbReturn, 1)
 
-        current = 0
-        msg = await ctx.send(embed=pages[current])
-        
-        for button in buttons:
-            await msg.add_reaction(button)
-
-        while True:
-            try:
-                reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
-
-            except asyncio.TimeoutError:
-                embed = pages[current]
-                embed.set_footer(text="Timed Out.")
-                await msg.clear_reactions()
-
-            else:
-                previous_page = current
-                if reaction.emoji == u"\u23EA":
-                    current = 0
-                elif reaction.emoji == u"\u25C0":
-                    if current > 0:
-                        current -= 1
-                elif reaction.emoji == u"\u25B6":
-                    if current < len(pages) -1:
-                        current += 1
-                elif reaction.emoji == u"\u23E9":
-                    current = len(pages) -1
-
-                for button in buttons:
-                    await msg.remove_reaction(button, ctx.author)
-                if current != previous_page:
-                    await msg.edit(embed=pages[current])
+        await Pages(ctx, pages)
 
     return 
     
