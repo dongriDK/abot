@@ -1,16 +1,14 @@
 # -*- coding:utf-8 -*-
 import discord
 import asyncio
-from discord.ext import commands
-from datetime import datetime
-import datetime
-from math import trunc
 import time
-# from discord.ext.commands.core import Command
-from discord.ext.commands.errors import CommandInvokeError
-from discord.ext.commands import CommandNotFound
+import datetime
 import mysql.connector
 import os
+from discord.ext import commands
+from datetime import datetime
+from discord.ext.commands.errors import CommandInvokeError
+from discord.ext.commands import CommandNotFound
 
 intents = discord.Intents.default()
 intents.members = True
@@ -220,7 +218,6 @@ def MakePageList(channel, list_, flag):
     return pages
 
 async def Pages(ctx, pages):
-    buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
     current = 0
     msg = await ctx.send(embed=pages[current])
     for button in buttons:
@@ -518,6 +515,7 @@ async def 채팅만(ctx):
 async def 채팅만2(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
+        loop = asyncio.new_event_loop()
         await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = []
@@ -538,7 +536,7 @@ async def 채팅만2(ctx):
 
         pages = MakePageList(0, chatList, 2)
 
-        await Pages(ctx, pages)
+        loop.run_until_complete(Pages(ctx, pages))
         # current = 0
         # msg = await ctx.send(embed=pages[current])
         # for button in buttons:
