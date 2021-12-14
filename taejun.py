@@ -414,7 +414,7 @@ async def 인원정리(ctx):
                     #     ghostList += "\n"
         pages = MakePageList(member, ghostList, 3)
 
-        await pages(ctx, pages)
+        await Pages(ctx, pages)
 
         # embed = discord.Embed(title="유령회원 목록",
         #                         description=ghostList,
