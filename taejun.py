@@ -34,7 +34,7 @@ config = {
     'database' : os.environ["database"],
     'raise_on_warnings' : True
 }
-
+buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
     mon = str(time.localtime(time.time() + 32400).tm_mon)
@@ -457,7 +457,6 @@ async def 벨튀(ctx, *args):
 
         pages = MakePageList(channel, DbReturn, 1)
 
-        buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
         current = 0
         msg = await ctx.send(embed=pages[current])
         
@@ -546,11 +545,38 @@ async def 채팅만2(ctx):
 
         pages = MakePageList(0, chatList, 2)
         
-        Pages(ctx, pages)
-        # embed = discord.Embed(title="채팅 + 음성 30분 미만 유저",
-        #                                 description=chatList,
-        #                                 color=0x00aaaa)            
-        # await ctx.channel.send(embed=embed)
+        current = 0
+        msg = await ctx.send(embed=pages[current])
+        for button in buttons:
+            await msg.add_reaction(button)
+
+        while True:
+            try:
+                reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
+
+            except asyncio.TimeoutError:
+                embed = pages[current]
+                embed.set_footer(text="Timed Out.")
+                await msg.clear_reactions()
+
+            else:
+                previous_page = current
+                if reaction.emoji == u"\u23EA":
+                    current = 0
+
+                elif reaction.emoji == u"\u25C0":
+                    if current > 0:
+                        current -= 1
+                elif reaction.emoji == u"\u25B6":
+                    if current < len(pages) -1:
+                        current += 1
+                elif reaction.emoji == u"\u23E9":
+                    current = len(pages) -1
+
+                for button in buttons:
+                    await msg.remove_reaction(button, ctx.author)
+                if current != previous_page:
+                    await msg.edit(embed=pages[current])
 
     # else:
     #     if (ctx.author.name == "노우리"):
