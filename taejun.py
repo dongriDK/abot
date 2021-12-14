@@ -307,7 +307,6 @@ async def on_command_error(ctx, error):
 @bot.event
 async def on_member_join(member):
     con, cur = DbConnect()
-    print(member, "입장")
     cur.execute("SELECT count from login where id=%s", (member.id,))
     count = cur.fetchall()
     if len(count) == 0:
@@ -315,7 +314,6 @@ async def on_member_join(member):
         con.commit()
     elif count[0][0] == 2:
         channel = bot.get_channel(894545802247159808)
-        print("AAAA")
         ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
         await channel.send(ret)
         await channel.send(ret)
@@ -485,7 +483,6 @@ async def 벨튀(ctx, *args):
         else:
             DbReturn = DbSearchbellrun(channel, time, con, cur)
 
-        print(DbReturn)
         pages = MakePageList(channel, DbReturn, 1)
 
         await Pages(ctx, pages)
