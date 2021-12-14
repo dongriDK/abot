@@ -131,13 +131,13 @@ def DbSearch_member_byid(id, con, cur):
 
     return cur.fetchall()
 
-async def DbSearchText_member(id, con, cur):
+def DbSearchText_member(id, con, cur):
     cur.execute("SELECT * from Text_info where id=%s order by time desc limit 10", (id,))
     textList = cur.fetchall()
 
     return textList
 
-async def DbSearchVoice_member(id, con, cur):
+def DbSearchVoice_member(id, con, cur):
     cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 10", (id,))
     voiceList = cur.fetchall()
 
