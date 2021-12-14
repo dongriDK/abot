@@ -216,7 +216,7 @@ def MakePageList(channel, list_, flag):
                                                 description="총 " + str(total_len) + "명\n" + disc_list[page],
                                                 color=0x00aaaa)
                 elif (flag == 3): # 인원정리
-                    pages[page] = discord.Embed(title = "유령회원 목록",
+                    pages[page] = discord.Embed(title = "유령회원 목록" + str(page + 1) + "/" + str(total_page),
                                                 description="총 " + str(total_len) + "명\n",
                                                 color=0x00aaaa)
                 page += 1
@@ -307,10 +307,11 @@ async def on_command_error(ctx, error):
 async def 초기화(ctx):
     if WhiteList(ctx):
         embed = discord.Embed(description="초기화 중입니다... \n잠시만 기다려주세요...")
-        await ctx.send(embed=embed)
+        msg = await ctx.send(embed=embed)
         DbInit()
         embed = discord.Embed(description="초기화가 완료되었습니다.")
         await ctx.send(embed=embed)
+        await msg.delete()
         return
     
     # else:
@@ -391,7 +392,7 @@ async def 검색(ctx, *args):
 async def 인원정리(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
-        await ctx.send("인원 정리중...")
+        msg = await ctx.send("인원 정리중...")
         ghostList = []
         guild = bot.get_guild(875392692014694450)
         count = 0
@@ -400,9 +401,9 @@ async def 인원정리(ctx):
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
 
+                print(count, len(guild.members))
+                count += 1
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
-                    print(count, len(guild.members))
-                    count += 1
                     ghost = ""
                     temp = DbSearch_member_byid(member.id, con, cur)
                     if (len(temp) == 0):
@@ -421,6 +422,7 @@ async def 인원정리(ctx):
         pages = MakePageList(member, ghostList, 3)
 
         await Pages(ctx, pages)
+        await msg.delete()
 
         # embed = discord.Embed(title="유령회원 목록",
         #                         description=ghostList,
@@ -497,7 +499,7 @@ async def 채팅만2(ctx):
     if WhiteList(ctx):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        await ctx.send("채팅, 음성기록 정리중...")
+        msg = await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = []
         for member in guild.members:
@@ -518,6 +520,7 @@ async def 채팅만2(ctx):
         pages = MakePageList(0, chatList, 2)
 
         await Pages(ctx, pages)
+        await msg.delete()
         # current = 0
         # msg = await ctx.send(embed=pages[current])
         # for button in buttons:
