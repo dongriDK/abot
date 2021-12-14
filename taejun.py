@@ -515,6 +515,7 @@ async def 채팅만2(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
         loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
         await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = []
