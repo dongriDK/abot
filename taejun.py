@@ -216,8 +216,8 @@ def MakePageList(channel, list_, flag):
                                                 description="총 " + str(total_len) + "명\n" + disc_list[page],
                                                 color=0x00aaaa)
                 elif (flag == 3): # 인원정리
-                    pages[page] = discord.Embed(title = "유령회원 목록" + str(page + 1) + "/" + str(total_page),
-                                                description="총 " + str(total_len) + "명\n",
+                    pages[page] = discord.Embed(title = "유령회원 목록 " + str(page + 1) + "/" + str(total_page),
+                                                description="총 " + str(total_len) + "명\n" + disc_list[page],
                                                 color=0x00aaaa)
                 page += 1
 
@@ -401,8 +401,6 @@ async def 인원정리(ctx):
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
 
-                print(count, len(guild.members))
-                count += 1
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
                     ghost = ""
                     temp = DbSearch_member_byid(member.id, con, cur)
@@ -418,11 +416,10 @@ async def 인원정리(ctx):
                         ghost += temp[0][1].decode()
                         ghost += "\n"
                         ghostList.append(ghost)
-        print(ghostList)
         pages = MakePageList(member, ghostList, 3)
 
-        await Pages(ctx, pages)
         await msg.delete()
+        await Pages(ctx, pages) 
 
         # embed = discord.Embed(title="유령회원 목록",
         #                         description=ghostList,
@@ -519,8 +516,8 @@ async def 채팅만2(ctx):
 
         pages = MakePageList(0, chatList, 2)
 
-        await Pages(ctx, pages)
         await msg.delete()
+        await Pages(ctx, pages)
         # current = 0
         # msg = await ctx.send(embed=pages[current])
         # for button in buttons:
