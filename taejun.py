@@ -446,7 +446,7 @@ async def 채팅만2(ctx):
                     chatList += str(datetime.timedelta(seconds=int(voiceReturn)))
                     chatList += "\n"
 
-        embed = discord.Embed(title="채팅만, 음성 30분 미만 유저",
+        embed = discord.Embed(title="채팅 + 음성 30분 미만 유저",
                                         description=chatList,
                                         color=0x00aaaa)            
         await ctx.channel.send(embed=embed)
