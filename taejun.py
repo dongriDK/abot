@@ -183,7 +183,7 @@ def MakePageList(channel, list_, flag):
     if flag == 1: # 벨튀
         for i in list_:
             disc_list[page] += i[3].decode()
-            disc_list[page] += "ㅤ"
+            disc_list[page] += " ㅤ"
             try:
                 becha = voiceChannels[i[1].decode()]
             except:
@@ -195,7 +195,7 @@ def MakePageList(channel, list_, flag):
             except:
                 afcha = "없음"
             disc_list[page] += afcha
-            disc_list[page] += "ㅤ"
+            disc_list[page] += " ㅤ"
             disc_list[page] += i[0].decode()
             disc_list[page] += "\n"
             count += 1
@@ -350,24 +350,24 @@ async def 검색(ctx, *args):
             textAnswer += "총 채팅 수 : " + str(ttext) + "\n"
             for j in textReturn:
                 textAnswer += j[3].decode()
-                textAnswer += "ㅤ"
+                textAnswer += " ㅤ"
                 textAnswer += voiceChannels[j[2].decode()]
-                textAnswer += "ㅤ"
+                textAnswer += " ㅤ"
                 textAnswer += j[1].decode()
                 textAnswer += "\n"
                 textFlag = True
             voiceAnswer += "음성채널 누적 시간 : " + str(datetime.timedelta(seconds=int(ttime))) + "\n"
             for j in voiceReturn:
                 voiceAnswer += j[3].decode()
-                voiceAnswer += "ㅤ"
+                voiceAnswer += " ㅤ"
                 try:
-                    becha = voiceChannels[j[1].decode()]
+                    becha = voiceChannels[j[1].decode()] + " "
                 except:
                     becha = "없음"
                 voiceAnswer += becha
                 voiceAnswer += " -> "
                 try:
-                    afcha = voiceChannels[j[2].decode()]
+                    afcha = voiceChannels[j[2].decode()] + " "
                 except:
                     afcha = "없음"
                 voiceAnswer += afcha
@@ -404,13 +404,13 @@ async def 인원정리(ctx):
                     temp = DbSearch_member_byid(member.id, con, cur)
                     if (len(temp) == 0):
                         ghost += member.name
-                        ghost += "ㅤ"
+                        ghost += " ㅤ"
                         ghost += member.discriminator
                         ghost += "\n"
                         ghostList.append(ghost)
                     else:
                         ghost += temp[0][0].decode()
-                        ghost += "ㅤ"
+                        ghost += " ㅤ"
                         ghost += temp[0][1].decode()
                         ghost += "\n"
                         ghostList.append(ghost)
@@ -474,7 +474,7 @@ async def 채팅만(ctx):
 
                 if (len(textReturn) != 0 and len(voiceReturn) == 0):
                     chatList += member.name
-                    chatList += "ㅤ"
+                    chatList += " ㅤ"
                     chatList += member.discriminator
                     chatList += "\n"
 
@@ -501,9 +501,9 @@ async def 채팅만2(ctx):
                 if (len(textReturn) != 0 and voiceReturn < 1800):
                     chat = ""
                     chat += member.name
-                    chat += "ㅤ"
+                    chat += " ㅤ"
                     chat += member.discriminator
-                    chat += "ㅤ"
+                    chat += " ㅤ"
                     chat += str(datetime.timedelta(seconds=int(voiceReturn)))
                     chat += "\n"
                     chatList.append(chat)
