@@ -173,7 +173,8 @@ def DbSearchtime(id, flag, con, cur):
 def MakePageList(channel, list_, flag):
     disc_list = []
     pages = []
-    total_page = len(list_) // 20 + 1 if len(list_) / 20 > len(list_) // 20 else len(list_) // 20
+    total_len = len(list_)
+    total_page = total_len // 20 + 1 if total_len / 20 > total_len // 20 else total_len // 20
     for i in range(total_page):
         disc_list.append("")
         pages.append("")
@@ -199,9 +200,9 @@ def MakePageList(channel, list_, flag):
             disc_list[page] += i[0].decode()
             disc_list[page] += "\n"
             count += 1
-            if (count % 20 == 0 or count == len(list_)):
+            if (count % 20 == 0 or count == total_len):
                 pages[page] = discord.Embed(title = channel + " 입장 기록 " + str(page + 1) + "/" + str(total_page), 
-                                            description="총 " + str(count) + "명" + disc_list[page], 
+                                            description="총 " + str(total_len) + "명\n" + disc_list[page], 
                                             color=0x00aaaa)
                 page += 1
 
@@ -209,14 +210,14 @@ def MakePageList(channel, list_, flag):
         for i in list_:
             disc_list[page] += i
             count += 1
-            if (count % 20 == 0 or count == len(list_)):
+            if (count % 20 == 0 or count == total_len):
                 if (flag == 2): # 채팅만2
                     pages[page] = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
-                                                description="총 " + str(count) + "명" + disc_list[page],
+                                                description="총 " + str(total_len) + "명\n" + disc_list[page],
                                                 color=0x00aaaa)
                 elif (flag == 3): # 인원정리
                     pages[page] = discord.Embed(title = "유령회원 목록",
-                                                description="총 " + str(count) + "명",
+                                                description="총 " + str(total_len) + "명\n",
                                                 color=0x00aaaa)
                 page += 1
 
@@ -400,18 +401,19 @@ async def 인원정리(ctx):
 
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
                     ghost = ""
-                    # temp = DbSearch_member_byid(member.id, con, cur)
-                    # if (len(temp) == 0):
-                    ghost += member.name
-                    ghost += "ㅤ"
-                    ghost += member.discriminator
-                    ghost += "\n"
-                    ghostList.append(ghost)
-                    # else:
-                    #     ghostList += temp[0][0].decode()
-                    #     ghostList += "ㅤ"
-                    #     ghostList += temp[0][1].decode()
-                    #     ghostList += "\n"
+                    temp = DbSearch_member_byid(member.id, con, cur)
+                    if (len(temp) == 0):
+                        ghost += member.name
+                        ghost += "ㅤ"
+                        ghost += member.discriminator
+                        ghost += "\n"
+                        ghostList.append(ghost)
+                    else:
+                        ghost += temp[0][0].decode()
+                        ghost += "ㅤ"
+                        ghost += temp[0][1].decode()
+                        ghost += "\n"
+                        ghostList.append(ghost)
         pages = MakePageList(member, ghostList, 3)
 
         await Pages(ctx, pages)
