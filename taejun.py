@@ -235,8 +235,8 @@ async def Pages(ctx, pages):
 
         except asyncio.TimeoutError:
             embed = pages[current]
-            embed.set_footer(text="Timed Out.")
             await msg.clear_reactions()
+            embed.set_footer(text="Timed Out.")
 
         else:
             previous_page = current
