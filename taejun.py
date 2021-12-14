@@ -219,21 +219,21 @@ def MakePageList(channel, list_, flag):
 
     return pages
 
-def Pages(ctx, pages):
+async def Pages(ctx, pages):
     buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
     current = 0
-    msg = ctx.send(embed=pages[current])
+    msg = await ctx.send(embed=pages[current])
     for button in buttons:
-        msg.add_reaction(button)
+        await msg.add_reaction(button)
 
     while True:
         try:
-            reaction, user = bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
+            reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
 
         except asyncio.TimeoutError:
             embed = pages[current]
             embed.set_footer(text="Timed Out.")
-            msg.clear_reactions()
+            await msg.clear_reactions()
 
         else:
             previous_page = current
@@ -250,9 +250,9 @@ def Pages(ctx, pages):
                 current = len(pages) -1
 
             for button in buttons:
-                msg.remove_reaction(button, ctx.author)
+                await msg.remove_reaction(button, ctx.author)
             if current != previous_page:
-                msg.edit(embed=pages[current])
+                await msg.edit(embed=pages[current])
     return
 
 def WhiteList(ctx):
@@ -537,7 +537,8 @@ async def 채팅만2(ctx):
                     chatList.append(chat)
 
         pages = MakePageList(0, chatList, 2)
-        Pages(ctx, pages)
+
+        await Pages(ctx, pages)
         # current = 0
         # msg = await ctx.send(embed=pages[current])
         # for button in buttons:
