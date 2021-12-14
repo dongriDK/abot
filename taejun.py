@@ -541,6 +541,7 @@ async def 채팅만2(ctx):
                     chat += member.discriminator
                     chat += "ㅤ"
                     chat += str(datetime.timedelta(seconds=int(voiceReturn)))
+                    chat += "\n"
                     chatList.append(chat)
 
         pages = MakePageList(0, chatList, 2)
