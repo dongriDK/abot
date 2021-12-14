@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import discord
+import asyncio
 from discord.ext import commands
 from datetime import datetime
 import datetime
@@ -100,13 +101,10 @@ def DbModify_voice(member, before, after, con, cur):
 
         if (beChannel != "없음"):
             year = str(time.localtime(time.time() + 32400).tm_year)
-            print(member.id)
-            print(beChannel)
-            print(afChannel)
+
             cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
             ret = cur.fetchall()
 
-            print(ret)
             oldTime = ret[0][0].decode()
             oldTime = year + "." + oldTime
             new_Time = year + "." + newTime
@@ -182,6 +180,41 @@ def DbSearchtime(id, flag, con, cur):
         ttime = cur.fetchall()
         return ttime[0][0], ttime[0][1]
 
+def MakePageList(channel, list_):
+    disc_list = []
+    pages = []
+    total_page = len(list_) // 20 + 1 if len(list_) / 20 > len(list_) // 20 else len(list_) // 20
+    for i in range(total_page):
+        disc_list.append("")
+        pages.append("")
+
+    count = 0
+    page = 0 
+    for i in list_:
+        disc_list[page] += i[3].decode()
+        disc_list[page] += "ㅤ"
+        try:
+            becha = voiceChannels[i[1].decode()]
+        except:
+            becha = "없음"
+        disc_list[page] += becha
+        disc_list[page] += " -> "
+        try:
+            afcha = voiceChannels[i[2].decode()]
+        except:
+            afcha = "없음"
+        disc_list[page] += afcha
+        disc_list[page] += "ㅤ"
+        disc_list[page] += i[0].decode()
+        disc_list[page] += "\n"
+        count += 1
+        if (count % 20 == 0 or count == len(list_)):
+            pages[page] = discord.Embed(title = channel + " 입장 기록" + str(page + 1) + "/" + str(total_page), 
+                                        description=disc_list[page], 
+                                        color=0x00aaaa)
+            page += 1
+
+    return pages
 
 def WhiteList(ctx):
     # if (ctx.author.name == "노우리"):
@@ -190,6 +223,8 @@ def WhiteList(ctx):
         if (i.name == "STAFF"):
             return True
     return False
+
+
 
 @bot.event
 async def on_ready():
@@ -373,28 +408,43 @@ async def 벨튀(ctx, *args):
         else:
             VoiceList = ""
             DbReturn = DbSearchbellrun(channel, time, con, cur)
-            for i in DbReturn:
-                VoiceList += i[3].decode()
-                VoiceList += "ㅤ"
-                try:
-                    becha = voiceChannels[i[1].decode()]
-                except:
-                    becha = "없음"
-                VoiceList += becha
-                VoiceList += " -> "
-                try:    
-                    afcha = voiceChannels[i[2].decode()]
-                except:
-                    afcha = "없음"
-                VoiceList += afcha
-                VoiceList += "ㅤ"
-                VoiceList += i[0].decode()
-                VoiceList += "\n"
-            embed = discord.Embed(title=channel + " 입장 기록",
-                                    description=VoiceList,
-                                    color=0x00aaaa)
-            await ctx.channel.send(embed=embed)
-        return 
+        pages = MakePageList(channel, DbReturn)
+
+        buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
+        current = 0
+        msg = await ctx.send(embed=pages[current])
+        for button in buttons:
+            await msg.add_reaction(button)
+
+        while True:
+            try:
+                reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
+
+            except asyncio.TimeoutError:
+                embed = pages[current]
+                embed.set_footer(text="Timed Out.")
+                await msg.clear_reactions()
+
+            else:
+                previous_page = current
+                if reaction.emoji == u"\u23EA":
+                    current = 0
+
+                elif reaction.emoji == u"\u25C0":
+                    if current > 0:
+                        current -= 1
+                elif reaction.emoji == u"\u25B6":
+                    if current < len(pages) -1:
+                        current += 1
+                elif reaction.emoji == u"\u23E9":
+                    current = len(pages) -1
+
+                for button in buttons:
+                    await msg.remove_reaction(button, ctx.author)
+                if current != previous_page:
+                    await msg.edit(embed=pages[current])
+
+    return 
     
     # else:
     #     if (ctx.author.name == "노우리"):
