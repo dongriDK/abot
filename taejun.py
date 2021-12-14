@@ -201,7 +201,7 @@ def MakePageList(channel, list_, flag):
             count += 1
             if (count % 20 == 0 or count == len(list_)):
                 pages[page] = discord.Embed(title = channel + " 입장 기록 " + str(page + 1) + "/" + str(total_page), 
-                                            description="총 " + count + "명" + disc_list[page], 
+                                            description="총 " + str(count) + "명" + disc_list[page], 
                                             color=0x00aaaa)
                 page += 1
 
@@ -212,11 +212,11 @@ def MakePageList(channel, list_, flag):
             if (count % 20 == 0 or count == len(list_)):
                 if (flag == 2): # 채팅만2
                     pages[page] = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
-                                                description="총 " + count + "명" + disc_list[page],
+                                                description="총 " + str(count) + "명" + disc_list[page],
                                                 color=0x00aaaa)
                 elif (flag == 3): # 인원정리
                     pages[page] = discord.Embed(title = "유령회원 목록",
-                                                description="총 " + count + "명",
+                                                description="총 " + str(count) + "명",
                                                 color=0x00aaaa)
                 page += 1
 
