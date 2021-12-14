@@ -6,7 +6,6 @@ import datetime
 import mysql.connector
 import os
 from discord.ext import commands
-from datetime import datetime
 from discord.ext.commands.errors import CommandInvokeError
 from discord.ext.commands import CommandNotFound
 
