@@ -101,8 +101,10 @@ def DbModify_voice(member, before, after, con, cur):
 
             cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
             ret = cur.fetchall()
-
-            oldTime = ret[0][0].decode()
+            try:
+                oldTime = ret[0][0].decode()
+            except:
+                oldTime = CurTime()
             oldTime = year + "." + oldTime
             new_Time = year + "." + newTime
 
