@@ -21,7 +21,7 @@ voiceChannels = {"수다방":"👥＿수다방＿٩( ᐛ )", "스트리밍1":"�
                     "기타게임방2":"🌙＿기타게임방2", "히드라전용＊감상":"🎧＿히드라전용＊감상", "하리보전용＊감상":"🎧＿하리보전용＊감상", "회의":"회의＿운영진맨날모여!쫄?",
                     "자유채팅방":"💬＿자유채팅방", "에펙＊구인방":"📝＿에펙＊구인방", "에펙＊닉넴방":"🚀＿에펙＊닉넴방", "에펙＊자랑방":"👑＿에펙＊자랑방",
                     "일상＆게임사진방":"📸＿일상＆게임사진방", "스트리밍채팅방":"💬＿스트리밍채팅방", "히드라＊노래추가":"🎵＿히드라＊노래추가",
-                    "하리보＊노래추가":"🎵＿하리보＊노래추가", "채팅방":"운영＿채팅방", "인원기록＆관리":"운영＿인원기록＆관리", "탈주자관리":"운영＿탈주자관리",
+                    "하리보＊노래추가":"🎵＿하리보＊노래추가", "채팅방":"운영＿채팅방", "인원기록＆관리":"운영＿인원기록＆관리", "탈주자관리":"운영＿탈주자관리", "인원정리공유":"운영＿인원정리공유",
                     "태준이방":"운영＿태준이방", "신입가입양식":"운영＿신입가입양식", "잠수":"🌛💤＿잠수＿쿨쿨", "봇사용＊기본":"👾＿봇사용＊기본", "봇사용＊마냥":"🐱＿봇사용＊마냥",
                     "운영진맨날모여!쫄?":"회의＿운영진맨날모여!쫄?"}
 config = {
@@ -230,7 +230,7 @@ async def Pages(ctx, pages):
 
     while True:
         try:
-            reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
+            reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=90.0)
 
         except asyncio.TimeoutError:
             embed = pages[current]
@@ -305,28 +305,35 @@ async def on_command_error(ctx, error):
 @bot.event
 async def on_member_join(member):
     con, cur = DbConnect()
+    print(member, "입장")
     cur.execute("SELECT count from login where id=%s", (member.id,))
     count = cur.fetchall()
-    if count == 2:
-        print("A")
+    if len(count) == 0:
+        cur.execute("INSERT INTO login(id, name, tag, count) VALUES(%s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1))
+        con.commit()
+    elif count[0][0] == 2:
+        channel = bot.get_channel(894545802247159808)
+        print("AAAA")
+        ret = str(member.name) + str(member.discriminator) + "서버 재입장 3회 탐지"
+        await channel.send(ret)
     else:
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
         con.commit()
 
-@bot.command()
-async def 업데이트(ctx):
-    if WhiteList(ctx):
-        guild = bot.get_guild(875392692014694450)
-        for member in guild.members:
-            if(member.bot != True):
-                print(member)
-                con, cur = DbConnect()
-                try:
-                    cur.execute("INSERT INTO login(id, name, tag, count) VALUES(%s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1))
-                    con.commit()
-                except:
-                    print("error", member)
-                    pass
+# @bot.command()
+# async def 업데이트(ctx):
+#     if WhiteList(ctx):
+#         guild = bot.get_guild(875392692014694450)
+#         for member in guild.members:
+#             if(member.bot != True):
+#                 print(member)
+#                 con, cur = DbConnect()
+#                 try:
+#                     cur.execute("INSERT INTO login(id, name, tag, count) VALUES(%s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1))
+#                     con.commit()
+#                 except:
+#                     print("error", member)
+#                     pass
                 
 
 @bot.command()
