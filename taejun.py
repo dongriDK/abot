@@ -302,6 +302,10 @@ async def on_command_error(ctx, error):
         await ctx.channel.send(embed=embed)
     raise error
 
+@bot.event
+async def on_member_join(member):
+    print(member)
+
 @bot.command()
 async def 초기화(ctx):
     if WhiteList(ctx):
