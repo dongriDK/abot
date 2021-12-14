@@ -123,43 +123,35 @@ def DbModify_voice(member, before, after, con, cur):
     return 0
 
 def DbSearch_member(name, tag, con, cur):
-    # con, cur = DbConnect()
-
     cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
     memberId = cur.fetchall()
+
     return memberId
 
 def DbSearch_member_byid(id, con, cur):
-    # con, cur = DbConnect()
-
     cur.execute("SELECT name, tag from User_info where id=%s", (id,))
+
     return cur.fetchall()
 
-def DbSearchText_member(id, con, cur):
-    # con, cur = DbConnect()
-
+async def DbSearchText_member(id, con, cur):
     cur.execute("SELECT * from Text_info where id=%s order by time desc limit 10", (id,))
     textList = cur.fetchall()
+
     return textList
 
-def DbSearchVoice_member(id, con, cur):
-    # con, cur = DbConnect() 
-
+async def DbSearchVoice_member(id, con, cur):
     cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 10", (id,))
     voiceList = cur.fetchall()
+
     return voiceList
 
 def DbSearchbellrun(channel, time, con, cur):
-    # con, cur = DbConnect()  
-
     cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like %s and (Voice_info.before_channel like %s or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channel, channel))
     channelList = cur.fetchall()
 
     return channelList
 
 def DbSearchtime(id, flag, con, cur):
-    # con, cur = DbConnect()
-
     if (flag == 1):
         cur.execute("SELECT ttime FROM user_info WHERE id=%s", (id,))
         ttime = cur.fetchall()
@@ -227,21 +219,21 @@ def MakePageList(channel, list_, flag):
 
     return pages
 
-async def Pages(ctx, pages):
+def Pages(ctx, pages):
     buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
     current = 0
-    msg = await ctx.send(embed=pages[current])
+    msg = ctx.send(embed=pages[current])
     for button in buttons:
-        await msg.add_reaction(button)
+        msg.add_reaction(button)
 
     while True:
         try:
-            reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
+            reaction, user = bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
 
         except asyncio.TimeoutError:
             embed = pages[current]
             embed.set_footer(text="Timed Out.")
-            await msg.clear_reactions()
+            msg.clear_reactions()
 
         else:
             previous_page = current
@@ -258,9 +250,9 @@ async def Pages(ctx, pages):
                 current = len(pages) -1
 
             for button in buttons:
-                await msg.remove_reaction(button, ctx.author)
+                msg.remove_reaction(button, ctx.author)
             if current != previous_page:
-                await msg.edit(embed=pages[current])
+                msg.edit(embed=pages[current])
     return
 
 def WhiteList(ctx):
@@ -545,39 +537,39 @@ async def 채팅만2(ctx):
                     chatList.append(chat)
 
         pages = MakePageList(0, chatList, 2)
-        
-        current = 0
-        msg = await ctx.send(embed=pages[current])
-        for button in buttons:
-            await msg.add_reaction(button)
+        Pages(ctx, pages)
+        # current = 0
+        # msg = await ctx.send(embed=pages[current])
+        # for button in buttons:
+        #     await msg.add_reaction(button)
 
-        while True:
-            try:
-                reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
+        # while True:
+        #     try:
+        #         reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
 
-            except asyncio.TimeoutError:
-                embed = pages[current]
-                embed.set_footer(text="Timed Out.")
-                await msg.clear_reactions()
+        #     except asyncio.TimeoutError:
+        #         embed = pages[current]
+        #         embed.set_footer(text="Timed Out.")
+        #         await msg.clear_reactions()
 
-            else:
-                previous_page = current
-                if reaction.emoji == u"\u23EA":
-                    current = 0
+        #     else:
+        #         previous_page = current
+        #         if reaction.emoji == u"\u23EA":
+        #             current = 0
 
-                elif reaction.emoji == u"\u25C0":
-                    if current > 0:
-                        current -= 1
-                elif reaction.emoji == u"\u25B6":
-                    if current < len(pages) -1:
-                        current += 1
-                elif reaction.emoji == u"\u23E9":
-                    current = len(pages) -1
+        #         elif reaction.emoji == u"\u25C0":
+        #             if current > 0:
+        #                 current -= 1
+        #         elif reaction.emoji == u"\u25B6":
+        #             if current < len(pages) -1:
+        #                 current += 1
+        #         elif reaction.emoji == u"\u23E9":
+        #             current = len(pages) -1
 
-                for button in buttons:
-                    await msg.remove_reaction(button, ctx.author)
-                if current != previous_page:
-                    await msg.edit(embed=pages[current])
+        #         for button in buttons:
+        #             await msg.remove_reaction(button, ctx.author)
+        #         if current != previous_page:
+        #             await msg.edit(embed=pages[current])
 
     # else:
     #     if (ctx.author.name == "노우리"):
