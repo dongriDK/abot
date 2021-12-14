@@ -356,6 +356,7 @@ async def 인원정리(ctx):
 
 @bot.command()
 async def 벨튀(ctx, *args):
+    con, cur = DbConnect()
     if WhiteList(ctx):
         try:
             channel = args[0]
@@ -371,7 +372,7 @@ async def 벨튀(ctx, *args):
             await ctx.channel.send(embed=embed)
         else:
             VoiceList = ""
-            DbReturn = DbSearchbellrun(channel, time)
+            DbReturn = DbSearchbellrun(channel, time, con, cur)
             for i in DbReturn:
                 VoiceList += i[3].decode()
                 VoiceList += "ㅤ"
@@ -404,14 +405,15 @@ async def 벨튀(ctx, *args):
 
 @bot.command()
 async def 채팅만(ctx):
+    con, cur = DbConnect()
     if WhiteList(ctx):
         await ctx.send("채팅기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = ""
         for member in guild.members:
             if (member.bot != True):
-                textReturn = DbSearchText_member(member.id)
-                voiceReturn = DbSearchVoice_member(member.id)
+                textReturn = DbSearchText_member(member.id, con, cur)
+                voiceReturn = DbSearchVoice_member(member.id, con, cur)
 
                 if (len(textReturn) != 0 and len(voiceReturn) == 0):
                     chatList += member.name
@@ -426,14 +428,15 @@ async def 채팅만(ctx):
     
 @bot.command()
 async def 채팅만2(ctx):
+    con, cur = DbConnect()
     if WhiteList(ctx):
         await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = ""
         for member in guild.members:
             if (member.bot != True):
-                textReturn = DbSearchText_member(member.id)
-                voiceReturn = DbSearchtime(member.id, 1)
+                textReturn = DbSearchText_member(member.id, con, cur)
+                voiceReturn = DbSearchtime(member.id, 1, con, cur)
 
                 if (len(textReturn) != 0 and voiceReturn < 1800):
                     chatList += member.name
