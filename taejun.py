@@ -8,6 +8,7 @@ import os
 from discord.ext import commands
 from discord.ext.commands.errors import CommandInvokeError
 from discord.ext.commands import CommandNotFound
+from discord.ext import tasks
 
 intents = discord.Intents.default()
 intents.members = True
@@ -258,8 +259,6 @@ def WhiteList(ctx):
         if (i.name == "STAFF"):
             return True
     return False
-
-
 
 @bot.event
 async def on_ready():
@@ -536,7 +535,7 @@ async def 채팅만2(ctx):
 
         pages = MakePageList(0, chatList, 2)
 
-        loop.run_until_complete(Pages(ctx, pages))
+        await Pages(ctx, pages)
         # current = 0
         # msg = await ctx.send(embed=pages[current])
         # for button in buttons:
