@@ -394,12 +394,15 @@ async def 인원정리(ctx):
         await ctx.send("인원 정리중...")
         ghostList = []
         guild = bot.get_guild(875392692014694450)
+        count = 0
         for member in guild.members:
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
 
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
+                    print(count, len(guild.members))
+                    count += 1
                     ghost = ""
                     temp = DbSearch_member_byid(member.id, con, cur)
                     if (len(temp) == 0):
@@ -414,6 +417,7 @@ async def 인원정리(ctx):
                         ghost += temp[0][1].decode()
                         ghost += "\n"
                         ghostList.append(ghost)
+        print(ghostList))
         pages = MakePageList(member, ghostList, 3)
 
         await Pages(ctx, pages)
