@@ -417,7 +417,7 @@ async def 인원정리(ctx):
                         ghost += temp[0][1].decode()
                         ghost += "\n"
                         ghostList.append(ghost)
-        print(ghostList))
+        print(ghostList)
         pages = MakePageList(member, ghostList, 3)
 
         await Pages(ctx, pages)
