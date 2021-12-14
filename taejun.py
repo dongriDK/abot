@@ -94,7 +94,6 @@ def DbModify_voice(member, before, after, con, cur):
         afChannel = afChannel.split("(")[0][:-1]
 
     if beChannel != afChannel:
-        # con, cur = DbConnect()
         newTime = CurTime()
 
         if (beChannel != "없음"):
@@ -309,9 +308,9 @@ async def 초기화(ctx):
         embed = discord.Embed(description="초기화 중입니다... \n잠시만 기다려주세요...")
         msg = await ctx.send(embed=embed)
         DbInit()
+        await msg.delete()
         embed = discord.Embed(description="초기화가 완료되었습니다.")
         await ctx.send(embed=embed)
-        await msg.delete()
         return
     
     # else:
@@ -395,7 +394,6 @@ async def 인원정리(ctx):
         msg = await ctx.send("인원 정리중...")
         ghostList = []
         guild = bot.get_guild(875392692014694450)
-        count = 0
         for member in guild.members:
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
@@ -416,15 +414,10 @@ async def 인원정리(ctx):
                         ghost += temp[0][1].decode()
                         ghost += "\n"
                         ghostList.append(ghost)
-        pages = MakePageList(member, ghostList, 3)
 
+        pages = MakePageList(member, ghostList, 3)
         await msg.delete()
         await Pages(ctx, pages) 
-
-        # embed = discord.Embed(title="유령회원 목록",
-        #                         description=ghostList,
-        #                         color=0x00aaaa)            
-        # await ctx.channel.send(embed=embed)
 
         return
     
@@ -471,7 +464,7 @@ async def 벨튀(ctx, *args):
 async def 채팅만(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
-        await ctx.send("채팅기록 정리중...")
+        msg = await ctx.send("채팅기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = ""
         for member in guild.members:
@@ -487,7 +480,8 @@ async def 채팅만(ctx):
 
         embed = discord.Embed(title="채팅만 쓴 유저",
                                         description=chatList,
-                                        color=0x00aaaa)            
+                                        color=0x00aaaa)
+        await msg.delete()            
         await ctx.channel.send(embed=embed)
     
 @bot.command()
@@ -518,38 +512,6 @@ async def 채팅만2(ctx):
 
         await msg.delete()
         await Pages(ctx, pages)
-        # current = 0
-        # msg = await ctx.send(embed=pages[current])
-        # for button in buttons:
-        #     await msg.add_reaction(button)
-
-        # while True:
-        #     try:
-        #         reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
-
-        #     except asyncio.TimeoutError:
-        #         embed = pages[current]
-        #         embed.set_footer(text="Timed Out.")
-        #         await msg.clear_reactions()
-
-        #     else:
-        #         previous_page = current
-        #         if reaction.emoji == u"\u23EA":
-        #             current = 0
-
-        #         elif reaction.emoji == u"\u25C0":
-        #             if current > 0:
-        #                 current -= 1
-        #         elif reaction.emoji == u"\u25B6":
-        #             if current < len(pages) -1:
-        #                 current += 1
-        #         elif reaction.emoji == u"\u23E9":
-        #             current = len(pages) -1
-
-        #         for button in buttons:
-        #             await msg.remove_reaction(button, ctx.author)
-        #         if current != previous_page:
-        #             await msg.edit(embed=pages[current])
 
     # else:
     #     if (ctx.author.name == "노우리"):
@@ -557,6 +519,7 @@ async def 채팅만2(ctx):
     #                                 color=0x00aaaa)
     #         await ctx.channel.send(embed=embed)
     #     return
+
 bot.run(os.environ["token"])
 
 
