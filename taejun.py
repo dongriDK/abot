@@ -304,7 +304,30 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_member_join(member):
-    print(member)
+    con, cur = DbConnect()
+    cur.execute("SELECT count from login where id=%s", (member.id,))
+    count = cur.fetchall()
+    if count == 2:
+        print("A")
+    else:
+        cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
+        con.commit()
+
+@bot.command()
+async def 업데이트(ctx):
+    if WhiteList(ctx):
+        guild = bot.get_guild(875392692014694450)
+        for member in guild.members:
+            if(member.bot != True):
+                print(member)
+                con, cur = DbConnect()
+                try:
+                    cur.execute("INSERT INTO login(id, name, tag, count) VALUES(%s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1))
+                    con.commit()
+                except:
+                    print("error", member)
+                    pass
+                
 
 @bot.command()
 async def 초기화(ctx):
