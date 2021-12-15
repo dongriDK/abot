@@ -306,6 +306,11 @@ async def on_message_delete(message):
     await channel.send("'" + message.content + "'" + " 메시지 삭제됨")
 
 @bot.event
+async def on_message_edit(before, after):
+    channel = bot.get_channel(894545802247159808)
+    await channel.send("'" + before.content + "'" + " -> " + "'" + after.content + "'" + "변경됨")
+
+@bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
         embed = discord.Embed(description="없는 명령어입니다.")
@@ -315,6 +320,7 @@ async def on_command_error(ctx, error):
         embed = discord.Embed(description="없는 채널입니다.")
         await ctx.channel.send(embed=embed)
     raise error
+
 
 @bot.event
 async def on_member_join(member):
