@@ -376,7 +376,9 @@ async def 검색(ctx, *args):
 
             memberId = memberId[0][0].decode()
             textReturn = DbSearchText_member(memberId, con, cur)
+            print(textReturn)
             voiceReturn = DbSearchVoice_member(memberId, con, cur)
+            print(voiceReturn)
             ttime, ttext = DbSearchtime(memberId, 3, con, cur)
 
             textFlag = False
