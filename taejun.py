@@ -389,9 +389,7 @@ async def 검색(ctx, *args):
         voiceAnswer = ""
 
         textReturn = DbSearchText_member(memberId, con, cur)
-        print(textReturn)
         voiceReturn = DbSearchVoice_member(memberId, con, cur)
-        print(voiceReturn)
         ttime, ttext = DbSearchtime(memberId, 3, con, cur)
 
         if len(textReturn) == 0 and len(voiceReturn) == 0:
@@ -438,8 +436,6 @@ async def 검색(ctx, *args):
         if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
         await ctx.channel.send(embed=embed)
 
-
-        
         return
     # else:
     #     if (ctx.author.name == "노우리"):
