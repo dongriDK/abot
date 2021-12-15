@@ -303,7 +303,7 @@ async def on_message(message):
 async def on_message_delete(message):
     # embed = discord.Embed(description=message.content + " 삭제됨")
     channel = bot.get_channel(894545802247159808)
-    await channel.send(message.content + " 삭제됨")
+    await channel.send("'" + message.content + "'" + " 메시지 삭제됨")
 
 @bot.event
 async def on_command_error(ctx, error):
