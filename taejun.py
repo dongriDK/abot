@@ -122,7 +122,7 @@ def DbModify_voice(member, before, after, con, cur):
     return 0
 
 def DbSearch_member(name, tag, con, cur):
-    cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
+    cur.execute("SELECT id from login where name=%s and tag=%s", (name, tag))
     memberId = cur.fetchall()
 
     return memberId
@@ -376,9 +376,7 @@ async def 검색(ctx, *args):
 
             memberId = memberId[0][0].decode()
             textReturn = DbSearchText_member(memberId, con, cur)
-            print(textReturn)
             voiceReturn = DbSearchVoice_member(memberId, con, cur)
-            print(voiceReturn)
             ttime, ttext = DbSearchtime(memberId, 3, con, cur)
 
             textFlag = False
