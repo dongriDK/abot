@@ -544,8 +544,6 @@ async def 벨튀(ctx, *args):
 async def 채팅만(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
         msg = await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = []
@@ -553,7 +551,8 @@ async def 채팅만(ctx):
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchtime(member.id, 1, con, cur)
-
+                print(member)
+                print(voiceReturn)
                 if (len(textReturn) != 0 and voiceReturn < 1800):
                     chat = ""
                     chat += member.name
@@ -563,7 +562,6 @@ async def 채팅만(ctx):
                     chat += str(datetime.timedelta(seconds=int(voiceReturn)))
                     chat += "\n"
                     chatList.append(chat)
-
         pages = MakePageList(0, chatList, 2)
 
         await msg.delete()
