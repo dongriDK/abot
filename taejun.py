@@ -387,7 +387,10 @@ async def 검색(ctx, *args):
             for j in textReturn:
                 textAnswer += j[3].decode()
                 textAnswer += " ㅤ"
-                textAnswer += voiceChannels[j[2].decode()]
+                try:
+                    textAnswer += voiceChannels[j[2].decode()]
+                except:
+                    textAnswer += j[2].decode()
                 textAnswer += " ㅤ"
                 textAnswer += j[1].decode()
                 textAnswer += "\n"
