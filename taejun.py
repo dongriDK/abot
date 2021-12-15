@@ -164,12 +164,18 @@ def DbSearchtime(id, flag, con, cur):
     if (flag == 2):
         cur.execute("SELECT ttext FROM user_info WHERE id=%s", (id,))
         textime = cur.fetchall()
-        return textime[0][0] 
+        try:
+            return textime[0][0] 
+        except:
+            return 0
     
     if (flag == 3):
         cur.execute("SELECT ttime, ttext FROM user_info WHERE id=%s", (id,))
         ttime = cur.fetchall()
-        return ttime[0][0], ttime[0][1]
+        try:
+            return ttime[0][0], ttime[0][1]
+        except:
+            return 0
 
 def MakePageList(channel, list_, flag):
     disc_list = []
