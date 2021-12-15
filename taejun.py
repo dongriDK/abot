@@ -122,7 +122,8 @@ def DbModify_voice(member, before, after, con, cur):
     return 0
 
 def DbSearch_member(name, tag, con, cur):
-    cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
+    # cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
+    cur.execute("SELECT id from login where name=%s and tag=%s", (name, tag))
     memberId = cur.fetchall()
 
     return memberId
@@ -169,7 +170,15 @@ def DbSearchtime(id, flag, con, cur):
     if (flag == 3):
         cur.execute("SELECT ttime, ttext FROM user_info WHERE id=%s", (id,))
         ttime = cur.fetchall()
-        return ttime[0][0], ttime[0][1]
+        try:
+            ttime1 = ttime[0][0]
+        except:
+            ttime1 = 0
+        try:
+            ttime2 = ttime[0][1]
+        except:
+            ttime2 = 0
+        return ttime1, ttime2
 
 def MakePageList(channel, list_, flag):
     disc_list = []
@@ -365,59 +374,72 @@ async def 검색(ctx, *args):
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
             await ctx.channel.send(embed=embed)
             return
+
         memberId = DbSearch_member(name, tag, con, cur)
-        if (len(memberId) == 0):
+        try:
+            memberId = memberId[0][0].decode()
+        except:
+            embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
+            # embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
+            #                         description="없습니다.")
+            await ctx.channel.send(embed=embed)
+            return    
+
+        textAnswer = ""
+        voiceAnswer = ""
+
+        textReturn = DbSearchText_member(memberId, con, cur)
+        print(textReturn)
+        voiceReturn = DbSearchVoice_member(memberId, con, cur)
+        print(voiceReturn)
+        ttime, ttext = DbSearchtime(memberId, 3, con, cur)
+
+        if len(textReturn) == 0 and len(voiceReturn) == 0:
             embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                     description="없습니다.")
             await ctx.channel.send(embed=embed)
-        else:
-            textAnswer = ""
-            voiceAnswer = ""
+            return    
+        
+        textFlag = False
+        voiceFlag = False
+        textAnswer += "총 채팅 수 : " + str(ttext) + "\n"
+        for j in textReturn:
+            textAnswer += j[3].decode()
+            textAnswer += " ㅤ"
+            try:
+                textAnswer += voiceChannels[j[2].decode()]
+            except:
+                textAnswer += j[2].decode()
+            textAnswer += " ㅤ"
+            textAnswer += j[1].decode()
+            textAnswer += "\n"
+            textFlag = True
+        voiceAnswer += "음성채널 누적 시간 : " + str(datetime.timedelta(seconds=int(ttime))) + "\n"
+        for j in voiceReturn:
+            voiceAnswer += j[3].decode()
+            voiceAnswer += " ㅤ"
+            try:
+                becha = voiceChannels[j[1].decode()] + " "
+            except:
+                becha = "없음"
+            voiceAnswer += becha
+            voiceAnswer += " -> "
+            try:
+                afcha = voiceChannels[j[2].decode()] + " "
+            except:
+                afcha = "없음"
+            voiceAnswer += afcha
+            voiceAnswer += "\n"
+            voiceFlag = True
 
-            memberId = memberId[0][0].decode()
-            textReturn = DbSearchText_member(memberId, con, cur)
-            print(textReturn)
-            voiceReturn = DbSearchVoice_member(memberId, con, cur)
-            print(voiceReturn)
-            ttime, ttext = DbSearchtime(memberId, 3, con, cur)
+        embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
+                                color=0x00aaaa)
+        if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
+        if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
+        await ctx.channel.send(embed=embed)
 
-            textFlag = False
-            voiceFlag = False
-            textAnswer += "총 채팅 수 : " + str(ttext) + "\n"
-            for j in textReturn:
-                textAnswer += j[3].decode()
-                textAnswer += " ㅤ"
-                try:
-                    textAnswer += voiceChannels[j[2].decode()]
-                except:
-                    textAnswer += j[2].decode()
-                textAnswer += " ㅤ"
-                textAnswer += j[1].decode()
-                textAnswer += "\n"
-                textFlag = True
-            voiceAnswer += "음성채널 누적 시간 : " + str(datetime.timedelta(seconds=int(ttime))) + "\n"
-            for j in voiceReturn:
-                voiceAnswer += j[3].decode()
-                voiceAnswer += " ㅤ"
-                try:
-                    becha = voiceChannels[j[1].decode()] + " "
-                except:
-                    becha = "없음"
-                voiceAnswer += becha
-                voiceAnswer += " -> "
-                try:
-                    afcha = voiceChannels[j[2].decode()] + " "
-                except:
-                    afcha = "없음"
-                voiceAnswer += afcha
-                voiceAnswer += "\n"
-                voiceFlag = True
 
-            embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
-                                    color=0x00aaaa)
-            if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
-            if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
-            await ctx.channel.send(embed=embed)
+        
         return
     # else:
     #     if (ctx.author.name == "노우리"):
