@@ -551,8 +551,6 @@ async def 채팅만(ctx):
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchtime(member.id, 1, con, cur)
-                print(member)
-                print(voiceReturn)
                 if (len(textReturn) != 0 and voiceReturn < 1800):
                     chat = ""
                     chat += member.name
