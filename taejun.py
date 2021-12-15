@@ -56,9 +56,12 @@ def DbConnect():
     
 def DbLogin(id, name, tag, con, cur):
     try:
+        print("A")
         cur.execute("insert into User_info values(%s, %s, %s)", (id, name, tag,))
+        print("B")
         con.commit()
     except:
+        print("C")
         return 1
     return 0
 
@@ -79,10 +82,13 @@ def DbModify_text(message, con, cur):
         msg = message.channel.name.split("＿")[1]
     except:
         msg = message.channel.name
-
+    print(msg)
     cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), msg, CurTime()))
+    print("D")
     cur.execute("UPDATE user_info SET ttext=ttext+1 where id=%s", (message.author.id,))
+    print("E")
     con.commit()
+    print("F")
     return 0
 
 def DbModify_voice(member, before, after, con, cur):
@@ -319,7 +325,7 @@ async def on_member_join(member):
     if len(count) == 0:
         cur.execute("INSERT INTO login(id, name, tag, count) VALUES(%s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1))
         con.commit()
-    elif count[0][0] == 2:
+    elif count[0][0] >= 2:
         channel = bot.get_channel(894545802247159808)
         ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
         await channel.send(ret)
