@@ -299,11 +299,11 @@ async def on_message(message):
     await bot.process_commands(message)
     return 0
 
-# @bot.event
-# async def on_message_delete(message):
-#     embed = discord.Embed(description="Someone has deleted the messages")
-#     channel = bot.get_channel(894545802247159808)
-#     await ctx.
+@bot.event
+async def on_message_delete(message):
+    # embed = discord.Embed(description=message.content + " 삭제됨")
+    channel = bot.get_channel(894545802247159808)
+    await channel.send(message.content + " 삭제됨")
 
 @bot.event
 async def on_command_error(ctx, error):
@@ -326,7 +326,7 @@ async def on_member_join(member):
         con.commit()
     elif count[0][0] >= 2:
         channel = bot.get_channel(894545802247159808)
-        ret = str(member.name) + " " + str(member.discriminator) + ":siren:서버 재입장 3회 탐지:siren:"
+        ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
         await channel.send(ret)
         await channel.send(ret)
         await channel.send(ret)
@@ -522,30 +522,6 @@ async def 벨튀(ctx, *args):
     #         await ctx.channel.send(embed=embed)
     #     return
 
-# @bot.command()
-# async def 채팅만(ctx):
-#     con, cur = DbConnect()
-#     if WhiteList(ctx):
-#         msg = await ctx.send("채팅기록 정리중...")
-#         guild = bot.get_guild(875392692014694450)
-#         chatList = ""
-#         for member in guild.members:
-#             if (member.bot != True):
-#                 textReturn = DbSearchText_member(member.id, con, cur)
-#                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
-
-#                 if (len(textReturn) != 0 and len(voiceReturn) == 0):
-#                     chatList += member.name
-#                     chatList += " ㅤ"
-#                     chatList += member.discriminator
-#                     chatList += "\n"
-
-#         embed = discord.Embed(title="채팅만 쓴 유저",
-#                                         description=chatList,
-#                                         color=0x00aaaa)
-#         await msg.delete()            
-#         await ctx.channel.send(embed=embed)
-    
 @bot.command()
 async def 채팅만(ctx):
     con, cur = DbConnect()
@@ -577,6 +553,33 @@ async def 채팅만(ctx):
     #                                 color=0x00aaaa)
     #         await ctx.channel.send(embed=embed)
     #     return
+
+
+
+# @bot.command()
+# async def 채팅만(ctx):
+#     con, cur = DbConnect()
+#     if WhiteList(ctx):
+#         msg = await ctx.send("채팅기록 정리중...")
+#         guild = bot.get_guild(875392692014694450)
+#         chatList = ""
+#         for member in guild.members:
+#             if (member.bot != True):
+#                 textReturn = DbSearchText_member(member.id, con, cur)
+#                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
+
+#                 if (len(textReturn) != 0 and len(voiceReturn) == 0):
+#                     chatList += member.name
+#                     chatList += " ㅤ"
+#                     chatList += member.discriminator
+#                     chatList += "\n"
+
+#         embed = discord.Embed(title="채팅만 쓴 유저",
+#                                         description=chatList,
+#                                         color=0x00aaaa)
+#         await msg.delete()            
+#         await ctx.channel.send(embed=embed)
+    
 
 bot.run(os.environ["token"])
 
