@@ -179,7 +179,6 @@ def MakePageList(channel, list_, flag):
     for i in range(total_page):
         disc_list.append("")
         pages.append("")
-
     count = 0
     page = 0 
     if flag == 1: # 벨튀
@@ -206,7 +205,6 @@ def MakePageList(channel, list_, flag):
                                             description="총 " + str(total_len) + "명\n" + disc_list[page], 
                                             color=0x00aaaa)
                 page += 1
-
     else:
         for i in list_:
             disc_list[page] += i
@@ -436,7 +434,9 @@ async def 인원정리(ctx):
         for member in guild.members:
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
+                print(textReturn)
                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
+                print(voiceReturn)
 
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
                     ghost = ""
