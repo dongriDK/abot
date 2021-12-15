@@ -122,7 +122,7 @@ def DbModify_voice(member, before, after, con, cur):
     return 0
 
 def DbSearch_member(name, tag, con, cur):
-    cur.execute("SELECT id from login where name=%s and tag=%s", (name, tag))
+    cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
     memberId = cur.fetchall()
 
     return memberId
@@ -164,18 +164,12 @@ def DbSearchtime(id, flag, con, cur):
     if (flag == 2):
         cur.execute("SELECT ttext FROM user_info WHERE id=%s", (id,))
         textime = cur.fetchall()
-        try:
-            return textime[0][0] 
-        except:
-            return 0
+        return textime[0][0] 
     
     if (flag == 3):
         cur.execute("SELECT ttime, ttext FROM user_info WHERE id=%s", (id,))
         ttime = cur.fetchall()
-        try:
-            return ttime[0][0], ttime[0][1]
-        except:
-            return 0
+        return ttime[0][0], ttime[0][1]
 
 def MakePageList(channel, list_, flag):
     disc_list = []
@@ -382,7 +376,9 @@ async def 검색(ctx, *args):
 
             memberId = memberId[0][0].decode()
             textReturn = DbSearchText_member(memberId, con, cur)
+            print(textReturn)
             voiceReturn = DbSearchVoice_member(memberId, con, cur)
+            print(voiceReturn)
             ttime, ttext = DbSearchtime(memberId, 3, con, cur)
 
             textFlag = False
