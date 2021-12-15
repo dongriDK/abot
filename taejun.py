@@ -57,7 +57,7 @@ def DbConnect():
 def DbLogin(id, name, tag, con, cur):
     try:
         print("A")
-        cur.execute("insert into User_info values(%s, %s, %s, %s, %s)", (id, name, tag, None, None))
+        cur.execute("insert into User_info values(%s, %s, %s, %s, %s)", (id, name, tag, 0, 0))
         print("B")
         con.commit()
     except:
