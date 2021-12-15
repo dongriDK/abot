@@ -56,12 +56,9 @@ def DbConnect():
     
 def DbLogin(id, name, tag, con, cur):
     try:
-        print("A")
         cur.execute("insert into User_info values(%s, %s, %s, %s, %s)", (id, name, tag, 0, 0))
-        print("B")
         con.commit()
     except:
-        print("C")
         return 1
     return 0
 
@@ -82,13 +79,9 @@ def DbModify_text(message, con, cur):
         msg = message.channel.name.split("＿")[1]
     except:
         msg = message.channel.name
-    print(msg)
     cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), msg, CurTime()))
-    print("D")
     cur.execute("UPDATE user_info SET ttext=ttext+1 where id=%s", (message.author.id,))
-    print("E")
     con.commit()
-    print("F")
     return 0
 
 def DbModify_voice(member, before, after, con, cur):
@@ -523,32 +516,32 @@ async def 벨튀(ctx, *args):
     #         await ctx.channel.send(embed=embed)
     #     return
 
-@bot.command()
-async def 채팅만(ctx):
-    con, cur = DbConnect()
-    if WhiteList(ctx):
-        msg = await ctx.send("채팅기록 정리중...")
-        guild = bot.get_guild(875392692014694450)
-        chatList = ""
-        for member in guild.members:
-            if (member.bot != True):
-                textReturn = DbSearchText_member(member.id, con, cur)
-                voiceReturn = DbSearchVoice_member(member.id, con, cur)
+# @bot.command()
+# async def 채팅만(ctx):
+#     con, cur = DbConnect()
+#     if WhiteList(ctx):
+#         msg = await ctx.send("채팅기록 정리중...")
+#         guild = bot.get_guild(875392692014694450)
+#         chatList = ""
+#         for member in guild.members:
+#             if (member.bot != True):
+#                 textReturn = DbSearchText_member(member.id, con, cur)
+#                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
 
-                if (len(textReturn) != 0 and len(voiceReturn) == 0):
-                    chatList += member.name
-                    chatList += " ㅤ"
-                    chatList += member.discriminator
-                    chatList += "\n"
+#                 if (len(textReturn) != 0 and len(voiceReturn) == 0):
+#                     chatList += member.name
+#                     chatList += " ㅤ"
+#                     chatList += member.discriminator
+#                     chatList += "\n"
 
-        embed = discord.Embed(title="채팅만 쓴 유저",
-                                        description=chatList,
-                                        color=0x00aaaa)
-        await msg.delete()            
-        await ctx.channel.send(embed=embed)
+#         embed = discord.Embed(title="채팅만 쓴 유저",
+#                                         description=chatList,
+#                                         color=0x00aaaa)
+#         await msg.delete()            
+#         await ctx.channel.send(embed=embed)
     
 @bot.command()
-async def 채팅만2(ctx):
+async def 채팅만(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
         loop = asyncio.new_event_loop()
