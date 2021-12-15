@@ -299,6 +299,12 @@ async def on_message(message):
     await bot.process_commands(message)
     return 0
 
+# @bot.event
+# async def on_message_delete(message):
+#     embed = discord.Embed(description="Someone has deleted the messages")
+#     channel = bot.get_channel(894545802247159808)
+#     await ctx.
+
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
@@ -320,7 +326,7 @@ async def on_member_join(member):
         con.commit()
     elif count[0][0] >= 2:
         channel = bot.get_channel(894545802247159808)
-        ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
+        ret = str(member.name) + " " + str(member.discriminator) + ":siren:서버 재입장 3회 탐지:siren:"
         await channel.send(ret)
         await channel.send(ret)
         await channel.send(ret)
