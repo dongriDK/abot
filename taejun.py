@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from asyncio.windows_events import NULL
 import discord
 import asyncio
 import time
@@ -57,7 +58,7 @@ def DbConnect():
 def DbLogin(id, name, tag, con, cur):
     try:
         print("A")
-        cur.execute("insert into User_info values(%s, %s, %s)", (id, name, tag,))
+        cur.execute("insert into User_info values(%s, %s, %s, %s, %s)", (id, name, tag, NULL, NULL))
         print("B")
         con.commit()
     except:
