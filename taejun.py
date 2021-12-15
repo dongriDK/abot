@@ -434,9 +434,7 @@ async def 인원정리(ctx):
         for member in guild.members:
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
-                print(textReturn)
                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
-                print(voiceReturn)
 
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
                     ghost = ""
