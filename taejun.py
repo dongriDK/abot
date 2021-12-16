@@ -33,7 +33,7 @@ config = {
     'database' : os.environ["database"],
     'raise_on_warnings' : True
 }
-taejunRoom = 920890646296952862
+taejunRoom = 905813712886198273
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
@@ -120,7 +120,7 @@ def DbModify_voice(member, before, after, con, cur):
 
             totalSeconds = newSec - oldSec
 
-            if (totalSeconds < 20):
+            if (totalSeconds < 5):
                 retValue = 1
 
             cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
@@ -301,7 +301,7 @@ async def on_voice_state_update(member, before, after):
     DbReturn = DbLogin(member.id, member.name, member.discriminator, con, cur)
     retValue, beChannel = DbModify_voice(member, before, after, con, cur)
     if (retValue == 1):
-        await SendMessage(taejunRoom, beChannel + "에서 " +member.name + "님 벨튀 탐지")
+        await SendMessage(taejunRoom, beChannel + "에서 " +member.name + " 벨튀 탐지")
 
     return 0
     
@@ -349,7 +349,7 @@ async def on_member_join(member):
         con.commit()
         print(member)
     elif count[0][0] >= 2:
-        channel = bot.get_channel(920890646296952862)
+        channel = bot.get_channel(taejunRoom)
         ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
         await channel.send(ret)
         await channel.send(ret)
