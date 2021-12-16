@@ -91,6 +91,7 @@ def DbModify_text(message, con, cur):
     return 0
 
 def DbModify_voice(member, before, after, con, cur):
+    retValue = 0
     beChannel = "없음" if before.channel == None else before.channel.name.split("＿")[1]
     afChannel = "없음" if after.channel == None else after.channel.name.split("＿")[1]
     if ("(" in beChannel):
@@ -118,13 +119,16 @@ def DbModify_voice(member, before, after, con, cur):
 
             totalSeconds = newSec - oldSec
 
+            if (totalSeconds < 20):
+                retValue = 1
+
             cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
             con.commit()
 
         cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
         con.commit()
 
-    return 0
+    return retValue
 
 def DbSearch_member(name, tag, con, cur):
     # cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
@@ -184,6 +188,10 @@ def DbSearchtime(id, flag, con, cur):
         except:
             ttime2 = 0
         return ttime1, ttime2
+
+async def SendMessage(channel, msg):
+    channel = bot.get_channel(894545802247159808)
+    await channel.send(msg)
 
 def MakePageList(channel, list_, flag):
     disc_list = []
@@ -290,7 +298,9 @@ async def on_ready():
 async def on_voice_state_update(member, before, after):
     con, cur = DbConnect()
     DbReturn = DbLogin(member.id, member.name, member.discriminator, con, cur)
-    DbModify_voice(member, before, after, con, cur)
+    retValue = DbModify_voice(member, before, after, con, cur)
+    # if (retValue == 1):
+    #     await SendMessage(1, member.name + "벨튀 탐지")
 
     return 0
     
@@ -347,9 +357,10 @@ async def on_member_join(member):
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
         con.commit()
 
-# @bot.command()
-# async def 업데이트(ctx):
-#     if WhiteList(ctx):
+@bot.command()
+async def ㅅㄷㄴㅅ(ctx):
+    if WhiteList(ctx):
+        print(bot.get_all_channels())
 #         guild = bot.get_guild(875392692014694450)
 #         for member in guild.members:
 #             if(member.bot != True):
