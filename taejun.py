@@ -360,8 +360,16 @@ async def on_member_join(member):
 @bot.command()
 async def test(ctx):
     if WhiteList(ctx):
-        for i in bot.get_all_channels():
-            print(i)
+        guild = ctx.message.guild
+
+        print(guild.channels)
+        try:
+            for i in guild.channels:
+                print(i)
+        except:
+            pass
+        # for i in bot.get_all_channels():
+            # print(i)
 #         guild = bot.get_guild(875392692014694450)
 #         for member in guild.members:
 #             if(member.bot != True):
