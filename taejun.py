@@ -22,7 +22,7 @@ voiceChannels = {"수다방":"👥＿수다방＿٩( ᐛ )", "스트리밍1":"�
                     "자유채팅방":"💬＿자유채팅방", "에펙＊구인방":"📝＿에펙＊구인방", "에펙＊닉넴방":"🚀＿에펙＊닉넴방", "에펙＊자랑방":"👑＿에펙＊자랑방",
                     "일상＆게임사진방":"📸＿일상＆게임사진방", "스트리밍채팅방":"💬＿스트리밍채팅방", "히드라＊노래추가":"🎵＿히드라＊노래추가",
                     "하리보＊노래추가":"🎵＿하리보＊노래추가", "채팅방":"운영＿채팅방", "인원기록＆관리":"운영＿인원기록＆관리", "탈주자관리":"운영＿탈주자관리", "인원정리공유":"운영＿인원정리공유",
-                    "태준이방":"👀＿태준이방", "신입가입양식":"운영＿신입가입양식", "양식":"운영＿양식＿매뉴얼", "잠수":"🌛💤＿잠수＿쿨쿨", "봇사용＊기본":"👾＿봇사용＊기본", "봇사용＊마냥":"🐱＿봇사용＊마냥",
+                    "태준이방":"👀＿태준이방", "신입가입양식":"운영＿신입가입양식", "공지양식":"운영＿양식＿매뉴얼", "잠수":"🌛💤＿잠수＿쿨쿨", "봇사용＊기본":"👾＿봇사용＊기본", "봇사용＊마냥":"🐱＿봇사용＊마냥",
                     "운영진맨날모여!쫄?":"회의＿운영진맨날모여!쫄?", "공지및채널관리":"🟥디렉터：공지및채널관리", "경고＆누적기록":"🟩오피스：경고＆누적기록",
                     "칼부림의그현장":"칼부림의그현장", "탈주자관리":"탈주자관리", "현생휴식유저":"현생휴식유저"}
 config = {
@@ -78,9 +78,12 @@ def DbInit():
 def DbModify_text(message, con, cur):
     try:
         msg = message.channel.name.split("＿")[1]
+        if (msg == "공지양식"):
+            return 0
     except:
         if (":" in message.channel.name):
-            msg = message.channel.name.split(":")[1]
+            return 0
+            # msg = message.channel.name.split(":")[1]
         msg = message.channel.name
     cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), msg, CurTime()))
     cur.execute("UPDATE user_info SET ttext=ttext+1 where id=%s", (message.author.id,))
