@@ -299,16 +299,16 @@ async def on_message(message):
     await bot.process_commands(message)
     return 0
 
-@bot.event
-async def on_message_delete(message):
-    # embed = discord.Embed(description=message.content + " 삭제됨")
-    channel = bot.get_channel(894545802247159808)
-    await channel.send("'" + message.content + "'" + " 메시지 삭제됨")
+# @bot.event
+# async def on_message_delete(message):
+#     # embed = discord.Embed(description=message.content + " 삭제됨")
+#     channel = bot.get_channel(894545802247159808)
+#     await channel.send("'" + message.content + "'" + " 메시지 삭제됨")
 
-@bot.event
-async def on_message_edit(before, after):
-    channel = bot.get_channel(894545802247159808)
-    await channel.send("'" + before.content + "'" + " -> " + "'" + after.content + "'" + "변경됨")
+# @bot.event
+# async def on_message_edit(before, after):
+#     channel = bot.get_channel(894545802247159808)
+#     await channel.send("'" + before.content + "'" + " -> " + "'" + after.content + "'" + "메시지 변경됨")
 
 @bot.event
 async def on_command_error(ctx, error):
