@@ -336,6 +336,7 @@ async def on_member_join(member):
     if len(count) == 0:
         cur.execute("INSERT INTO login(id, name, tag, count) VALUES(%s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1))
         con.commit()
+        print(member)
     elif count[0][0] >= 2:
         channel = bot.get_channel(894545802247159808)
         ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
