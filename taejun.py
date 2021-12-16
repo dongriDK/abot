@@ -358,7 +358,7 @@ async def on_member_join(member):
         con.commit()
 
 @bot.command()
-async def ㅅㄷㄴㅅ(ctx):
+async def test(ctx):
     if WhiteList(ctx):
         print(bot.get_all_channels())
 #         guild = bot.get_guild(875392692014694450)
