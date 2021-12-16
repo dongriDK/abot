@@ -33,6 +33,7 @@ config = {
     'database' : os.environ["database"],
     'raise_on_warnings' : True
 }
+taejunRoom = 920890646296952862
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
@@ -128,7 +129,7 @@ def DbModify_voice(member, before, after, con, cur):
         cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
         con.commit()
 
-    return retValue
+    return retValue, beChannel
 
 def DbSearch_member(name, tag, con, cur):
     # cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
@@ -298,9 +299,9 @@ async def on_ready():
 async def on_voice_state_update(member, before, after):
     con, cur = DbConnect()
     DbReturn = DbLogin(member.id, member.name, member.discriminator, con, cur)
-    retValue = DbModify_voice(member, before, after, con, cur)
-    # if (retValue == 1):
-    #     await SendMessage(1, member.name + "벨튀 탐지")
+    retValue, beChannel = DbModify_voice(member, before, after, con, cur)
+    if (retValue == 1):
+        await SendMessage(taejunRoom, beChannel + "에서 " +member.name + "님 벨튀 탐지")
 
     return 0
     
@@ -348,7 +349,7 @@ async def on_member_join(member):
         con.commit()
         print(member)
     elif count[0][0] >= 2:
-        channel = bot.get_channel(894545802247159808)
+        channel = bot.get_channel(920890646296952862)
         ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
         await channel.send(ret)
         await channel.send(ret)
@@ -357,17 +358,17 @@ async def on_member_join(member):
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
         con.commit()
 
-@bot.command()
-async def test(ctx):
-    if WhiteList(ctx):
-        guild = ctx.message.guild
+# @bot.command()
+# async def test(ctx):
+#     if WhiteList(ctx):
+#         guild = ctx.message.guild
 
-        print(guild.channels)
-        try:
-            for i in guild.channels:
-                print(i)
-        except:
-            pass
+#         print(guild.channels)
+#         try:
+#             for i in guild.channels:
+#                 print(i)
+#         except:
+#             pass
         # for i in bot.get_all_channels():
             # print(i)
 #         guild = bot.get_guild(875392692014694450)
