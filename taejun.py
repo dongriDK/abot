@@ -120,7 +120,7 @@ def DbModify_voice(member, before, after, con, cur):
 
             totalSeconds = newSec - oldSec
 
-            if (totalSeconds < 5):
+            if (totalSeconds < 10):
                 retValue = 1
 
             cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
@@ -129,7 +129,7 @@ def DbModify_voice(member, before, after, con, cur):
         cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
         con.commit()
 
-    return retValue, beChannel
+    return retValue, beChannel, totalSeconds
 
 def DbSearch_member(name, tag, con, cur):
     # cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
@@ -299,9 +299,9 @@ async def on_ready():
 async def on_voice_state_update(member, before, after):
     con, cur = DbConnect()
     DbReturn = DbLogin(member.id, member.name, member.discriminator, con, cur)
-    retValue, beChannel = DbModify_voice(member, before, after, con, cur)
+    retValue, beChannel, retTime = DbModify_voice(member, before, after, con, cur)
     if (retValue == 1):
-        await SendMessage(taejunRoom, beChannel + "에서 " +member.name + " 벨튀 탐지")
+        await SendMessage(taejunRoom, beChannel + "에서 " +member.name + " " + retTime + "초 벨튀 탐지")
 
     return 0
     
