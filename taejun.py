@@ -226,7 +226,7 @@ def MakePageList(channel, list_, flag):
             count += 1
             if (count % 20 == 0 or count == total_len):
                 pages[page] = discord.Embed(title = channel + " 입장 기록 " + str(page + 1) + "/" + str(total_page), 
-                                            description="총 " + str(total_len) + "명\n" + disc_list[page], 
+                                            description="총 `" + str(total_len) + "`명\n" + disc_list[page], 
                                             color=0x00aaaa)
                 page += 1
     else:
@@ -236,11 +236,11 @@ def MakePageList(channel, list_, flag):
             if (count % 20 == 0 or count == total_len):
                 if (flag == 2): # 채팅만2
                     pages[page] = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
-                                                description="총 " + str(total_len) + "명\n" + disc_list[page],
+                                                description="총 1" + str(total_len) + "1명\n" + disc_list[page],
                                                 color=0x00aaaa)
                 elif (flag == 3): # 인원정리
                     pages[page] = discord.Embed(title = "유령회원 목록 " + str(page + 1) + "/" + str(total_page),
-                                                description="총 " + str(total_len) + "명\n" + disc_list[page],
+                                                description="총 1" + str(total_len) + "1명\n" + disc_list[page],
                                                 color=0x00aaaa)
                 page += 1
 
@@ -305,7 +305,7 @@ async def on_voice_state_update(member, before, after):
         runChannel_id = bot.get_channel(before.channel.id)
         runChannel_members = runChannel_id.members
         if len(runChannel_members) > 0:
-            await SendMessage(taejunRoom, "**" + beChannel + "**" + "에서 " + "`" + member.name + "`" + " " + "`" + str(retTime) + "`" + "초 벨튀 탐지")
+            await SendMessage(taejunRoom, "`" + beChannel + "`" + "에서 " + "`" + member.name + "`" + " " + "`" + str(retTime) + "`" + "초 벨튀 탐지")
 
     return 0
     
@@ -442,7 +442,7 @@ async def 검색(ctx, *args):
         
         textFlag = False
         voiceFlag = False
-        textAnswer += "총 채팅 수 : " + str(ttext) + "\n"
+        textAnswer += "총 채팅 수 : `" + str(ttext) + "`\n"
         for j in textReturn:
             textAnswer += j[3].decode()
             textAnswer += " ㅤ"
@@ -454,7 +454,7 @@ async def 검색(ctx, *args):
             textAnswer += j[1].decode()
             textAnswer += "\n"
             textFlag = True
-        voiceAnswer += "음성채널 누적 시간 : " + str(datetime.timedelta(seconds=int(ttime))) + "\n"
+        voiceAnswer += "음성채널 누적 시간 : `" + str(datetime.timedelta(seconds=int(ttime))) + "`\n"
         for j in voiceReturn:
             voiceAnswer += j[3].decode()
             voiceAnswer += " ㅤ"
