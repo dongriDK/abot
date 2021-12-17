@@ -324,13 +324,19 @@ async def on_message(message):
 async def on_member_update(before, after):
     print(dir(before))
     print(dir(after))
+    print(before.nick)
+    print(after.nick)
+    print(before.display_name)
+    print(after.display_name)
     print("member", before)
     print("member", after)
 
 @bot.event
 async def on_user_update(before, after):
+    # 프로필 변경 시 호출
     print("user", before)
     print("user", after)
+
 # @bot.event
 # async def on_message_delete(message):
 #     # embed = discord.Embed(description=message.content + " 삭제됨")
