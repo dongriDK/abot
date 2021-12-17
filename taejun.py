@@ -331,6 +331,10 @@ async def on_member_update(before, after):
     print(dir(after))
     print(before.display_name)
     print(after.display_name)
+    print(before.name)
+    print(after.name)
+    print(before.nick)
+    print(after.nick)
    # print("member", before)
    # print("member", after)
     msg = "`" + before.display_name + "` -> `" + after.display_name + "` 별명 변경."
