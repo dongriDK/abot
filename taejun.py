@@ -322,20 +322,26 @@ async def on_message(message):
 
 @bot.event
 async def on_member_update(before, after):
-    print(dir(before))
-    print(dir(after))
-    print(before.nick)
-    print(after.nick)
+    # 별명 변경 시 호출
     print(before.display_name)
     print(after.display_name)
     print("member", before)
     print("member", after)
+    msg = "'" + before.display_name + "' -> '" + after.display_name + "' change nickname!"
+    print(msg)
+   # SendMessage(taejunRoom, msg)
 
 @bot.event
 async def on_user_update(before, after):
     # 프로필 변경 시 호출
     print("user", before)
     print("user", after)
+    print(dir(before))
+    print(dir(after))
+    print(before.display_name)
+    print(after.display_name)
+    print(before.nick)
+    print(after.nick)
 
 # @bot.event
 # async def on_message_delete(message):
