@@ -241,11 +241,11 @@ def MakePageList(channel, list_, flag):
             if (count % 20 == 0 or count == total_len):
                 if (flag == 2): # 채팅만2
                     pages[page] = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
-                                                description = "총 1" + str(total_len) + "1명\n" + disc_list[page],
+                                                description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
                 elif (flag == 3): # 인원정리
                     pages[page] = discord.Embed(title = "유령회원 목록 " + str(page + 1) + "/" + str(total_page),
-                                                description = "총 1" + str(total_len) + "1명\n" + disc_list[page],
+                                                description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
                 page += 1
 
