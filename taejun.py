@@ -194,6 +194,8 @@ def DbSearchtime(id, flag, con, cur):
 async def SendMessage(channel, msg):
     channel = bot.get_channel(channel)
     print(dir(channel))
+    print(channel.members)
+    # print(channel.members())
     await channel.send(msg)
 
 def MakePageList(channel, list_, flag):
