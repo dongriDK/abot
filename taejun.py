@@ -322,8 +322,13 @@ async def on_message(message):
 
 @bot.event
 async def on_member_update(before, after):
-    print(before)
-    print(after)
+    print("member", before)
+    print("member", after)
+
+@bot.event
+async def on_user_update(before, after):
+    print("user", before)
+    print("user", after)
 # @bot.event
 # async def on_message_delete(message):
 #     # embed = discord.Embed(description=message.content + " 삭제됨")
