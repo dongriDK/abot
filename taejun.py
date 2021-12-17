@@ -320,6 +320,10 @@ async def on_message(message):
     await bot.process_commands(message)
     return 0
 
+@bot.event
+async def on_member_update(before, after):
+    print(before)
+    print(after)
 # @bot.event
 # async def on_message_delete(message):
 #     # embed = discord.Embed(description=message.content + " 삭제됨")
