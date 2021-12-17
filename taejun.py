@@ -195,6 +195,10 @@ async def SendMessage(channel, msg):
     channelg = bot.get_channel(channel)
     await channelg.send(msg)
 
+def MakeEmbed(text):
+    embed = discord.embeds(description=text)
+    return embed
+
 def MakePageList(channel, list_, flag):
     disc_list = []
     pages = []
@@ -323,23 +327,25 @@ async def on_message(message):
 @bot.event
 async def on_member_update(before, after):
     # 별명 변경 시 호출
+    print(dir(before))
+    print(dir(after))
     print(before.display_name)
     print(after.display_name)
    # print("member", before)
    # print("member", after)
-    msg = "'" + before.display_name + "' -> '" + after.display_name + "' change nickname!"
+    msg = "`" + before.display_name + "` -> `" + after.display_name + "` 별명 변경."
  #   print(msg)
     await SendMessage(taejunRoom, msg)
 
 @bot.event
 async def on_user_update(before, after):
     # 프로필 변경 시 호출
-    print("user", before)
-    print("user", after)
+    # print("user", before)
+    # print("user", after)
     print(dir(before))
     print(dir(after))
-    print(before.display_name)
-    print(after.display_name)
+    # print(before.display_name)
+    # print(after.display_name)
  #   msg = "'" + before.display_name + "' -> '" + after.display_name 
 
 # @bot.event
@@ -356,12 +362,10 @@ async def on_user_update(before, after):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
-        embed = discord.Embed(description="없는 명령어입니다.")
-        await ctx.channel.send(embed=embed)
+        await ctx.channel.send(embed=MakeEmbed("없는 명령어입니다."))
 
     elif isinstance(error, CommandInvokeError):
-        embed = discord.Embed(description="없는 채널입니다.")
-        await ctx.channel.send(embed=embed)
+        await ctx.channel.send(embed=MakeEmbed("없는 채널입니다."))
     raise error
 
 
@@ -568,9 +572,11 @@ async def 벨튀(ctx, *args):
         else:
             DbReturn = DbSearchbellrun(channel, time, con, cur)
 
-        pages = MakePageList(channel, DbReturn, 1)
-
-        await Pages(ctx, pages)
+        if len(DbReturn) == 0:
+            await ctx.channel.send(embed=MakeEmbed("결과가 없습니다."))
+        else:
+            pages = MakePageList(channel, DbReturn, 1)
+            await Pages(ctx, pages)
 
     return 
     
