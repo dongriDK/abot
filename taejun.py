@@ -93,6 +93,7 @@ def DbModify_text(message, con, cur):
 
 def DbModify_voice(member, before, after, con, cur):
     retValue = 0
+    totalSeconds = 0
     beChannel = "없음" if before.channel == None else before.channel.name.split("＿")[1]
     afChannel = "없음" if after.channel == None else after.channel.name.split("＿")[1]
     if ("(" in beChannel):
