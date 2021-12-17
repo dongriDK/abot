@@ -192,11 +192,10 @@ def DbSearchtime(id, flag, con, cur):
         return ttime1, ttime2
 
 async def SendMessage(channel, msg):
-    channel = bot.get_channel(channel)
-    print(dir(channel))
-    print(channel.members)
-    # print(channel.members())
-    await channel.send(msg)
+    channelg = bot.get_channel(channel)
+    print(dir(channelg))
+    print(channelg.members)
+    await channelg.send(msg)
 
 def MakePageList(channel, list_, flag):
     disc_list = []
@@ -305,7 +304,12 @@ async def on_voice_state_update(member, before, after):
     DbReturn = DbLogin(member.id, member.name, member.discriminator, con, cur)
     retValue, beChannel, retTime = DbModify_voice(member, before, after, con, cur)
     if (retValue == 1):
-        await SendMessage(taejunRoom, beChannel + "에서 " +member.name + " " + str(retTime) + "초 벨튀 탐지")
+        print(before)
+        print(dir(before))
+        runChannel_id = bot.get_channel(before.id)
+        runChannel_members = runChannel_id.members
+        if len(runChannel_members) > 0:
+            await SendMessage(taejunRoom, beChannel + "에서 " +member.name + " " + str(retTime) + "초 벨튀 탐지")
 
     return 0
     
