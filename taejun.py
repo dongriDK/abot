@@ -301,7 +301,7 @@ async def on_voice_state_update(member, before, after):
     DbReturn = DbLogin(member.id, member.name, member.discriminator, con, cur)
     retValue, beChannel, retTime = DbModify_voice(member, before, after, con, cur)
     if (retValue == 1):
-        await SendMessage(taejunRoom, beChannel + "에서 " +member.name + " " + retTime + "초 벨튀 탐지")
+        await SendMessage(taejunRoom, beChannel + "에서 " +member.name + " " + str(retTime) + "초 벨튀 탐지")
 
     return 0
     
