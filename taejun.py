@@ -322,6 +322,8 @@ async def on_message(message):
 
 @bot.event
 async def on_member_update(before, after):
+    print(dir(before))
+    print(dir(after))
     print("member", before)
     print("member", after)
 
