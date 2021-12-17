@@ -305,7 +305,7 @@ async def on_voice_state_update(member, before, after):
         runChannel_id = bot.get_channel(before.channel.id)
         runChannel_members = runChannel_id.members
         if len(runChannel_members) > 0:
-            await SendMessage(taejunRoom, beChannel + "에서 " +member.name + " " + str(retTime) + "초 벨튀 탐지")
+            await SendMessage(taejunRoom, "*" + beChannel + "*" + "에서 " +member.name + " " + str(retTime) + "초 벨튀 탐지")
 
     return 0
     
