@@ -325,32 +325,22 @@ async def on_message(message):
     await bot.process_commands(message)
     return 0
 
+# 별명 변경 시 호출
 @bot.event
 async def on_member_update(before, after):
-    # 별명 변경 시 호출
     beNick = before.display_name
     afNick = after.display_name
-
-   # print("member", before)
-   # print("member", after)
     if(beNick != afNick):
         msg = "`" + beNick + "` -> `" + afNick + "` 별명 변경."
         await SendMessage(taejunRoom, msg)
 
+# 프로필 변경 시 호출
 @bot.event
 async def on_user_update(before, after):
     beName = before.display_name
     afName = after.display_name
-    # 프로필 변경 시 호출
-    # print("user", before)
-    # print("user", after)
-    print(dir(before))
-    print(dir(after))
-    print(before.display_name)
-    print(after.display_name)
-    msg = "`" + beName + "` -> `" + afName + "` 아이디 변경"
-    print(msg)
-    # await SendMessage(taejunRoom, msg)
+    msg = "`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
+    await SendMessage(taejunRoom, msg)
 
 # @bot.event
 # async def on_message_delete(message):
