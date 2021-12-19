@@ -339,8 +339,9 @@ async def on_member_update(before, after):
 async def on_user_update(before, after):
     beName = before.display_name
     afName = after.display_name
-    msg = "`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
-    await SendMessage(taejunRoom, msg)
+    if (beName != afName):
+        msg = "`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
+        await SendMessage(taejunRoom, msg)
 
 # @bot.event
 # async def on_message_delete(message):
