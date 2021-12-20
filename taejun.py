@@ -358,6 +358,8 @@ async def on_member_join(member):
         await channel.send(ret)
         await channel.send(ret)
         await channel.send(ret)
+        cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
+        con.commit()
     else:
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
         con.commit()
