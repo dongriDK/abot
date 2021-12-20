@@ -26,7 +26,7 @@ voiceChannels = {"수다방":"👥＿수다방＿٩( ᐛ )", "스트리밍1":"�
                     "태준이방":"📡⚡＿태준이방", "신입가입양식":"운영＿신입가입양식", "공지양식":"운영＿양식＿매뉴얼", "잠수":"🌛💤＿잠수＿쿨쿨", "봇사용＊기본":"👾＿봇사용＊기본", "봇사용＊마냥":"🐱＿봇사용＊마냥",
                     "운영진맨날모여!쫄?":"회의＿운영진맨날모여!쫄?", "공지및채널관리":"🟥디렉터：공지및채널관리", "경고＆누적기록":"🟩오피스：경고＆누적기록",
                     "칼부림의그현장":"칼부림의그현장", "탈주자관리":"탈주자관리", "현생휴식유저":"현생휴식유저", "에펙질문방":"❓＿에펙질문방",
-                    "에펙＊클럽당":"🚀＿에펙＊클럽당"}
+                    "에펙＊클럽방":"🎲＿에펙＊클럽방"}
 config = {
     'user' : os.environ["user"],
     'password' : os.environ["password"],
@@ -344,6 +344,39 @@ async def on_user_update(before, after):
         msg = "`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
         await SendMessage(taejunRoom, msg)
 
+@bot.event
+async def on_member_join(member):
+    con, cur = DbConnect()
+    cur.execute("SELECT count from login where id=%s", (member.id,))
+    count = cur.fetchall()
+    if len(count) == 0:
+        cur.execute("INSERT INTO login(id, name, tag, count) VALUES(%s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1))
+        con.commit()
+    elif count[0][0] >= 2:
+        channel = bot.get_channel(taejunRoom)
+        ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
+        await channel.send(ret)
+        await channel.send(ret)
+        await channel.send(ret)
+    else:
+        cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
+        con.commit()
+
+@bot.event
+async def on_member_remove(member):
+    con, cur = DbConnect()
+    cur.execute("SELECT count from login where id=%s", (member.id,))
+    count = cur.fetchall()
+    if len(count) >= 2:
+        channel = bot.get_channel(taejunRoom)
+        ret = str(member.name) + " " + str(member.discriminator) + " 서버 재입장 후 탈퇴"
+        await channel.send(ret)
+        await channel.send(ret)
+        await channel.send(ret)
+    else:
+        cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
+        con.commit()
+
 # @bot.event
 # async def on_message_delete(message):
 #     # embed = discord.Embed(description=message.content + " 삭제됨")
@@ -365,23 +398,6 @@ async def on_command_error(ctx, error):
     raise error
 
 
-@bot.event
-async def on_member_join(member):
-    con, cur = DbConnect()
-    cur.execute("SELECT count from login where id=%s", (member.id,))
-    count = cur.fetchall()
-    if len(count) == 0:
-        cur.execute("INSERT INTO login(id, name, tag, count) VALUES(%s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1))
-        con.commit()
-    elif count[0][0] >= 2:
-        channel = bot.get_channel(taejunRoom)
-        ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
-        await channel.send(ret)
-        await channel.send(ret)
-        await channel.send(ret)
-    else:
-        cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
-        con.commit()
 
 # @bot.command()
 # async def test(ctx):
