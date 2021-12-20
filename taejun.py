@@ -356,8 +356,6 @@ async def on_member_join(member):
         channel = bot.get_channel(taejunRoom)
         ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
         await channel.send(ret)
-        await channel.send(ret)
-        await channel.send(ret)
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
         con.commit()
     else:
@@ -372,8 +370,6 @@ async def on_member_remove(member):
     if count[0][0] >= 2:
         channel = bot.get_channel(taejunRoom)
         ret = "`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 후 탈퇴"
-        await channel.send(ret)
-        await channel.send(ret)
         await channel.send(ret)
     else:
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
