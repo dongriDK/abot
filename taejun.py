@@ -19,7 +19,7 @@ voiceChannels = {"수다방":"👥＿수다방＿٩( ᐛ )", "스트리밍1":"�
                     "스트리밍4":"📺＿스트리밍4",  "스트리밍5":"📺＿스트리밍5",
                     "대기중":"👀＿대기중", "일반1":"⭐＿일반1", "일반2":"🌙＿일반2", "일반3":"🌕＿일반3", "랭크1":"⭐＿랭크1", "랭크2":"🌙＿랭크2",
                     "랭크3":"🌕＿랭크3", "랭크4":"🪐＿랭크4", "랭크5":"🌎＿랭크5", "듀오1":"⭐＿듀오1", "듀오2":"🌙＿듀오2", "기타게임방1":"⭐＿기타게임방1",
-                    "기타게임방2":"🌙＿기타게임방2", "히드라전용＊감상":"🎧＿히드라전용＊감상", "하리보전용＊감상":"🎧＿하리보전용＊감상", "회의":"회의＿운영진맨날모여!쫄?",
+                    "기타게임방2":"🌙＿기타게임방2", "기타게임방3":"🌕＿기타게임방3", "히드라전용＊감상":"🎧＿히드라전용＊감상", "하리보전용＊감상":"🎧＿하리보전용＊감상", "회의":"회의＿운영진맨날모여!쫄?",
                     "자유채팅방":"💬＿자유채팅방", "에펙＊구인방":"📝＿에펙＊구인방", "에펙＊닉넴방":"🚀＿에펙＊닉넴방", "에펙＊자랑방":"👑＿에펙＊자랑방",
                     "일상＆게임사진방":"📸＿일상＆게임사진방", "스트리밍채팅방":"💬＿스트리밍채팅방", "히드라＊노래추가":"🎵＿히드라＊노래추가",
                     "하리보＊노래추가":"🎵＿하리보＊노래추가", "채팅방":"운영＿채팅방", "인원기록＆관리":"운영＿인원기록＆관리", "탈주자관리":"운영＿탈주자관리", "인원정리공유":"운영＿인원정리공유",
@@ -96,8 +96,17 @@ def DbModify_text(message, con, cur):
 def DbModify_voice(member, before, after, con, cur):
     retValue = 0
     totalSeconds = 0
-    beChannel = "없음" if before.channel == None else before.channel.name.split("＿")[1]
-    afChannel = "없음" if after.channel == None else after.channel.name.split("＿")[1]
+    print(before)
+    print(after)
+    try:
+        beChannel = "없음" if before.channel == None else before.channel.name.split("＿")[1]
+    except:
+        beChannel = before.channel.name[9:]
+    try:
+        afChannel = "없음" if after.channel == None else after.channel.name.split("＿")[1]
+    except:
+        beChannel = after.channel.name[9:]
+        
     if ("(" in beChannel):
         beChannel = beChannel.split("(")[0][:-1]
     if ("(" in afChannel):
@@ -134,7 +143,10 @@ def DbModify_voice(member, before, after, con, cur):
 
     return retValue, beChannel, totalSeconds
 
-# def DbModify_name(member, con, cur):
+def DbModify_user_info(bename, afname, betag, aftag, con, cur):
+    id = DbSearch_member(bename, betag, con, cur)
+    cur.execute("UPDATE login set name=%s, tag=%s where id=%s", (afname, aftag, id,))
+    con.commit()
 
 def DbSearch_member(name, tag, con, cur):
     # cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
@@ -340,12 +352,17 @@ async def on_member_update(before, after):
 # 프로필 변경 시 호출
 @bot.event
 async def on_user_update(before, after):
+    con, cur = DbConnect()
     beName = before.display_name
     afName = after.display_name
-    print(dir(before))
+    beDis = before.discriminator
+    afDis = after.discriminator
+    print(before.discriminator)
     if (beName != afName):
         msg = "`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
-        # DbModify_name()
+        if (beDis != afDis):
+            msg = "`" + beDis + "` -> `" + afDis + "` 디스코드 태그 변경"
+        DbModify_user_info(beName, afName, beDis, afDis, con, cur)
         await SendMessage(taejunRoom, msg)
 
 @bot.event
