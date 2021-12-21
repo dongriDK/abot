@@ -253,7 +253,7 @@ def MakePageList(channel, list_, flag):
             count += 1
             if (count % 20 == 0 or count == total_len):
                 if (flag == 2): # 채팅만2
-                    pages[page] = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
+                    pages[page] = discord.Embed(title = "채팅과 음성 1시간 미만 유저 " + str(page + 1) + "/" + str(total_page),
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
                 elif (flag == 3): # 인원정리
