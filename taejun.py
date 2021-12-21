@@ -145,6 +145,7 @@ def DbModify_voice(member, before, after, con, cur):
 
 def DbModify_user_info(bename, afname, betag, aftag, con, cur):
     id = DbSearch_member(bename, betag, con, cur)
+    id = id[0][0]
     print(afname, aftag, id)
     cur.execute("UPDATE login set name=%s, tag=%s where id=%s", (afname, aftag, id,))
     cur.execute("UPDATE user_info set name=%s, tag=%s where id=%s", (afname, aftag, id,))
