@@ -145,7 +145,9 @@ def DbModify_voice(member, before, after, con, cur):
 
 def DbModify_user_info(bename, afname, betag, aftag, con, cur):
     id = DbSearch_member(bename, betag, con, cur)
+    print(afname, aftag, id)
     cur.execute("UPDATE login set name=%s, tag=%s where id=%s", (afname, aftag, id,))
+    cur.execute("UPDATE user_info set name=%s, tag=%s where id=%s", (afname, aftag, id,))
     con.commit()
 
 def DbSearch_member(name, tag, con, cur):
@@ -357,7 +359,6 @@ async def on_user_update(before, after):
     afName = after.display_name
     beDis = before.discriminator
     afDis = after.discriminator
-    print(before.discriminator)
     if (beName != afName):
         msg = "`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
         if (beDis != afDis):
