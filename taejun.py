@@ -134,6 +134,8 @@ def DbModify_voice(member, before, after, con, cur):
 
     return retValue, beChannel, totalSeconds
 
+# def DbModify_name(member, con, cur):
+
 def DbSearch_member(name, tag, con, cur):
     # cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
     cur.execute("SELECT id from login where name=%s and tag=%s", (name, tag))
@@ -340,8 +342,10 @@ async def on_member_update(before, after):
 async def on_user_update(before, after):
     beName = before.display_name
     afName = after.display_name
+    print(dir(before))
     if (beName != afName):
         msg = "`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
+        # DbModify_name()
         await SendMessage(taejunRoom, msg)
 
 @bot.event
