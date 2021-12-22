@@ -183,7 +183,7 @@ def DbSearchVoiceRank(con, cur):
     return voiceList
 
 def DbSearchTextRank(con, cur):
-    cur.execute("SELECT * FROM user_info order by ttext desc limit 50")
+    cur.execute("SELECT * FROM user_info order by ttext desc limit 100")
     textList = cur.fetchall()
 
     return textList
