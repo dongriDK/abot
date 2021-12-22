@@ -81,7 +81,7 @@ def DbInit():
 def DbModify_text(message, con, cur):
     try:
         print("0", message.channel.name)
-        msg = message.channel.name.split("＿")[1]
+        msg = message.channel.name.split("＿")
         print("1", msg)
         if "║" in msg:
             msg = msg.split("║")[1]
@@ -90,6 +90,8 @@ def DbModify_text(message, con, cur):
             print("3",msg)
         elif (msg == "공지양식"):
             return 0
+        else:
+            msg = msg[1]
     except:
         if (":" in message.channel.name):
             return 0
