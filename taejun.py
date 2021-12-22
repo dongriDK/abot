@@ -678,11 +678,11 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
         for i in Return:
             voice = ""
             voice += str(rank)
-            voice += ".ㅤ"
+            voice += ".ㅤ "
             voice += i[1].decode()
-            voice += "ㅤ"
+            voice += "ㅤ "
             voice += i[2].decode()
-            voice += "ㅤ`"
+            voice += "ㅤ `"
             voice += str(datetime.timedelta(seconds=int(i[4])))
             voice += "`\n"
             voiceRankList.append(voice)
@@ -701,11 +701,11 @@ async def 채팅순위(ctx):
         for i in Return:
             text = ""
             text += str(rank)
-            text += ".ㅤ"
+            text += ".ㅤ "
             text += i[1].decode()
-            text += "ㅤ"
+            text += "ㅤ "
             text += i[2].decode()
-            text += "ㅤ`"
+            text += "ㅤ `"
             text += str(i[3])
             text += "`\n"
             textRankList.append(text)
