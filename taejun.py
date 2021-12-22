@@ -660,6 +660,7 @@ async def 음거시(ctx): # 음성채널 거주 시간 순위
         voiceRankList = []
         voiceRankReturn = DbSearchVoiceRank(con, cur)
         print(voiceRankReturn)
+        print(voiceRankReturn[0])
         # for i in voiceRankReturn:
 
 
