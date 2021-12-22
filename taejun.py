@@ -26,7 +26,7 @@ voiceChannels = {"수다방":"👥＿수다방＿٩( ᐛ )", "스트리밍1":"�
                     "태준이방":"📡⚡＿태준이방", "신입가입양식":"운영＿신입가입양식", "공지양식":"운영＿양식＿매뉴얼", "잠수":"🌛💤＿잠수＿쿨쿨", "봇사용＊기본":"👾＿봇사용＊기본", "봇사용＊마냥":"🐱＿봇사용＊마냥",
                     "운영진맨날모여!쫄?":"회의＿운영진맨날모여!쫄?", "공지및채널관리":"🟥디렉터：공지및채널관리", "경고＆누적기록":"🟩오피스：경고＆누적기록",
                     "칼부림의그현장":"칼부림의그현장", "탈주자관리":"탈주자관리", "현생휴식유저":"현생휴식유저", "에펙질문방":"❓＿에펙질문방",
-                    "에펙＊클럽방":"🎲＿에펙＊클럽방"}
+                    "에펙＊클럽방":"🎲＿에펙＊클럽방", "회의티비":"회의＿회의티비"}
 config = {
     'user' : os.environ["user"],
     'password' : os.environ["password"],
@@ -181,6 +181,9 @@ def DbSearchVoiceRank(con, cur):
     voiceList = cur.fetchall()
 
     return voiceList
+
+# def DbSearchTextRank(con, cur):
+#     cur.execute("")
 
 def DbSearchtime(id, flag, con, cur):
     if (flag == 1):
@@ -658,7 +661,7 @@ async def 채팅만(ctx):
     #     return
 
 @bot.command()
-async def 음거시(ctx): # 음성채널 거주 시간 순위
+async def 음성순위(ctx): # 음성채널 거주 시간 순위
     con, cur = DbConnect()
     if (WhiteList(ctx)):
         voiceRankList = []
@@ -681,6 +684,12 @@ async def 음거시(ctx): # 음성채널 거주 시간 순위
 
         await Pages(ctx, pages)
 
+# @bot.command()
+# async def 채팅순위(ctx):
+#     con, cur = DbConnect()
+#     if (WhiteList(ctx)):
+#         textRankList = []
+#         Return = Db
 
 # @bot.command()
 # async def 채팅만(ctx):
