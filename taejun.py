@@ -676,6 +676,7 @@ async def 음거시(ctx): # 음성채널 거주 시간 순위
             voice += i[2].decode()
             voice += "` `"
             voice += str(datetime.timedelta(seconds=int(i[4])))
+            voice += "`\n"
             voiceRankList.append(voice)
             rank += 1
         pages = MakePageList(0, voiceRankList, 4)
