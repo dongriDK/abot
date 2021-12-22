@@ -89,6 +89,7 @@ def DbModify_text(message, con, cur):
             return 0
         else:
             msg = msg[1]
+            print(msg)
     except:
         print(msg)
         if (":" in message.channel.name):
