@@ -706,7 +706,7 @@ async def 채팅순위(ctx):
             text += "ㅤ"
             text += i[2].decode()
             text += "ㅤ`"
-            text += i[3]
+            text += str(i[3])
             text += "`\n"
             textRankList.append(text)
             rank += 1
