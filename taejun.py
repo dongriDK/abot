@@ -177,13 +177,16 @@ def DbSearchbellrun(channel, time, con, cur):
     return channelList
 
 def DbSearchVoiceRank(con, cur):
-    cur.execute("SELECT * FROM user_info order by ttime desc limit 50")
+    cur.execute("SELECT * FROM user_info order by ttime desc limit 100")
     voiceList = cur.fetchall()
 
     return voiceList
 
-# def DbSearchTextRank(con, cur):
-#     cur.execute("")
+def DbSearchTextRank(con, cur):
+    cur.execute("SELECT * FROM user_info order by ttext desc limit 50")
+    textList = cur.fetchall()
+
+    return textList
 
 def DbSearchtime(id, flag, con, cur):
     if (flag == 1):
@@ -689,7 +692,13 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
 #     con, cur = DbConnect()
 #     if (WhiteList(ctx)):
 #         textRankList = []
-#         Return = Db
+#         Return = DbSearchTextRank(con, cur)
+#         rank = 1
+#         for i in Return:
+#             text = ""
+#             text += str(rank)
+#             text += ".ㅤ"
+
 
 # @bot.command()
 # async def 채팅만(ctx):
