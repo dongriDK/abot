@@ -80,15 +80,14 @@ def DbInit():
 
 def DbModify_text(message, con, cur):
     try:
-        print(message.channel.name)
+        print("0", message.channel.name)
         msg = message.channel.name.split("＿")[1]
         print("1", msg)
-        if len(msg) == 1:
-            if "║" in msg:
-                msg = msg.split("║")[1]
-                print("2",msg)
-                msg = msg.split("＊")[0]
-                print("3",msg)
+        if "║" in msg:
+            msg = msg.split("║")[1]
+            print("2",msg)
+            msg = msg.split("＊")[0]
+            print("3",msg)
         elif (msg == "공지양식"):
             return 0
     except:
