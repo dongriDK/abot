@@ -81,10 +81,13 @@ def DbInit():
 def DbModify_text(message, con, cur):
     try:
         msg = message.channel.name.split("＿")[1]
+        print(msg)
         if len(msg) == 1:
             if "║" in msg:
-                msg = message.channel.name.split("║")[1]
+                msg = msg.split("║")[1]
+                print(msg)
                 msg = msg.split("＊")[0]
+                print(msg)
         elif (msg == "공지양식"):
             return 0
     except:
