@@ -272,8 +272,12 @@ def MakePageList(channel, list_, flag):
                     pages[page] = discord.Embed(title = "유령회원 목록 " + str(page + 1) + "/" + str(total_page),
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
-                elif (flag == 4): # 음거시
+                elif (flag == 4): # 음성 순위
                     pages[page] = discord.Embed(title = "음성채널 거주 시간 Top 100",
+                                                description = disc_list[page],
+                                                color = 0x00aaaa)
+                elif (flag == 5): # 채팅 순위
+                    pages[page] = discord.Embed(title = "채팅 Top 100",
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
                 page += 1
@@ -687,17 +691,29 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
 
         await Pages(ctx, pages)
 
-# @bot.command()
-# async def 채팅순위(ctx):
-#     con, cur = DbConnect()
-#     if (WhiteList(ctx)):
-#         textRankList = []
-#         Return = DbSearchTextRank(con, cur)
-#         rank = 1
-#         for i in Return:
-#             text = ""
-#             text += str(rank)
-#             text += ".ㅤ"
+@bot.command()
+async def 채팅순위(ctx):
+    con, cur = DbConnect()
+    if (WhiteList(ctx)):
+        textRankList = []
+        Return = DbSearchTextRank(con, cur)
+        rank = 1
+        for i in Return:
+            text = ""
+            text += str(rank)
+            text += ".ㅤ"
+            text += i[1].decode()
+            text += "ㅤ"
+            text += i[2].decode()
+            text += "ㅤ`"
+            text += i[3]
+            text += "`\n"
+            textRankList.append(text)
+            rank += 1
+        pages = MakePageList(0, textRankList, 5)
+
+        await Pages(ctx, pages)
+
 
 
 # @bot.command()
