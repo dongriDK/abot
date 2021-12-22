@@ -210,7 +210,7 @@ async def SendMessage(channel, msg):
     await channelg.send(msg)
 
 def MakeEmbed(text):
-    embed = discord.embeds(description=text)
+    embed = discord.Embed(description=text)
     return embed
 
 def MakePageList(channel, list_, flag):
