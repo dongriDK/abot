@@ -273,7 +273,7 @@ def MakePageList(channel, list_, flag):
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
                 elif (flag == 4): # 음거시
-                    pages[page] = discord.Embed(title = "음성채널 거주 시간 Top 50",
+                    pages[page] = discord.Embed(title = "음성채널 거주 시간 Top 100",
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
                 page += 1
