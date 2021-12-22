@@ -82,9 +82,9 @@ def DbModify_text(message, con, cur):
     try:
         print("0", message.channel.name)
         msg = message.channel.name.split("＿")
-        print("1", msg)
-        if "║" in msg:
-            msg = msg.split("║")[1]
+        print("1", msg[0])
+        if "║" in msg[0]:
+            msg = msg[0].split("║")[1]
             print("2",msg)
             msg = msg.split("＊")[0]
             print("3",msg)
