@@ -670,11 +670,11 @@ async def 음거시(ctx): # 음성채널 거주 시간 순위
         for i in Return:
             voice = ""
             voice += str(rank)
-            voice += ". `"
+            voice += ". "
             voice += i[1].decode()
-            voice += "` `"
+            voice += " "
             voice += i[2].decode()
-            voice += "` `"
+            voice += "ㅤ`"
             voice += str(datetime.timedelta(seconds=int(i[4])))
             voice += "`\n"
             voiceRankList.append(voice)
