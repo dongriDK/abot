@@ -267,7 +267,6 @@ def MakePageList(channel, list_, flag):
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
                 elif (flag == 4): # 음거시
-                    print(":270")
                     pages[page] = discord.Embed(title = "음성채널 거주 시간 Top 50",
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
@@ -664,7 +663,6 @@ async def 음거시(ctx): # 음성채널 거주 시간 순위
     if (WhiteList(ctx)):
         voiceRankList = []
         Return = DbSearchVoiceRank(con, cur)
-        print(Return)
         # print(voiceRankReturn[0])
         rank = 1
         for i in Return:
@@ -672,7 +670,7 @@ async def 음거시(ctx): # 음성채널 거주 시간 순위
             voice += str(rank)
             voice += ". "
             voice += i[1].decode()
-            voice += " "
+            voice += "ㅤ"
             voice += i[2].decode()
             voice += "ㅤ`"
             voice += str(datetime.timedelta(seconds=int(i[4])))
