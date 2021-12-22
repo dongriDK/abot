@@ -80,14 +80,15 @@ def DbInit():
 
 def DbModify_text(message, con, cur):
     try:
+        print(message.channel.name)
         msg = message.channel.name.split("＿")[1]
-        print(msg)
+        print("1", msg)
         if len(msg) == 1:
             if "║" in msg:
                 msg = msg.split("║")[1]
-                print(msg)
+                print("2",msg)
                 msg = msg.split("＊")[0]
-                print(msg)
+                print("3",msg)
         elif (msg == "공지양식"):
             return 0
     except:
@@ -95,6 +96,7 @@ def DbModify_text(message, con, cur):
             return 0
             # msg = message.channel.name.split(":")[1]
         msg = message.channel.name
+    print("4", msg)
     cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), msg, CurTime()))
     cur.execute("UPDATE user_info SET ttext=ttext+1 where id=%s", (message.author.id,))
     con.commit()
