@@ -131,7 +131,8 @@ def DbModify_voice(member, before, after, con, cur):
                 oldTime = ret[0][0].decode()
                 print("B", beChannel, oldTime)
             except:
-                print(str(ret))
+                if(len(ret) == 0):
+                    return 0, 0, 0
                 oldTime = CurTime()
             oldTime = year + "." + oldTime
             new_Time = year + "." + newTime
