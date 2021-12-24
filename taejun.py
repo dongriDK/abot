@@ -350,7 +350,7 @@ async def on_voice_state_update(member, before, after):
     con, cur = DbConnect()
     DbReturn = DbLogin(member.id, member.name, member.discriminator, con, cur)
     retValue, beChannel, retTime = DbModify_voice(member, before, after, con, cur)
-    print(beChannel)
+    print("C",beChannel)
     if (retValue == 1 and beChannel != "없음"):
         print("ㅁㅁㅁㅁㅁ", beChannel)
         runChannel_id = bot.get_channel(before.channel.id)
