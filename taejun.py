@@ -302,7 +302,7 @@ async def Pages(ctx, pages):
 
     while True:
         try:
-            reaction, user = await bot.wait_for("reaction_add", check=lambda reaction: reaction.emoji in buttons, timeout=90.0)
+            reaction, user = await bot.wait_for("reaction_add", check=lambda reaction, user: user == ctx.author and reaction.emoji in buttons, timeout=60.0)
 
         except asyncio.TimeoutError:
             embed = pages[current]
