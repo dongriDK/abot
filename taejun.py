@@ -84,14 +84,14 @@ def DbModify_text(message, con, cur):
         if "║" in msg[0]:
             msg = msg[0].split("║")[1]
             msg = msg.split("＊")[0]
-            print(msg)
+            print("1", msg)
         elif (msg == "공지양식"):
             return 0
         else:
             msg = msg[1]
-            print(msg)
+            print("2", msg)
     except:
-        print(msg)
+        print("3", msg)
         if (":" in message.channel.name):
             return 0
             # msg = message.channel.name.split(":")[1]
