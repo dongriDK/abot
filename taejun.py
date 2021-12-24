@@ -253,13 +253,20 @@ def MakePageList(channel, list_, flag):
             try:
                 becha = voiceChannels[i[1].decode()]
             except:
-                becha = "없음"
+                try:
+                    becha = i[1].decode()
+                except:
+                    becha = "없음"
             disc_list[page] += becha
             disc_list[page] += " -> "
             try:
                 afcha = voiceChannels[i[2].decode()]
             except:
-                afcha = "없음"
+                try:
+                    afcha = i[1].decode()
+                except:
+                    afcha = "없음"
+                
             disc_list[page] += afcha
             disc_list[page] += " ㅤ"
             disc_list[page] += i[0].decode()
@@ -548,13 +555,19 @@ async def 검색(ctx, *args):
             try:
                 becha = voiceChannels[j[1].decode()] + " "
             except:
-                becha = "없음"
+                try:
+                    becha = j[1].decode()
+                except:
+                    becha = "없음"
             voiceAnswer += becha
             voiceAnswer += " -> "
             try:
                 afcha = voiceChannels[j[2].decode()] + " "
             except:
-                afcha = "없음"
+                try:
+                    afcha = j[1].decode()
+                except:
+                    afcha = "없음"
             voiceAnswer += afcha
             voiceAnswer += "\n"
             voiceFlag = True
