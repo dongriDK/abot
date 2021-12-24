@@ -113,8 +113,8 @@ def DbModify_voice(member, before, after, con, cur):
     except:
         afChannel = after.channel.name[9:]
     
-    print(beChannel)
-    print(afChannel)
+    print("AAA", beChannel)
+    print("BBB", afChannel)
     if ("(" in beChannel):
         beChannel = beChannel.split("(")[0][:-1]
     if ("(" in afChannel):
