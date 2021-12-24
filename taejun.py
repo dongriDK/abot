@@ -113,8 +113,6 @@ def DbModify_voice(member, before, after, con, cur):
     except:
         afChannel = after.channel.name[9:]
     
-    print("AAA", beChannel)
-    print("BBB", afChannel)
     if ("(" in beChannel):
         beChannel = beChannel.split("(")[0][:-1]
     if ("(" in afChannel):
@@ -128,8 +126,10 @@ def DbModify_voice(member, before, after, con, cur):
 
             cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
             ret = cur.fetchall()
+            print("A", beChannel, ret)
             try:
                 oldTime = ret[0][0].decode()
+                print("B", beChannel, oldTime)
             except:
                 oldTime = CurTime()
             oldTime = year + "." + oldTime
