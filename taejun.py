@@ -371,7 +371,7 @@ async def on_voice_state_update(member, before, after):
 @bot.event
 async def on_message(message):
     con, cur = DbConnect()
-    if (message.author.name != "태준이" or message.author.name == "InFi-EYE"):
+    if (message.author.name != "태준이" or message.author.name != "InFi-EYE"):
         if("!ㅌ" not in message.content):
             DbReturn = DbLogin(message.author.id, message.author.name, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
