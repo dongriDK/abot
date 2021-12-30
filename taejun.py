@@ -36,6 +36,7 @@ config = {
     'raise_on_warnings' : True
 }
 taejunRoom = 905813712886198273
+DeclarRoom = 926123278584651806
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
@@ -382,7 +383,7 @@ async def on_message(message):
             if message.channel.id == 926118022245142538:
                 await message.delete()
                 msg = "<@" + str(message.author.id) + ">" + "님이\n" + "```" + message.content + "```"
-                await SendMessage(taejunRoom, msg)
+                await SendMessage(DeclarRoom, msg)
 
 
     await bot.process_commands(message)
