@@ -373,11 +373,19 @@ async def on_message(message):
     con, cur = DbConnect()
     if (message.author.name != "태준이" and message.author.name != "InFi-EYE"):
         if("!ㅌ" not in message.content):
+            print(message, dir(message))
+            # if message.author.id == "159985870458322944":
+            #     message.delete()
             DbReturn = DbLogin(message.author.id, message.author.name, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
 
+
     await bot.process_commands(message)
     return 0
+
+# @bot.event
+# async def delete_message(message):
+#     if message.author.id == "159985870458322944":
 
 # 별명 변경 시 호출
 @bot.event
