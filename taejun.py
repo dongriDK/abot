@@ -373,7 +373,7 @@ async def on_message(message):
     con, cur = DbConnect()
     if (message.author.name != "태준이" and message.author.name != "InFi-EYE"):
         if("!ㅌ" not in message.content):
-            if message.author.id == "159985870458322944":
+            if message.author.id == "925004142831874119":
                 print(message, dir(message))
                 message.delete()
             DbReturn = DbLogin(message.author.id, message.author.name, message.author.discriminator, con, cur)
