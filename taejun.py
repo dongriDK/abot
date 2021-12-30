@@ -376,7 +376,7 @@ async def on_message(message):
             print(message.author.id, message)
             if message.author.id == "925004142831874119" or message.author.id == "915102187548446751":
                 print(message, dir(message))
-                message.delete()
+                message.delete(message)
             DbReturn = DbLogin(message.author.id, message.author.name, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
 
