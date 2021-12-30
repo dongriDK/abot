@@ -373,7 +373,7 @@ async def on_message(message):
     con, cur = DbConnect()
     if (message.author.name != "태준이" and message.author.name != "InFi-EYE"):
         if("!ㅌ" not in message.content):
-            if message.author.id == "925004142831874119" or message.author.id == "915102187548446751":
+            if message.author.id == 925004142831874119 or message.author.id == "915102187548446751":
                 print(message.author.id)
                 print(message, dir(message))
                 await message.delete()
