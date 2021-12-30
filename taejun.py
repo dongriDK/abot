@@ -380,7 +380,7 @@ async def on_message(message):
             #     await message.delete()
             DbReturn = DbLogin(message.author.id, message.author.name, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
-            if message.channel.id == 926118022245142538:
+            if message.channel.id == 926118022245142538 and message.author.id != 346545477245861888:
                 await message.delete()
                 msg = "**신고자** ㅤ: ㅤ<@" + str(message.author.id) + ">\n" + "```" + message.content + "```"
                 await SendMessage(DeclarRoom, msg)
