@@ -381,7 +381,7 @@ async def on_message(message):
             DbModify_text(message, con, cur)
             if message.channel.id == 926118022245142538:
                 await message.delete()
-                msg = "```<@" + str(message.author.id) + ">" + "님이\n" + message.content + "```"
+                msg = "<@" + str(message.author.id) + ">" + "님이\n" + "```" + message.content + "```"
                 await SendMessage(taejunRoom, msg)
 
 
