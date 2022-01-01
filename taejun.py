@@ -136,11 +136,9 @@ def DbModify_voice(member, before, after, con, cur):
                 if(len(ret) == 0):
                     return 0, 0, 0
                 oldTime = CurTime()
-            oldTime = year + "." + oldTime
-            new_Time = year + "." + newTime
 
             oldSec = time.mktime(datetime.datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
-            newSec = time.mktime(datetime.datetime.strptime(new_Time, '%Y.%m.%d %H:%M:%S').timetuple())
+            newSec = time.mktime(datetime.datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
 
             totalSeconds = newSec - oldSec
 
