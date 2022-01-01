@@ -40,6 +40,7 @@ DeclarRoom = 926123278584651806
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
+    year = str(time.localtime(time.time() + 32400).tm_year)
     mon = str(time.localtime(time.time() + 32400).tm_mon)
     day = str(time.localtime(time.time() + 32400).tm_mday)
     hour = str(time.localtime(time.time() + 32400).tm_hour)
@@ -50,7 +51,7 @@ def CurTime():
     if (len(hour) == 1): hour = "0" + hour
     if (len(min) == 1): min = "0" + min
     if (len(sec) == 1): sec = "0" + sec
-    strTime = mon + "." + day + " " + hour + ":" + min + ":" + sec
+    strTime = year + "." + mon + "." + day + " " + hour + ":" + min + ":" + sec
     return strTime
 
 def DbConnect():
