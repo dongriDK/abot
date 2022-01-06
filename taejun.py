@@ -238,7 +238,7 @@ def MakeEmbed(text):
     return embed
 
 def MakeMension(id):
-    return "<@" + str(id) + ">\n"
+    return "<@" + str(id) + ">"
 
 def MakePageList(channel, list_, flag):
     disc_list = []
