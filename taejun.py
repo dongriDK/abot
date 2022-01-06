@@ -237,6 +237,9 @@ def MakeEmbed(text):
     embed = discord.Embed(description=text)
     return embed
 
+def MakeMension(id):
+    return "<@" + str(id) + ">\n"
+
 def MakePageList(channel, list_, flag):
     disc_list = []
     pages = []
@@ -381,7 +384,7 @@ async def on_message(message):
             DbModify_text(message, con, cur)
             if message.channel.id == 926118022245142538 and message.author.id != 346545477245861888:
                 await message.delete()
-                msg = "**신고자** ㅤ: ㅤ<@" + str(message.author.id) + ">\n" + "```" + message.content + "```"
+                msg = "**신고자** ㅤ: ㅤ" + MakeMension(message) + "```" + message.content + "```"
                 await SendMessage(DeclarRoom, msg)
 
 
@@ -398,7 +401,7 @@ async def on_member_update(before, after):
     beNick = before.display_name
     afNick = after.display_name
     if(beNick != afNick):
-        msg = "`" + beNick + "` -> `" + afNick + "` 별명 변경."
+        msg = MakeMension(after.id) + " ㅤ`" + beNick + "` -> `" + afNick + "` 별명 변경."
         await SendMessage(taejunRoom, msg)
 
 # 프로필 변경 시 호출
@@ -410,9 +413,9 @@ async def on_user_update(before, after):
     beDis = before.discriminator
     afDis = after.discriminator
     if (beName != afName):
-        msg = "`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
+        msg = MakeMension(after.id) + " ㅤ`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
         if (beDis != afDis):
-            msg = "`" + beName + "` " + "`" + beDis + "` -> `" + afDis + "` 디스코드 태그 변경"
+            msg = MakeMension(after.id) + " ㅤ`" + beName + "` " + "`" + beDis + "` -> `" + afDis + "` 디스코드 태그 변경"
         DbModify_user_info(afName, afDis, before.id, con, cur)
         await SendMessage(taejunRoom, msg)
 
