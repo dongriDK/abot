@@ -143,7 +143,7 @@ def DbModify_voice(member, before, after, con, cur):
             con.commit()
 
         elif (beChannel != "없음"):
-            cur.execute("SELECT be_time FROM voice_info where id=%s and af_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
+            cur.execute("SELECT be_time FROM voice_info where id=%s and af_channel=%s ORDER BY be_time desc limit 1", (member.id, beChannel))
 
             ret = cur.fetchall()
             cur.execute("UPDATE voice_info set af_time=%s where id=%s and af_channel=%s and af_time=%s", (newTime, member.id, beChannel, 0))
