@@ -196,7 +196,7 @@ def DbSearchVoice_member(id, con, cur):
 
 def DbSearchbellrun(channel, time, con, cur):
     # cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like %s and (Voice_info.before_channel like %s or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channel, channel))
-    cur.execute("SELECT * from voice_info where time like %s and (be_channel like %s or af_channel like %s) order by time desc",(time+"%", channel, channel))
+    cur.execute("SELECT * from voice_info where time like %s and (be_channel=%s or af_channel=%s) order by time desc",(time+"%", channel, channel))
     channelList = cur.fetchall()
 
     return channelList
