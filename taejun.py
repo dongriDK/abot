@@ -590,7 +590,7 @@ async def 검색(ctx, *args):
             await ctx.channel.send(embed=embed)
             return
 
-        allMember = bot.get_guild(ServerRoom)
+        allMember = bot.get_guild(ServerRoom).members
         flag = False
         for i in allMember:
             if name in i.name and tag in i.discriminator:
