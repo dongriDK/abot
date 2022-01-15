@@ -367,7 +367,7 @@ def WhiteList(ctx):
 @bot.event
 async def on_ready():
     print(f'부팅 성공:{bot.user.name}!')
-    game = discord.Game("")
+    game = discord.Game("Scan")
     await bot.change_presence(status = discord.Status.online, activity = game)
 
     return 0
@@ -736,9 +736,9 @@ async def 채팅만(ctx):
                     # chat += member.name
                     # chat += " ㅤ"
                     # chat += member.discriminator
-                    chat += " ㅤ"
-                    chat += str(datetime.timedelta(seconds=int(voiceReturn)))
                     chat += " ㅤ`"
+                    chat += str(datetime.timedelta(seconds=int(voiceReturn)))
+                    chat += "` ㅤ`"
                     chat += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     chat += "`\n"
                     chatList.append(chat)
