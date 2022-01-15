@@ -275,31 +275,19 @@ def MakePageList(channel, list_, flag):
         for i in list_:
             disc_list[page] += i[3].decode()
             disc_list[page] += " ㅤ"
+
             if i[1].decode() != "없음":
                 disc_list[page] += MakeMension(i[1].decode, 0)
             else:
                 disc_list[page] += "없음"
-            # try:
-            #     becha = voiceChannels[i[1].decode()]
-            # except:
-            #     try:
-            #         becha = i[1].decode()
-            #     except:
-            #         becha = "없음"
-            # disc_list[page] += becha
+
             disc_list[page] += " -> "
+
             if i[2].decode() != "없음":
                 disc_list[page] += MakeMension(i[2].decode(), 0)
             else:
                 disc_list[page] += "없음"
-            # try:
-            #     afcha = voiceChannels[i[2].decode()]
-            # except:
-            #     try:
-            #         afcha = i[1].decode()
-            #     except:
-            #         afcha = "없음"
-            # disc_list[page] += afcha
+
             disc_list[page] += " ㅤ"
             disc_list[page] += MakeMension(i[0].decode(), 1)
             disc_list[page] += "\n"
@@ -590,7 +578,7 @@ async def 검색(ctx, *args):
         for j in textReturn:
             textAnswer += j[3].decode()
             textAnswer += " ㅤ"
-            textAnswer += "<#" + j[2].decode() + ">"
+            textAnswer += MakeMension(j[2].decode(), 0)
             # try:
             #     textAnswer += voiceChannels[j[2].decode()]
             # except:
@@ -604,7 +592,7 @@ async def 검색(ctx, *args):
             voiceAnswer += j[3].decode()
             voiceAnswer += " ㅤ"
             if j[1].decode() != "없음":
-                voiceAnswer += "<#" + j[1].decode() + ">"
+                voiceAnswer += MakeMension(j[1].decode(), 0)
             else:
                 voiceAnswer += "없음"
             # try:
