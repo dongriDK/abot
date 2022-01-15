@@ -136,39 +136,6 @@ def DbModify_voice(member, before, after, con, cur):
 
     if beChannel != afChannel:
         newTime = CurTime()
-        
-        # if (beChannel == "없음" and afChannel != "없음"):   # 없음 -> 스트리밍
-        #     cur.execute("INSERT INTO Voice_info(id, be_channel, af_channel, time) VALUE(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
-        #     con.commit()
-
-        # elif (beChannel != "없음"):
-        #     cur.execute("SELECT be_time FROM voice_info where id=%s and af_channel=%s ORDER BY be_time desc limit 1", (member.id, beChannel))
-
-        #     ret = cur.fetchall()
-        #     cur.execute("UPDATE voice_info set af_time=%s where id=%s and af_channel=%s and af_time=%s", (newTime, member.id, beChannel, 0))
-
-        #     try:
-        #         oldTime = ret[0][0].decode()
-        #         print("DBVoice try", beChannel, oldTime)
-        #     except:
-        #         print("DBVoice except", beChannel)
-        #         if(len(ret) == 0):
-        #             return 0, 0, 0
-        #         oldTime = CurTime()
-            
-        #     oldTime = '2022.' + oldTime
-        #     newTime = '2022.' + newTime
-        #     oldSec = time.mktime(datetime.datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
-        #     newSec = time.mktime(datetime.datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
-
-        #     totalSeconds = newSec - oldSec
-
-        #     if (totalSeconds < 10):
-        #         retValue = 1
-
-        #     cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
-        #     con.commit()
-
         if (beChannel != "없음"):
             cur.execute("SELECT time FROM voice_info where id=%s and af_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
             ret = cur.fetchall()
@@ -181,10 +148,8 @@ def DbModify_voice(member, before, after, con, cur):
                     return 0, 0, 0
                 oldTime = CurTime()
 
-            oldTime = '2022.' + oldTime
-            newTime = '2022.' + newTime
-            oldSec = time.mktime(datetime.datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
-            newSec = time.mktime(datetime.datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
+            oldSec = time.mktime(datetime.datetime.strptime("2022" + oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
+            newSec = time.mktime(datetime.datetime.strptime("2022" + newTime, '%Y.%m.%d %H:%M:%S').timetuple())
 
             totalSeconds = newSec - oldSec
 
