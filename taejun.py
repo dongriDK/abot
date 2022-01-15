@@ -37,7 +37,7 @@ config = {
 }
 taejunRoom = 905813712886198273
 DeclarRoom = 926123278584651806
-ServerRoom = 928604108498296833
+ServerRoom = 875392692014694450
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
