@@ -367,7 +367,7 @@ def WhiteList(ctx):
 @bot.event
 async def on_ready():
     print(f'부팅 성공:{bot.user.name}!')
-    game = discord.Game("탐지")
+    game = discord.Game("")
     await bot.change_presence(status = discord.Status.online, activity = game)
 
     return 0
@@ -648,9 +648,9 @@ async def 인원정리(ctx):
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
                     ghost = ""
                     ghost += MakeMension(member.id, 1)
-                    ghost += " ㅤ"
-                    ghost += DbSearchTime_byid(member.id, con, cur)[0]
-                    ghost += "\n"
+                    ghost += " ㅤ`"
+                    ghost += DbSearchTime_byid(member.id, con, cur)[0][0]
+                    ghost += "`\n"
                     ghostList.append(ghost)
                     # temp = DbSearch_member_byid(member.id, con, cur)
                     # if (len(temp) == 0):
@@ -735,9 +735,9 @@ async def 채팅만(ctx):
                     # chat += member.discriminator
                     chat += " ㅤ"
                     chat += str(datetime.timedelta(seconds=int(voiceReturn)))
-                    chat += " ㅤ"
-                    chat += DbSearchTime_byid(member.id, con, cur)[0]
-                    chat += "\n"
+                    chat += " ㅤ`"
+                    chat += DbSearchTime_byid(member.id, con, cur)[0][0]
+                    chat += "`\n"
                     chatList.append(chat)
         pages = MakePageList(0, chatList, 2)
 
