@@ -619,7 +619,7 @@ async def 검색(ctx, *args):
         
         textFlag = False
         voiceFlag = False
-        textAnswer += "서버 입장 : `" + str(jointime) + "`\n"
+        textAnswer += "서버 입장 : `" + str(jointime[0].decode()) + "`\n"
         textAnswer += "총 채팅 수 : `" + str(ttext) + "`\n"
         for j in textReturn:
             textAnswer += j[3].decode()
