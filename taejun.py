@@ -277,7 +277,7 @@ def MakePageList(channel, list_, flag):
             disc_list[page] += " ㅤ"
 
             if i[1].decode() != "없음":
-                disc_list[page] += MakeMension(i[1].decode, 0)
+                disc_list[page] += MakeMension(i[1].decode(), 0)
             else:
                 disc_list[page] += "없음"
 
