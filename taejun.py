@@ -81,7 +81,7 @@ def DbInit():
     con, cur = DbConnect()
 
     cur.execute("DROP TABLE Voice_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id varchar(128), be_channel TEXT, af_channel TEXT, be_time TEXT, af_time TEXT) DEFAULT CHARSET=utf8mb4")
+    cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id varchar(128), be_channel TEXT, af_channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE Text_info")
     cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE User_info")
@@ -137,17 +137,41 @@ def DbModify_voice(member, before, after, con, cur):
     if beChannel != afChannel:
         newTime = CurTime()
         
-        year = str(time.localtime(time.time() + 32400).tm_year)
-        if (beChannel == "없음" and afChannel != "없음"):   # 없음 -> 스트리밍
-            cur.execute("INSERT INTO Voice_info(id, be_channel, af_channel, be_time, af_time) VALUE(%s, %s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime, 0))
-            con.commit()
+        # if (beChannel == "없음" and afChannel != "없음"):   # 없음 -> 스트리밍
+        #     cur.execute("INSERT INTO Voice_info(id, be_channel, af_channel, time) VALUE(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
+        #     con.commit()
 
-        elif (beChannel != "없음"):
-            cur.execute("SELECT be_time FROM voice_info where id=%s and af_channel=%s ORDER BY be_time desc limit 1", (member.id, beChannel))
+        # elif (beChannel != "없음"):
+        #     cur.execute("SELECT be_time FROM voice_info where id=%s and af_channel=%s ORDER BY be_time desc limit 1", (member.id, beChannel))
 
+        #     ret = cur.fetchall()
+        #     cur.execute("UPDATE voice_info set af_time=%s where id=%s and af_channel=%s and af_time=%s", (newTime, member.id, beChannel, 0))
+
+        #     try:
+        #         oldTime = ret[0][0].decode()
+        #         print("DBVoice try", beChannel, oldTime)
+        #     except:
+        #         print("DBVoice except", beChannel)
+        #         if(len(ret) == 0):
+        #             return 0, 0, 0
+        #         oldTime = CurTime()
+            
+        #     oldTime = '2022.' + oldTime
+        #     newTime = '2022.' + newTime
+        #     oldSec = time.mktime(datetime.datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
+        #     newSec = time.mktime(datetime.datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
+
+        #     totalSeconds = newSec - oldSec
+
+        #     if (totalSeconds < 10):
+        #         retValue = 1
+
+        #     cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
+        #     con.commit()
+
+        if (beChannel != "없음"):
+            cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
             ret = cur.fetchall()
-            cur.execute("UPDATE voice_info set af_time=%s where id=%s and af_channel=%s and af_time=%s", (newTime, member.id, beChannel, 0))
-
             try:
                 oldTime = ret[0][0].decode()
                 print("DBVoice try", beChannel, oldTime)
@@ -156,7 +180,7 @@ def DbModify_voice(member, before, after, con, cur):
                 if(len(ret) == 0):
                     return 0, 0, 0
                 oldTime = CurTime()
-            
+
             oldTime = '2022.' + oldTime
             newTime = '2022.' + newTime
             oldSec = time.mktime(datetime.datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
@@ -170,31 +194,8 @@ def DbModify_voice(member, before, after, con, cur):
             cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
             con.commit()
 
-        # if (beChannel != "없음"):
-        #     cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
-        #     ret = cur.fetchall()
-        #     # print("A", beChannel, ret)
-        #     try:
-        #         oldTime = ret[0][0].decode()
-        #         print("B", beChannel, oldTime)
-        #     except:
-        #         if(len(ret) == 0):
-        #             return 0, 0, 0
-        #         oldTime = CurTime()
-
-        #     oldSec = time.mktime(datetime.datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
-        #     newSec = time.mktime(datetime.datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
-
-        #     totalSeconds = newSec - oldSec
-
-        #     if (totalSeconds < 10):
-        #         retValue = 1
-
-        #     cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
-        #     con.commit()
-
-        # cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
-        # con.commit()
+        cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
+        con.commit()
 
     return retValue, beChannel, totalSeconds
 
@@ -223,14 +224,14 @@ def DbSearchText_member(id, con, cur):
     return textList
 
 def DbSearchVoice_member(id, con, cur):
-    cur.execute("SELECT * from Voice_info where id=%s order by be_time desc limit 15", (id,))
+    cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 15", (id,))
     voiceList = cur.fetchall()
 
     return voiceList
 
 def DbSearchbellrun(channel, time, con, cur):
     # cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like %s and (Voice_info.before_channel like %s or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channel, channel))
-    cur.execute("SELECT * from voice_info where be_time like %s and (be_channel like %s or af_channel like %s) order by be_time desc",(time+"%", channel, channel))
+    cur.execute("SELECT * from voice_info where time like %s and (be_channel like %s or af_channel like %s) order by time desc",(time+"%", channel, channel))
     channelList = cur.fetchall()
 
     return channelList
