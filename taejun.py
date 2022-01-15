@@ -649,6 +649,7 @@ async def 인원정리(ctx):
                     ghost = ""
                     ghost += MakeMension(member.id, 1)
                     ghost += " ㅤ`"
+                    print(member.name)
                     ghost += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     ghost += "`\n"
                     ghostList.append(ghost)
@@ -763,7 +764,7 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
             voice = ""
             voice += str(rank)
             voice += ".ㅤ "
-            voice += MakeMension(i[0].decode())
+            voice += MakeMension(i[0].decode(), 1)
             # voice += i[1].decode()
             # voice += "ㅤ "
             # voice += i[2].decode()
@@ -787,7 +788,7 @@ async def 채팅순위(ctx):
             text = ""
             text += str(rank)
             text += ".ㅤ "
-            text += MakeMension(i[0].decode())
+            text += MakeMension(i[0].decode(), 1)
             # text += i[1].decode()
             # text += "ㅤ "
             # text += i[2].decode()
