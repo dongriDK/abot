@@ -170,7 +170,7 @@ def DbModify_voice(member, before, after, con, cur):
         #     con.commit()
 
         if (beChannel != "없음"):
-            cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
+            cur.execute("SELECT time FROM voice_info where id=%s and af_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
             ret = cur.fetchall()
             try:
                 oldTime = ret[0][0].decode()
@@ -194,7 +194,7 @@ def DbModify_voice(member, before, after, con, cur):
             cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
             con.commit()
 
-        cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
+        cur.execute("INSERT INTO Voice_info(id, be_channel, af_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
         con.commit()
 
     return retValue, beChannel, totalSeconds
