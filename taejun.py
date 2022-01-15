@@ -141,9 +141,7 @@ def DbModify_voice(member, before, after, con, cur):
             ret = cur.fetchall()
             try:
                 oldTime = ret[0][0].decode()
-                print("DBVoice try", beChannel, oldTime)
             except:
-                print("DBVoice except", beChannel)
                 if(len(ret) == 0):
                     return 0, 0, 0
                 oldTime = CurTime()
@@ -377,9 +375,7 @@ async def on_voice_state_update(member, before, after):
     con, cur = DbConnect()
     DbReturn = DbLogin(member.id, member.name, member.discriminator, con, cur)
     retValue, beChannel, retTime = DbModify_voice(member, before, after, con, cur)
-    print("C",beChannel)
     if (retValue == 1 and beChannel != "없음"):
-        print("ㅁㅁㅁㅁㅁ", beChannel)
         runChannel_id = bot.get_channel(before.channel.id)
         runChannel_members = runChannel_id.members
         if len(runChannel_members) > 0:
@@ -649,9 +645,7 @@ async def 인원정리(ctx):
                     ghost = ""
                     ghost += MakeMension(member.id, 1)
                     ghost += " ㅤ`"
-                    print(member.name)
                     abc = DbSearchTime_byid(member.id, con, cur)
-                    print(abc)
                     ghost += abc[0][0].decode()
                     ghost += "`\n"
                     ghostList.append(ghost)
