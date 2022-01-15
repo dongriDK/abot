@@ -650,7 +650,9 @@ async def 인원정리(ctx):
                     ghost += MakeMension(member.id, 1)
                     ghost += " ㅤ`"
                     print(member.name)
-                    ghost += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
+                    abc = DbSearchTime_byid(member.id, con, cur)
+                    print(abc)
+                    ghost += abc[0][0].decode()
                     ghost += "`\n"
                     ghostList.append(ghost)
                     # temp = DbSearch_member_byid(member.id, con, cur)
