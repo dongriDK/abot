@@ -37,10 +37,11 @@ config = {
 }
 taejunRoom = 905813712886198273
 DeclarRoom = 926123278584651806
+ServerRoom = 928604108498296833
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
-    year = str(time.localtime(time.time() + 32400).tm_year)
+    # year = str(time.localtime(time.time() + 32400).tm_year)
     mon = str(time.localtime(time.time() + 32400).tm_mon)
     day = str(time.localtime(time.time() + 32400).tm_mday)
     hour = str(time.localtime(time.time() + 32400).tm_hour)
@@ -51,7 +52,15 @@ def CurTime():
     if (len(hour) == 1): hour = "0" + hour
     if (len(min) == 1): min = "0" + min
     if (len(sec) == 1): sec = "0" + sec
-    strTime = year + "." + mon + "." + day + " " + hour + ":" + min + ":" + sec
+    strTime = mon + "." + day + " " + hour + ":" + min + ":" + sec
+    return strTime
+
+def CurDay():
+    mon = str(time.localtime(time.time() + 32400).tm_mon)
+    day = str(time.localtime(time.time() + 32400).tm_mday)
+    if (len(mon) == 1): mon = "0" + mon
+    if (len(day) == 1): day = "0" + day
+    strTime = mon + "." + day
     return strTime
 
 def DbConnect():
@@ -72,7 +81,7 @@ def DbInit():
     con, cur = DbConnect()
 
     cur.execute("DROP TABLE Voice_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id VARCHAR(128), before_channel TEXT, after_channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
+    cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id varchar(128), be_channel TEXT, af_channel TEXT, be_time TEXT, af_time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE Text_info")
     cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE User_info")
@@ -81,24 +90,25 @@ def DbInit():
     return 0
 
 def DbModify_text(message, con, cur):
-    try:
-        msg = message.channel.name.split("＿")
-        if "║" in msg[0]:
-            msg = msg[0].split("║")[1]
-            msg = msg.split("＊")[0]
-            print("1", msg)
-        elif (msg == "공지양식"):
-            return 0
-        else:
-            msg = msg[1]
-            print("2", msg)
-    except:
-        print("3", msg)
-        if (":" in message.channel.name):
-            return 0
-            # msg = message.channel.name.split(":")[1]
-        msg = message.channel.name
-    cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), msg, CurTime()))
+
+    # try:
+    #     msg = message.channel.name.split("＿")
+    #     if "║" in msg[0]:
+    #         msg = msg[0].split("║")[1]
+    #         msg = msg.split("＊")[0]
+    #         print("1", msg)
+    #     elif (msg == "공지양식"):
+    #         return 0
+    #     else:
+    #         msg = msg[1]
+    #         print("2", msg)
+    # except:
+    #     print("3", msg)
+    #     if (":" in message.channel.name):
+    #         return 0
+    #         # msg = message.channel.name.split(":")[1]
+    #     msg = message.channel.name
+    cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), message.channel.id, CurTime()))
     cur.execute("UPDATE user_info SET ttext=ttext+1 where id=%s", (message.author.id,))
     con.commit()
     return 0
@@ -106,37 +116,49 @@ def DbModify_text(message, con, cur):
 def DbModify_voice(member, before, after, con, cur):
     retValue = 0
     totalSeconds = 0
-    try:
-        beChannel = "없음" if before.channel == None else before.channel.name.split("＿")[1]
-    except:
-        beChannel = before.channel.name[9:]
-    try:
-        afChannel = "없음" if after.channel == None else after.channel.name.split("＿")[1]
-    except:
-        afChannel = after.channel.name[9:]
+
+    beChannel = "없음" if before.channel == None else before.channel.id
+    afChannel = "없음" if after.channel == None else after.channel.id
     
-    if ("(" in beChannel):
-        beChannel = beChannel.split("(")[0][:-1]
-    if ("(" in afChannel):
-        afChannel = afChannel.split("(")[0][:-1]
+    # try:
+    #     beChannel = "없음" if before.channel == None else before.channel.name.split("＿")[1]
+    # except:
+    #     beChannel = before.channel.name[9:]
+    # try:
+    #     afChannel = "없음" if after.channel == None else after.channel.name.split("＿")[1]
+    # except:
+    #     afChannel = after.channel.name[9:]
+    
+    # if ("(" in beChannel):
+    #     beChannel = beChannel.split("(")[0][:-1]
+    # if ("(" in afChannel):
+    #     afChannel = afChannel.split("(")[0][:-1]
 
     if beChannel != afChannel:
         newTime = CurTime()
+        
+        year = str(time.localtime(time.time() + 32400).tm_year)
+        if (beChannel == "없음" and afChannel != "없음"):   # 없음 -> 스트리밍
+            cur.execute("INSERT INTO Voice_info(id, be_channel, af_channel, be_time, af_time) VALUE(%s, %s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime, 0))
+            con.commit()
 
-        if (beChannel != "없음"):
-            year = str(time.localtime(time.time() + 32400).tm_year)
+        elif (beChannel != "없음"):
+            cur.execute("SELECT be_time FROM voice_info where id=%s and af_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
 
-            cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
             ret = cur.fetchall()
-            # print("A", beChannel, ret)
+            cur.execute("UPDATE voice_info set af_time=%s where id=%s and af_channel=%s and af_time=%s", (newTime, member.id, beChannel, 0))
+
             try:
                 oldTime = ret[0][0].decode()
-                print("B", beChannel, oldTime)
+                print("DBVoice try", beChannel, oldTime)
             except:
+                print("DBVoice except", beChannel)
                 if(len(ret) == 0):
                     return 0, 0, 0
                 oldTime = CurTime()
-
+            
+            oldTime = '2022.' + oldTime
+            newTime = '2022.' + newTime
             oldSec = time.mktime(datetime.datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
             newSec = time.mktime(datetime.datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
 
@@ -148,8 +170,31 @@ def DbModify_voice(member, before, after, con, cur):
             cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
             con.commit()
 
-        cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
-        con.commit()
+        # if (beChannel != "없음"):
+        #     cur.execute("SELECT time FROM voice_info where id=%s and after_channel=%s ORDER BY time desc limit 1", (member.id, beChannel))
+        #     ret = cur.fetchall()
+        #     # print("A", beChannel, ret)
+        #     try:
+        #         oldTime = ret[0][0].decode()
+        #         print("B", beChannel, oldTime)
+        #     except:
+        #         if(len(ret) == 0):
+        #             return 0, 0, 0
+        #         oldTime = CurTime()
+
+        #     oldSec = time.mktime(datetime.datetime.strptime(oldTime, '%Y.%m.%d %H:%M:%S').timetuple())
+        #     newSec = time.mktime(datetime.datetime.strptime(newTime, '%Y.%m.%d %H:%M:%S').timetuple())
+
+        #     totalSeconds = newSec - oldSec
+
+        #     if (totalSeconds < 10):
+        #         retValue = 1
+
+        #     cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
+        #     con.commit()
+
+        # cur.execute("INSERT INTO Voice_info(id, before_channel, after_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
+        # con.commit()
 
     return retValue, beChannel, totalSeconds
 
@@ -165,25 +210,27 @@ def DbSearch_member(name, tag, con, cur):
 
     return memberId
 
-def DbSearch_member_byid(id, con, cur):
-    cur.execute("SELECT name, tag from User_info where id=%s", (id,))
+def DbSearchTime_byid(id, con, cur):
+    cur.execute("SELECT jointime from login where id=%s", (id,))
+    # cur.execute("SELECT name, tag from User_info where id=%s", (id,))
 
     return cur.fetchall()
 
 def DbSearchText_member(id, con, cur):
-    cur.execute("SELECT * from Text_info where id=%s order by time desc limit 10", (id,))
+    cur.execute("SELECT * from Text_info where id=%s order by time desc limit 15", (id,))
     textList = cur.fetchall()
 
     return textList
 
 def DbSearchVoice_member(id, con, cur):
-    cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 10", (id,))
+    cur.execute("SELECT * from Voice_info where id=%s order by be_time desc limit 15", (id,))
     voiceList = cur.fetchall()
 
     return voiceList
 
 def DbSearchbellrun(channel, time, con, cur):
-    cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like %s and (Voice_info.before_channel like %s or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channel, channel))
+    # cur.execute("SELECT User_info.name, Voice_info.before_channel, Voice_info.after_channel, Voice_info.time FROM User_info left join Voice_info on User_info.id = Voice_info.id where Voice_info.time like %s and (Voice_info.before_channel like %s or Voice_info.after_channel like ?) ORDER BY time desc",(time+"%", channel, channel))
+    cur.execute("SELECT * from voice_info where be_time like %s and (be_channel like %s or af_channel like %s) order by be_time desc",(time+"%", channel, channel))
     channelList = cur.fetchall()
 
     return channelList
@@ -229,6 +276,14 @@ def DbSearchtime(id, flag, con, cur):
             ttime2 = 0
         return ttime1, ttime2
 
+def FindChannelName(name):
+    channels = bot.get_guild(ServerRoom).channels
+    
+    for i in channels:
+        if name in i.name:
+            return i.id
+    return 0
+
 async def SendMessage(channel, msg):
     channelg = bot.get_channel(channel)
     await channelg.send(msg)
@@ -237,8 +292,8 @@ def MakeEmbed(text):
     embed = discord.Embed(description=text)
     return embed
 
-def MakeMension(id):
-    return "<@" + str(id) + ">"
+def MakeMension(id, tag):
+    return"<@" + str(id) + ">" if tag == 1 else "<#" + str(id) + ">"
 
 def MakePageList(channel, list_, flag):
     disc_list = []
@@ -254,26 +309,33 @@ def MakePageList(channel, list_, flag):
         for i in list_:
             disc_list[page] += i[3].decode()
             disc_list[page] += " ㅤ"
-            try:
-                becha = voiceChannels[i[1].decode()]
-            except:
-                try:
-                    becha = i[1].decode()
-                except:
-                    becha = "없음"
-            disc_list[page] += becha
+            if i[1].decode() != "없음":
+                disc_list[page] += MakeMension(i[1].decode, 0)
+            else:
+                disc_list[page] += "없음"
+            # try:
+            #     becha = voiceChannels[i[1].decode()]
+            # except:
+            #     try:
+            #         becha = i[1].decode()
+            #     except:
+            #         becha = "없음"
+            # disc_list[page] += becha
             disc_list[page] += " -> "
-            try:
-                afcha = voiceChannels[i[2].decode()]
-            except:
-                try:
-                    afcha = i[1].decode()
-                except:
-                    afcha = "없음"
-                
-            disc_list[page] += afcha
+            if i[2].decode() != "없음":
+                disc_list[page] += MakeMension(i[2].decode(), 0)
+            else:
+                disc_list[page] += "없음"
+            # try:
+            #     afcha = voiceChannels[i[2].decode()]
+            # except:
+            #     try:
+            #         afcha = i[1].decode()
+            #     except:
+            #         afcha = "없음"
+            # disc_list[page] += afcha
             disc_list[page] += " ㅤ"
-            disc_list[page] += i[0].decode()
+            disc_list[page] += MakeMension(i[0].decode(), 1)
             disc_list[page] += "\n"
             count += 1
             if (count % 20 == 0 or count == total_len):
@@ -367,7 +429,7 @@ async def on_voice_state_update(member, before, after):
         runChannel_id = bot.get_channel(before.channel.id)
         runChannel_members = runChannel_id.members
         if len(runChannel_members) > 0:
-            await SendMessage(taejunRoom, "`" + beChannel + "`" + "에서 " + "`" + member.name + "`" + " " + "`" + str(retTime) + "`" + "초 벨튀 탐지")
+            await SendMessage(taejunRoom, "<#" + beChannel + ">" + "에서 " + "`" + member.name + "`" + " " + "`" + str(retTime) + "`" + "초 벨튀 탐지")
 
     return 0
     
@@ -384,7 +446,7 @@ async def on_message(message):
             DbModify_text(message, con, cur)
             if message.channel.id == 926118022245142538 and message.author.id != 346545477245861888:
                 await message.delete()
-                msg = "**신고자** ㅤ: ㅤ" + MakeMension(message) + "```" + message.content + "```"
+                msg = "**신고자** ㅤ: ㅤ" + MakeMension(message, 1) + "```" + message.content + "```"
                 await SendMessage(DeclarRoom, msg)
 
 
@@ -401,7 +463,7 @@ async def on_member_update(before, after):
     beNick = before.display_name
     afNick = after.display_name
     if(beNick != afNick):
-        msg = MakeMension(after.id) + " ㅤ`" + beNick + "` -> `" + afNick + "` 별명 변경."
+        msg = MakeMension(after.id, 1) + " ㅤ`" + beNick + "` -> `" + afNick + "` 별명 변경."
         await SendMessage(taejunRoom, msg)
 
 # 프로필 변경 시 호출
@@ -413,9 +475,9 @@ async def on_user_update(before, after):
     beDis = before.discriminator
     afDis = after.discriminator
     if (beName != afName):
-        msg = MakeMension(after.id) + " ㅤ`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
+        msg = MakeMension(after.id, 1) + " ㅤ`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
         if (beDis != afDis):
-            msg = MakeMension(after.id) + " ㅤ`" + beName + "` " + "`" + beDis + "` -> `" + afDis + "` 디스코드 태그 변경"
+            msg = MakeMension(after.id, 1) + " ㅤ`" + beName + "` " + "`" + beDis + "` -> `" + afDis + "` 디스코드 태그 변경"
         DbModify_user_info(afName, afDis, before.id, con, cur)
         await SendMessage(taejunRoom, msg)
 
@@ -425,7 +487,7 @@ async def on_member_join(member):
     cur.execute("SELECT count from login where id=%s", (member.id,))
     count = cur.fetchall()
     if len(count) == 0:
-        cur.execute("INSERT INTO login(id, name, tag, count) VALUES(%s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1))
+        cur.execute("INSERT INTO login(id, name, tag, count, newTime) VALUES(%s, %s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1, CurDay()))
         con.commit()
     elif count[0][0] >= 3:
         channel = bot.get_channel(taejunRoom)
@@ -528,13 +590,17 @@ async def 검색(ctx, *args):
             await ctx.channel.send(embed=embed)
             return
 
-        memberId = DbSearch_member(name, tag, con, cur)
-        try:
-            memberId = memberId[0][0].decode()
-        except:
+        allMember = bot.get_guild(ServerRoom)
+        flag = False
+        for i in allMember:
+            if name in i.name and tag in i.discriminator:
+                memberId = i.id
+                flag = True
+        # memberId = DbSearch_member(name, tag, con, cur)
+        if not flag:
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
-            # embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
-            #                         description="없습니다.")
+        # embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
+        #                         description="없습니다.")
             await ctx.channel.send(embed=embed)
             return    
 
@@ -544,7 +610,7 @@ async def 검색(ctx, *args):
         textReturn = DbSearchText_member(memberId, con, cur)
         voiceReturn = DbSearchVoice_member(memberId, con, cur)
         ttime, ttext = DbSearchtime(memberId, 3, con, cur)
-
+        jointime = DbSearchTime_byid(memberId, con, cur)
         if len(textReturn) == 0 and len(voiceReturn) == 0:
             embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                     description="없습니다.")
@@ -553,14 +619,16 @@ async def 검색(ctx, *args):
         
         textFlag = False
         voiceFlag = False
+        textAnswer += "서버 입장 : `" + str(jointime) + "`\n"
         textAnswer += "총 채팅 수 : `" + str(ttext) + "`\n"
         for j in textReturn:
             textAnswer += j[3].decode()
             textAnswer += " ㅤ"
-            try:
-                textAnswer += voiceChannels[j[2].decode()]
-            except:
-                textAnswer += j[2].decode()
+            textAnswer += "<#" + j[2].decode() + ">"
+            # try:
+            #     textAnswer += voiceChannels[j[2].decode()]
+            # except:
+            #     textAnswer += j[2].decode()
             textAnswer += " ㅤ"
             textAnswer += j[1].decode()
             textAnswer += "\n"
@@ -569,23 +637,31 @@ async def 검색(ctx, *args):
         for j in voiceReturn:
             voiceAnswer += j[3].decode()
             voiceAnswer += " ㅤ"
-            try:
-                becha = voiceChannels[j[1].decode()] + " "
-            except:
-                try:
-                    becha = j[1].decode()
-                except:
-                    becha = "없음"
-            voiceAnswer += becha
+            if j[1].decode() != "없음":
+                voiceAnswer += "<#" + j[1].decode() + ">"
+            else:
+                voiceAnswer += "없음"
+            # try:
+            #     becha = voiceChannels[j[1].decode()] + " "
+            # except:
+            #     try:
+            #         becha = j[1].decode()
+            #     except:
+            #         becha = "없음"
+            # voiceAnswer += becha
             voiceAnswer += " -> "
-            try:
-                afcha = voiceChannels[j[2].decode()] + " "
-            except:
-                try:
-                    afcha = j[1].decode()
-                except:
-                    afcha = "없음"
-            voiceAnswer += afcha
+            if j[2].decode() != "없음":
+                voiceAnswer += "<#" + j[2].decode() + ">"
+            else:
+                voiceAnswer += "없음"
+            # try:
+            #     afcha = voiceChannels[j[2].decode()] + " "
+            # except:
+            #     try:
+            #         afcha = j[1].decode()
+            #     except:
+            #         afcha = "없음"
+            # voiceAnswer += afcha
             voiceAnswer += "\n"
             voiceFlag = True
 
@@ -617,19 +693,24 @@ async def 인원정리(ctx):
 
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
                     ghost = ""
-                    temp = DbSearch_member_byid(member.id, con, cur)
-                    if (len(temp) == 0):
-                        ghost += member.name
-                        ghost += " ㅤ"
-                        ghost += member.discriminator
-                        ghost += "\n"
-                        ghostList.append(ghost)
-                    else:
-                        ghost += temp[0][0].decode()
-                        ghost += " ㅤ"
-                        ghost += temp[0][1].decode()
-                        ghost += "\n"
-                        ghostList.append(ghost)
+                    ghost += MakeMension(member.id, 1)
+                    ghost += " ㅤ"
+                    ghost += DbSearchTime_byid(member.id, con, cur)[0]
+                    ghost += "\n"
+                    ghostList.append(ghost)
+                    # temp = DbSearch_member_byid(member.id, con, cur)
+                    # if (len(temp) == 0):
+                    #     ghost += member.name
+                    #     ghost += " ㅤ"
+                    #     ghost += member.discriminator
+                    #     ghost += "\n"
+                    #     ghostList.append(ghost)
+                    # else:
+                    #     ghost += temp[0][0].decode()
+                    #     ghost += " ㅤ"
+                    #     ghost += temp[0][1].decode()
+                    #     ghost += "\n"
+                    #     ghostList.append(ghost)
 
         pages = MakePageList(member, ghostList, 3)
         await msg.delete()
@@ -661,7 +742,10 @@ async def 벨튀(ctx, *args):
             embed = discord.Embed(description="!ㅌ 벨튀 [채널이름] [날짜]\n ex) !ㅌ 벨튀 랭크1 11.15")
             await ctx.channel.send(embed=embed)
         else:
-            DbReturn = DbSearchbellrun(channel, time, con, cur)
+            retChannel = FindChannelName(channel)
+            if retChannel == 0:
+                await ctx.channel.send(embed=MakeEmbed("채널 이름 검색이 안됨"))
+            DbReturn = DbSearchbellrun(retChannel, time, con, cur)
 
         if len(DbReturn) == 0:
             await ctx.channel.send(embed=MakeEmbed("결과가 없습니다."))
@@ -689,13 +773,16 @@ async def 채팅만(ctx):
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchtime(member.id, 1, con, cur)
-                if (len(textReturn) != 0 and voiceReturn < 3600):
+                if (len(textReturn) != 0 and voiceReturn < 1800):
                     chat = ""
-                    chat += member.name
-                    chat += " ㅤ"
-                    chat += member.discriminator
+                    chat += MakeMension(member.id, 1)
+                    # chat += member.name
+                    # chat += " ㅤ"
+                    # chat += member.discriminator
                     chat += " ㅤ"
                     chat += str(datetime.timedelta(seconds=int(voiceReturn)))
+                    chat += " ㅤ"
+                    chat += DbSearchTime_byid(member.id, con, cur)[0]
                     chat += "\n"
                     chatList.append(chat)
         pages = MakePageList(0, chatList, 2)
@@ -722,9 +809,10 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
             voice = ""
             voice += str(rank)
             voice += ".ㅤ "
-            voice += i[1].decode()
-            voice += "ㅤ "
-            voice += i[2].decode()
+            voice += MakeMension(i[0].decode())
+            # voice += i[1].decode()
+            # voice += "ㅤ "
+            # voice += i[2].decode()
             voice += "ㅤ `"
             voice += str(datetime.timedelta(seconds=int(i[4])))
             voice += "`\n"
@@ -745,9 +833,10 @@ async def 채팅순위(ctx):
             text = ""
             text += str(rank)
             text += ".ㅤ "
-            text += i[1].decode()
-            text += "ㅤ "
-            text += i[2].decode()
+            text += MakeMension(i[0].decode())
+            # text += i[1].decode()
+            # text += "ㅤ "
+            # text += i[2].decode()
             text += "ㅤ `"
             text += str(i[3])
             text += "`\n"
