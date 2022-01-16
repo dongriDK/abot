@@ -457,7 +457,7 @@ async def on_member_remove(member):
     print(count)
     if count[0][0] >= 2:
         channel = bot.get_channel(taejunRoom)
-        ret = MakeMension(member.id) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 후 탈퇴"
+        ret = MakeMension(member.id, 0) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 후 탈퇴"
         await channel.send(ret)
     else:
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
