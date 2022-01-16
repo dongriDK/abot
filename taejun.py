@@ -575,7 +575,6 @@ async def 검색(ctx, *args):
         
         textFlag = False
         voiceFlag = False
-        textAnswer += "서버 입장 : `" + str(jointime[0][0].decode()) + "`\n"
         textAnswer += "총 채팅 수 : `" + str(ttext) + "`\n"
         for j in textReturn:
             textAnswer += j[3].decode()
@@ -623,6 +622,7 @@ async def 검색(ctx, *args):
 
         embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                 color=0x00aaaa)
+        embed.add_field(name="서버 입장 : ", value = "`" + str(jointime[0][0].decode()) + "`\n", inline=False)
         if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
         if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
         await ctx.channel.send(embed=embed)
