@@ -437,15 +437,18 @@ async def on_member_join(member):
     cur.execute("SELECT count from login where id=%s", (member.id,))
     count = cur.fetchall()
     if len(count) == 0:
+        print("join new", member)
         cur.execute("INSERT INTO login(id, name, tag, count, newTime) VALUES(%s, %s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1, CurDay()))
         con.commit()
     elif count[0][0] >= 3:
+        print("join exc", member)
         channel = bot.get_channel(taejunRoom)
         ret = str(member.name) + " " + str(member.discriminator) + "서버 재입장 3회 탐지"
         await channel.send(ret)
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
         con.commit()
     else:
+        print("join again", member)
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
         con.commit()
 
@@ -456,10 +459,12 @@ async def on_member_remove(member):
     count = cur.fetchall()
     print(count)
     if count[0][0] >= 2:
+        print("remove if", member)
         channel = bot.get_channel(taejunRoom)
         ret = MakeMension(member.id, 0) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 후 탈퇴"
         await channel.send(ret)
     else:
+        print("remove else", member)
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
         con.commit()
 
