@@ -704,11 +704,11 @@ async def 벨튀(ctx, *args):
                 await ctx.channel.send(embed=MakeEmbed("채널 이름 검색이 안됨"))
             DbReturn = DbSearchbellrun(retChannel, time, con, cur)
 
-        if len(DbReturn) == 0:
-            await ctx.channel.send(embed=MakeEmbed("결과가 없습니다."))
-        else:
-            pages = MakePageList(channel, DbReturn, 1)
-            await Pages(ctx, pages)
+            if len(DbReturn) == 0:
+                await ctx.channel.send(embed=MakeEmbed("결과가 없습니다."))
+            else:
+                pages = MakePageList(channel, DbReturn, 1)
+                await Pages(ctx, pages)
 
     return 
     
