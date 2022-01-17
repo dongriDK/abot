@@ -90,7 +90,7 @@ def DbInit():
     return 0
 
 def DbModify_text(message, con, cur):
-    asdfasd
+
     # try:
     #     msg = message.channel.name.split("＿")
     #     if "║" in msg[0]:
