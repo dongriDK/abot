@@ -257,7 +257,7 @@ def MakeEmbed(text):
     return embed
 
 def MakeMension(id, tag):
-    return"<@" + str(id) + ">" if tag == 1 else "<#" + str(id) + ">"
+    return"<@!" + str(id) + ">" if tag == 1 else "<#" + str(id) + ">"
 
 def MakePageList(channel, list_, flag):
     disc_list = []
