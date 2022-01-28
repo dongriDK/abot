@@ -728,6 +728,7 @@ async def 채팅만(ctx):
         chatList = []
         for member in guild.members:
             if (member.bot != True):
+                print(member)
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchtime(member.id, 1, con, cur)
                 if (len(textReturn) != 0 and voiceReturn < 1800):
