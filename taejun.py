@@ -438,7 +438,7 @@ async def on_member_join(member):
     count = cur.fetchall()
     if len(count) == 0:
         print("join new", member)
-        cur.execute("INSERT INTO login(id, name, tag, count, newTime) VALUES(%s, %s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1, CurDay()))
+        cur.execute("INSERT INTO login(id, name, tag, count, jointime) VALUES(%s, %s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1, CurDay()))
         con.commit()
     elif count[0][0] >= 3:
         print("join exc", member)
@@ -622,7 +622,7 @@ async def 검색(ctx, *args):
 
         embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                 color=0x00aaaa)
-        embed.add_field(name="서버 입장 : ", value = "`" + str(jointime[0][0].decode()) + "`\n", inline=False)
+        embed.add_field(name="서버 입장", value = "`" + str(jointime[0][0].decode()) + "`\n", inline=False)
         if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
         if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
         await ctx.channel.send(embed=embed)
