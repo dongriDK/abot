@@ -154,8 +154,18 @@ def DbModify_voice(member, before, after, con, cur):
             if (totalSeconds < 10):
                 retValue = 1
 
-            cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
-            con.commit()
+            try:
+                bef_cat_id = before.channel.category.id
+            except:
+                bef_cat_id = 0
+            try:
+                aft_cat_id = after.channel.category.id
+            except:
+                aft_cat_id = 0
+
+            if (bef_cat_id == 875392692014694452 or bef_cat_id == 875416181077577809):
+                cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
+                con.commit()
 
         cur.execute("INSERT INTO Voice_info(id, be_channel, af_channel, time) VALUES(%s, %s, %s, %s)", (member.id, beChannel, afChannel, newTime))
         con.commit()
