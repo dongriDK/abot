@@ -501,8 +501,6 @@ async def on_command_error(ctx, error):
         await ctx.channel.send(embed=MakeEmbed("없는 채널입니다."))
     raise error
 
-
-
 # @bot.command()
 # async def test(ctx):
 #     if WhiteList(ctx):
@@ -657,9 +655,10 @@ async def 인원정리(ctx):
         guild = bot.get_guild(875392692014694450)
         for member in guild.members:
             if (member.bot != True):
+                print(member)
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
-
+                
                 if (len(textReturn) == 0 and len(voiceReturn) == 0):
                     ghost = ""
                     ghost += MakeMension(member.id, 1)
@@ -668,19 +667,6 @@ async def 인원정리(ctx):
                     ghost += abc[0][0].decode()
                     ghost += "`\n"
                     ghostList.append(ghost)
-                    # temp = DbSearch_member_byid(member.id, con, cur)
-                    # if (len(temp) == 0):
-                    #     ghost += member.name
-                    #     ghost += " ㅤ"
-                    #     ghost += member.discriminator
-                    #     ghost += "\n"
-                    #     ghostList.append(ghost)
-                    # else:
-                    #     ghost += temp[0][0].decode()
-                    #     ghost += " ㅤ"
-                    #     ghost += temp[0][1].decode()
-                    #     ghost += "\n"
-                    #     ghostList.append(ghost)
 
         pages = MakePageList(member, ghostList, 3)
         await msg.delete()
