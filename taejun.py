@@ -38,6 +38,7 @@ config = {
 taejunRoom = 905813712886198273
 DeclarRoom = 926123278584651806
 ServerRoom = 875392692014694450
+STAFFROLE = 875396480381382706
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
@@ -217,8 +218,15 @@ def MakeEmbed(text):
     embed = discord.Embed(description=text)
     return embed
 
+# tag : 1 = user, 2 = channel, 3 = role
 def MakeMension(id, tag):
-    return"<@!" + str(id) + ">" if tag == 1 else "<#" + str(id) + ">"
+    if tag == 1:
+        return "<@!" + str(id) + ">"
+    elif tag == 2:
+        return "<#" + str(id) + ">"
+    elif tag == 3:
+        return "<@&" + str(id) + ">"
+    
 
 def MakePageList(channel, list_, flag, arg):
     disc_list = []
@@ -236,14 +244,14 @@ def MakePageList(channel, list_, flag, arg):
             disc_list[page] += " ㅤ"
 
             if i[1].decode() != "없음":
-                disc_list[page] += MakeMension(i[1].decode(), 0)
+                disc_list[page] += MakeMension(i[1].decode(), 2)
             else:
                 disc_list[page] += "없음"
 
             disc_list[page] += " -> "
 
             if i[2].decode() != "없음":
-                disc_list[page] += MakeMension(i[2].decode(), 0)
+                disc_list[page] += MakeMension(i[2].decode(), 2)
             else:
                 disc_list[page] += "없음"
 
@@ -345,7 +353,7 @@ async def on_voice_state_update(member, before, after):
         runChannel_id = bot.get_channel(before.channel.id)
         runChannel_members = runChannel_id.members
         if len(runChannel_members) > 0:
-            await SendMessage(taejunRoom, MakeMension(beChannel, 0) + "에서 " + MakeMension(member.id, 1) + " " + "`" + str(retTime) + "`" + "초 벨튀 탐지")
+            await SendMessage(taejunRoom, MakeMension(beChannel, 2) + "에서 " + MakeMension(member.id, 1) + " " + "`" + str(retTime) + "`" + "초 벨튀 탐지")
 
     return 0
     
@@ -412,7 +420,7 @@ async def on_member_join(member):
     elif count[0][0] >= 3:
         print("join exc", member)
         channel = bot.get_channel(taejunRoom)
-        ret = MakeMension(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 3회 탐지"
+        ret = MakeMension(STAFFROLE, 3) + " ㅤ" + MakeMension(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 3회 탐지"
         await channel.send(ret)
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
         con.commit()
@@ -430,7 +438,7 @@ async def on_member_remove(member):
     if count[0][0] >= 2:
         print("remove if", member)
         channel = bot.get_channel(taejunRoom)
-        ret = MakeMension(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 후 탈퇴"
+        ret = MakeMension(STAFFROLE, 3) + " ㅤ" + MakeMension(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 후 탈퇴"
         await channel.send(ret)
     else:
         print("remove else", member)
@@ -546,7 +554,7 @@ async def 검색(ctx, *args):
         for j in textReturn:
             textAnswer += j[3].decode()
             textAnswer += " ㅤ"
-            textAnswer += MakeMension(j[2].decode(), 0)
+            textAnswer += MakeMension(j[2].decode(), 2)
             textAnswer += " ㅤ"
             textAnswer += j[1].decode()
             textAnswer += "\n"
@@ -556,7 +564,7 @@ async def 검색(ctx, *args):
             voiceAnswer += j[3].decode()
             voiceAnswer += " ㅤ"
             if j[1].decode() != "없음":
-                voiceAnswer += MakeMension(j[1].decode(), 0)
+                voiceAnswer += MakeMension(j[1].decode(), 2)
             else:
                 voiceAnswer += "없음"
             voiceAnswer += " -> "
