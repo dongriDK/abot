@@ -220,7 +220,7 @@ def MakeEmbed(text):
 def MakeMension(id, tag):
     return"<@!" + str(id) + ">" if tag == 1 else "<#" + str(id) + ">"
 
-def MakePageList(channel, list_, flag):
+def MakePageList(channel, list_, flag, arg):
     disc_list = []
     pages = []
     total_len = len(list_)
@@ -261,14 +261,18 @@ def MakePageList(channel, list_, flag):
             disc_list[page] += i
             count += 1
             if (count % 20 == 0 or count == total_len):
-                if (flag == 2): # 채팅만2
-                    pages[page] = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
+                if (flag == 2): # 채팅만
+                    embed = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
+                    embed.add_field(name="휴식회원", value = arg, inline=False)
+                    pages[page] = embed
                 elif (flag == 3): # 인원정리
-                    pages[page] = discord.Embed(title = "유령회원 목록 " + str(page + 1) + "/" + str(total_page),
+                    embed = discord.Embed(title = "유령회원 목록 " + str(page + 1) + "/" + str(total_page),
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
+                    embed.add_field(name="휴식회원", value = arg, inline=False)
+                    pages[page] = embed
                 elif (flag == 4): # 음성 순위
                     pages[page] = discord.Embed(title = "음성채널 거주 시간 Top 100",
                                                 description = disc_list[page],
@@ -579,10 +583,13 @@ async def 인원정리(ctx):
     if WhiteList(ctx):
         msg = await ctx.send("인원 정리중...")
         ghostList = []
+        rest = ""
         guild = bot.get_guild(875392692014694450)
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
+                    rest += MakeMension(member.id, 1)
+                    rest += " ㅤ"
                     continue
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
@@ -597,7 +604,7 @@ async def 인원정리(ctx):
                     ghost += "`\n"
                     ghostList.append(ghost)
 
-        pages = MakePageList(member, ghostList, 3)
+        pages = MakePageList(member, ghostList, 3, rest)
         await msg.delete()
         await Pages(ctx, pages) 
 
@@ -628,7 +635,7 @@ async def 벨튀(ctx, *args):
             if len(DbReturn) == 0:
                 await ctx.channel.send(embed=MakeEmbed("결과가 없습니다."))
             else:
-                pages = MakePageList(channel, DbReturn, 1)
+                pages = MakePageList(channel, DbReturn, 1, 0)
                 await Pages(ctx, pages)
 
     return 
@@ -640,9 +647,11 @@ async def 채팅만(ctx):
         msg = await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = []
+        rest = []
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
+                    rest.append(member.id)
                     continue
             if (member.bot != True):
                 textReturn = DbSearchText_member(member.id, con, cur)
@@ -656,7 +665,7 @@ async def 채팅만(ctx):
                     chat += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     chat += "`\n"
                     chatList.append(chat)
-        pages = MakePageList(0, chatList, 2)
+        pages = MakePageList(0, chatList, 2, rest)
 
         await msg.delete()
         await Pages(ctx, pages)
@@ -678,7 +687,7 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
             voice += "`\n"
             voiceRankList.append(voice)
             rank += 1
-        pages = MakePageList(0, voiceRankList, 4)
+        pages = MakePageList(0, voiceRankList, 4, 0)
 
         await Pages(ctx, pages)
 
@@ -699,7 +708,7 @@ async def 채팅순위(ctx):
             text += "`\n"
             textRankList.append(text)
             rank += 1
-        pages = MakePageList(0, textRankList, 5)
+        pages = MakePageList(0, textRankList, 5, 0)
 
         await Pages(ctx, pages)
 
