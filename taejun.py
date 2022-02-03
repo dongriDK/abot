@@ -331,10 +331,11 @@ async def on_ready():
 
     return 0
 
+# 보이스 상태 변경 시 오출
 @bot.event
 async def on_voice_state_update(member, before, after):
     con, cur = DbConnect()
-    DbReturn = DbLogin(member.id, member.name, member.discriminator, con, cur)
+    DbReturn = DbLogin(member.id, member.discriminator, con, cur)
     retValue, beChannel, retTime = DbModify_voice(member, before, after, con, cur)
     if (retValue == 1 and beChannel != "없음"):
         runChannel_id = bot.get_channel(before.channel.id)
@@ -344,6 +345,7 @@ async def on_voice_state_update(member, before, after):
 
     return 0
     
+# 메시지 생성 시 호출
 @bot.event
 async def on_message(message):
     con, cur = DbConnect()
@@ -487,13 +489,6 @@ async def 초기화(ctx):
         embed = discord.Embed(description="초기화가 완료되었습니다.")
         await ctx.send(embed=embed)
         return
-    
-    # else:
-    #     if (ctx.author.name == "노우리"):
-    #         embed = discord.Embed(description="우리님은 뭐다? 태준이 권한이 없다~",
-    #                                 color=0x00aaaa)
-    #         await ctx.channel.send(embed=embed)
-    #     return
 
 @bot.command()
 async def 검색(ctx, *args): 
@@ -548,10 +543,6 @@ async def 검색(ctx, *args):
             textAnswer += j[3].decode()
             textAnswer += " ㅤ"
             textAnswer += MakeMension(j[2].decode(), 0)
-            # try:
-            #     textAnswer += voiceChannels[j[2].decode()]
-            # except:
-            #     textAnswer += j[2].decode()
             textAnswer += " ㅤ"
             textAnswer += j[1].decode()
             textAnswer += "\n"
@@ -564,27 +555,12 @@ async def 검색(ctx, *args):
                 voiceAnswer += MakeMension(j[1].decode(), 0)
             else:
                 voiceAnswer += "없음"
-            # try:
-            #     becha = voiceChannels[j[1].decode()] + " "
-            # except:
-            #     try:
-            #         becha = j[1].decode()
-            #     except:
-            #         becha = "없음"
-            # voiceAnswer += becha
             voiceAnswer += " -> "
             if j[2].decode() != "없음":
                 voiceAnswer += "<#" + j[2].decode() + ">"
             else:
                 voiceAnswer += "없음"
-            # try:
-            #     afcha = voiceChannels[j[2].decode()] + " "
-            # except:
-            #     try:
-            #         afcha = j[1].decode()
-            #     except:
-            #         afcha = "없음"
-            # voiceAnswer += afcha
+
             voiceAnswer += "\n"
             voiceFlag = True
 
@@ -596,12 +572,6 @@ async def 검색(ctx, *args):
         await ctx.channel.send(embed=embed)
 
         return
-    # else:
-    #     if (ctx.author.name == "노우리"):
-    #         embed = discord.Embed(description="우리님은 뭐다? 태준이 권한이 없다~",
-    #                                 color=0x00aaaa)
-    #         await ctx.channel.send(embed=embed)
-    #     return
 
 @bot.command()
 async def 인원정리(ctx):
@@ -630,13 +600,6 @@ async def 인원정리(ctx):
         await Pages(ctx, pages) 
 
         return
-    
-    # else:
-    #     if (ctx.author.name == "노우리"):
-    #         embed = discord.Embed(description="우리님은 뭐다? 태준이 권한이 없다~",
-    #                                 color=0x00aaaa)
-    #         await ctx.channel.send(embed=embed)
-    #     return
 
 @bot.command()
 async def 벨튀(ctx, *args):
@@ -667,13 +630,6 @@ async def 벨튀(ctx, *args):
                 await Pages(ctx, pages)
 
     return 
-    
-    # else:
-    #     if (ctx.author.name == "노우리"):
-    #         embed = discord.Embed(description="우리님은 뭐다? 태준이 권한이 없다~",
-    #                                 color=0x00aaaa)
-    #         await ctx.channel.send(embed=embed)
-    #     return
 
 @bot.command()
 async def 채팅만(ctx):
@@ -690,9 +646,6 @@ async def 채팅만(ctx):
                 if (len(textReturn) != 0 and voiceReturn < 1800):
                     chat = ""
                     chat += MakeMension(member.id, 1)
-                    # chat += member.name
-                    # chat += " ㅤ"
-                    # chat += member.discriminator
                     chat += " ㅤ`"
                     chat += str(datetime.timedelta(seconds=int(voiceReturn)))
                     chat += "` ㅤ`"
@@ -703,14 +656,6 @@ async def 채팅만(ctx):
 
         await msg.delete()
         await Pages(ctx, pages)
-
-    # else:
-    #     if (ctx.author.name == "노우리"):
-    #         embed = discord.Embed(description="우리님은 뭐다? 태준이 권한이 없다~",
-    #                                 color=0x00aaaa)
-    #         await ctx.channel.send(embed=embed)
-    #     return
-
 @bot.command()
 async def 음성순위(ctx): # 음성채널 거주 시간 순위
     con, cur = DbConnect()
@@ -724,9 +669,6 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
             voice += str(rank)
             voice += ".ㅤ "
             voice += MakeMension(i[0].decode(), 1)
-            # voice += i[1].decode()
-            # voice += "ㅤ "
-            # voice += i[2].decode()
             voice += "ㅤ `"
             voice += str(datetime.timedelta(seconds=int(i[4])))
             voice += "`\n"
@@ -748,9 +690,6 @@ async def 채팅순위(ctx):
             text += str(rank)
             text += ".ㅤ "
             text += MakeMension(i[0].decode(), 1)
-            # text += i[1].decode()
-            # text += "ㅤ "
-            # text += i[2].decode()
             text += "ㅤ `"
             text += str(i[3])
             text += "`\n"
