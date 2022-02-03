@@ -671,6 +671,8 @@ async def 채팅만(ctx):
                 if (ttext != 0 and ttime < 1800):
                     chat = ""
                     chat += MakeMension(member.id, 1)
+                    chat += " ㅤ"
+                    chat += ttext
                     chat += " ㅤ`"
                     chat += str(datetime.timedelta(seconds=int(ttime)))
                     chat += "` ㅤ`"
