@@ -611,10 +611,10 @@ async def 인원정리(ctx):
                 if (ttext == 0 and ttime == 0):
                     ghost = ""
                     ghost += MakeMension(member.id, 1)
-                    ghost += " ㅤ`"
+                    ghost += " ㅤ**"
                     abc = DbSearchTime_byid(member.id, con, cur)
                     ghost += abc[0][0].decode()
-                    ghost += "`\n"
+                    ghost += "**\n"
                     ghostList.append(ghost)
 
         pages = MakePageList(member, ghostList, 3, rest)
@@ -679,13 +679,13 @@ async def 채팅만(ctx):
                 if (ttext != 0 and ttime < 1800):
                     chat = ""
                     chat += MakeMension(member.id, 1)
-                    chat += " ㅤ"
+                    chat += " ㅤ**"
                     chat += str(ttext)
-                    chat += " ㅤ`"
+                    chat += "** ㅤ`"
                     chat += str(datetime.timedelta(seconds=int(ttime)))
-                    chat += "` ㅤ`"
+                    chat += "` ㅤ**"
                     chat += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
-                    chat += "`\n"
+                    chat += "**\n"
                     chatList.append(chat)
         pages = MakePageList(0, chatList, 2, rest)
 
