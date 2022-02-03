@@ -353,7 +353,7 @@ async def on_message(message):
             #     print(message.author.id)
             #     print(message, dir(message))
             #     await message.delete()
-            DbReturn = DbLogin(message.author.id, message.author.name, message.author.discriminator, con, cur)
+            DbReturn = DbLogin(message.author.id, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
             if message.channel.id == 926118022245142538 and (message.author.id != 263662225309433857 and message.author.id != 903288998577983530 and message.author.id != 397084939897667584):
                 await message.delete()
