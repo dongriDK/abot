@@ -652,7 +652,7 @@ async def 채팅만(ctx):
         msg = await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = []
-        rest = []
+        rest = ""
         flag = False
         for member in guild.members:
             for roles in member.roles:
