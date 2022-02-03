@@ -680,7 +680,7 @@ async def 채팅만(ctx):
                     chat = ""
                     chat += MakeMension(member.id, 1)
                     chat += " ㅤ"
-                    chat += ttext
+                    chat += str(ttext)
                     chat += " ㅤ`"
                     chat += str(datetime.timedelta(seconds=int(ttime)))
                     chat += "` ㅤ`"
