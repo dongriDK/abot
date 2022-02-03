@@ -659,7 +659,8 @@ async def 채팅만(ctx):
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
-                    rest.append(member.id)
+                    rest += MakeMension(member.id, 1)
+                    rest += " ㅤ"
                     flag = True
                     continue
             
@@ -683,6 +684,7 @@ async def 채팅만(ctx):
 
         await msg.delete()
         await Pages(ctx, pages)
+
 @bot.command()
 async def 음성순위(ctx): # 음성채널 거주 시간 순위
     con, cur = DbConnect()
