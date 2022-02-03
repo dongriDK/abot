@@ -581,8 +581,10 @@ async def 인원정리(ctx):
         ghostList = []
         guild = bot.get_guild(875392692014694450)
         for member in guild.members:
+            for roles in member.roles:
+                if roles.id == 893155020499988490:
+                    continue
             if (member.bot != True):
-                print(member)
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
                 
@@ -639,8 +641,10 @@ async def 채팅만(ctx):
         guild = bot.get_guild(875392692014694450)
         chatList = []
         for member in guild.members:
+            for roles in member.roles:
+                if roles.id == 893155020499988490:
+                    continue
             if (member.bot != True):
-                print(member)
                 textReturn = DbSearchText_member(member.id, con, cur)
                 voiceReturn = DbSearchtime(member.id, 1, con, cur)
                 if (len(textReturn) != 0 and voiceReturn < 1800):
