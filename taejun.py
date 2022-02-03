@@ -69,9 +69,9 @@ def DbConnect():
 
     return con, cur
     
-def DbLogin(id, name, tag, con, cur):
+def DbLogin(id, tag, con, cur):
     try:
-        cur.execute("insert into User_info values(%s, %s, %s, %s, %s)", (id, name, tag, 0, 0))
+        cur.execute("insert into User_info values(%s, %s, %s, %s)", (id, tag, 0, 0))
         con.commit()
     except:
         return 1
@@ -85,29 +85,11 @@ def DbInit():
     cur.execute("DROP TABLE Text_info")
     cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE User_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), name TEXT, tag TEXT, ttext MEDIUMINT(9) DEFAULT '0', ttime MEDIUMINT(9) DEFAULT '0', PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4")
+    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), tag TEXT, ttext MEDIUMINT(9) DEFAULT '0', ttime MEDIUMINT(9) DEFAULT '0', PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4")
     con.commit()
     return 0
 
 def DbModify_text(message, con, cur):
-
-    # try:
-    #     msg = message.channel.name.split("＿")
-    #     if "║" in msg[0]:
-    #         msg = msg[0].split("║")[1]
-    #         msg = msg.split("＊")[0]
-    #         print("1", msg)
-    #     elif (msg == "공지양식"):
-    #         return 0
-    #     else:
-    #         msg = msg[1]
-    #         print("2", msg)
-    # except:
-    #     print("3", msg)
-    #     if (":" in message.channel.name):
-    #         return 0
-    #         # msg = message.channel.name.split(":")[1]
-    #     msg = message.channel.name
     cur.execute("INSERT INTO Text_info(id, text, channel, time) VALUES(%s, %s, %s, %s)", (message.author.id, message.content.encode('utf-8'), message.channel.id, CurTime()))
     cur.execute("UPDATE user_info SET ttext=ttext+1 where id=%s", (message.author.id,))
     con.commit()
@@ -119,20 +101,6 @@ def DbModify_voice(member, before, after, con, cur):
 
     beChannel = "없음" if before.channel == None else before.channel.id
     afChannel = "없음" if after.channel == None else after.channel.id
-    
-    # try:
-    #     beChannel = "없음" if before.channel == None else before.channel.name.split("＿")[1]
-    # except:
-    #     beChannel = before.channel.name[9:]
-    # try:
-    #     afChannel = "없음" if after.channel == None else after.channel.name.split("＿")[1]
-    # except:
-    #     afChannel = after.channel.name[9:]
-    
-    # if ("(" in beChannel):
-    #     beChannel = beChannel.split("(")[0][:-1]
-    # if ("(" in afChannel):
-    #     afChannel = afChannel.split("(")[0][:-1]
 
     if beChannel != afChannel:
         newTime = CurTime()
@@ -158,10 +126,6 @@ def DbModify_voice(member, before, after, con, cur):
                 bef_cat_id = before.channel.category.id
             except:
                 bef_cat_id = 0
-            try:
-                aft_cat_id = after.channel.category.id
-            except:
-                aft_cat_id = 0
 
             if (bef_cat_id == 875392692014694452 or bef_cat_id == 875416181077577809):
                 cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
@@ -172,21 +136,8 @@ def DbModify_voice(member, before, after, con, cur):
 
     return retValue, beChannel, totalSeconds
 
-def DbModify_user_info(afname, aftag, id, con, cur):
-    cur.execute("UPDATE login set name=%s, tag=%s where id=%s", (afname, aftag, id,))
-    cur.execute("UPDATE user_info set name=%s, tag=%s where id=%s", (afname, aftag, id,))
-    con.commit()
-
-def DbSearch_member(name, tag, con, cur):
-    # cur.execute("SELECT id from User_info where name=%s and tag=%s", (name, tag))
-    cur.execute("SELECT id from login where name=%s and tag=%s", (name, tag))
-    memberId = cur.fetchall()
-
-    return memberId
-
 def DbSearchTime_byid(id, con, cur):
     cur.execute("SELECT jointime from login where id=%s", (id,))
-    # cur.execute("SELECT name, tag from User_info where id=%s", (id,))
 
     return cur.fetchall()
 
@@ -441,7 +392,6 @@ async def on_user_update(before, after):
         msg = MakeMension(after.id, 1) + " ㅤ`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
         if (beDis != afDis):
             msg = MakeMension(after.id, 1) + " ㅤ`" + beName + "` " + "`" + beDis + "` -> `" + afDis + "` 디스코드 태그 변경"
-        DbModify_user_info(afName, afDis, before.id, con, cur)
         await SendMessage(taejunRoom, msg)
 
 @bot.event
@@ -451,7 +401,7 @@ async def on_member_join(member):
     count = cur.fetchall()
     if len(count) == 0:
         print("join new", member)
-        cur.execute("INSERT INTO login(id, name, tag, count, jointime) VALUES(%s, %s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1, CurDay()))
+        cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
         con.commit()
     elif count[0][0] >= 3:
         print("join exc", member)
@@ -552,6 +502,16 @@ async def 검색(ctx, *args):
         if len(args) == 2:
             name = args[0]
             tag = args[1]
+        elif len(args) == 1:
+            if "#" in args[0]:
+                splittext = args[0].split("#")
+                name = splittext[0]
+                tag = splittext[1]
+            else:
+                embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
+                await ctx.channel.send(embed=embed)
+                return
+                
         else:
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
             await ctx.channel.send(embed=embed)
@@ -563,11 +523,8 @@ async def 검색(ctx, *args):
             if name in i.name and tag in i.discriminator:
                 memberId = i.id
                 flag = True
-        # memberId = DbSearch_member(name, tag, con, cur)
         if not flag:
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
-        # embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
-        #                         description="없습니다.")
             await ctx.channel.send(embed=embed)
             return    
 
