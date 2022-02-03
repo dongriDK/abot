@@ -172,9 +172,9 @@ def DbSearchTextRank(con, cur):
 
     return textList
 
-def DbSearchtime(id, flag, con, cur):
+def DbSearchtexttime(id, flag, con, cur):
     if (flag == 1):
-        cur.execute("SELECT ttime FROM user_info WHERE id=%s", (id,))
+        cur.execute("SELECT ttext FROM user_info WHERE id=%s", (id,))
         ttime = cur.fetchall()
         try:
             ttime = ttime[0][0]
@@ -196,10 +196,10 @@ def DbSearchtime(id, flag, con, cur):
         except:
             ttime1 = 0
         try:
-            ttime2 = ttime[0][1]
+            ttext = ttime[0][1]
         except:
-            ttime2 = 0
-        return ttime1, ttime2
+            ttext = 0
+        return ttime1, ttext
 
 def FindChannelName(name):
     channels = bot.get_guild(ServerRoom).channels
@@ -532,7 +532,7 @@ async def 검색(ctx, *args):
 
         textReturn = DbSearchText_member(memberId, con, cur)
         voiceReturn = DbSearchVoice_member(memberId, con, cur)
-        ttime, ttext = DbSearchtime(memberId, 3, con, cur)
+        ttime, ttext = DbSearchtexttime(memberId, 3, con, cur)
         jointime = DbSearchTime_byid(memberId, con, cur)
         if len(textReturn) == 0 and len(voiceReturn) == 0:
             embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
@@ -599,10 +599,8 @@ async def 인원정리(ctx):
                 continue
 
             if (member.bot != True):
-                textReturn = DbSearchText_member(member.id, con, cur)
-                voiceReturn = DbSearchVoice_member(member.id, con, cur)
-                
-                if (len(textReturn) == 0 and len(voiceReturn) == 0):
+                ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
+                if (ttext == 0 and ttime == 0):
                     ghost = ""
                     ghost += MakeMension(member.id, 1)
                     ghost += " ㅤ`"
@@ -669,13 +667,12 @@ async def 채팅만(ctx):
                 continue
 
             if (member.bot != True):
-                textReturn = DbSearchText_member(member.id, con, cur)
-                voiceReturn = DbSearchtime(member.id, 1, con, cur)
-                if (len(textReturn) != 0 and voiceReturn < 1800):
+                ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
+                if (ttext != 0 and ttime < 1800):
                     chat = ""
                     chat += MakeMension(member.id, 1)
                     chat += " ㅤ`"
-                    chat += str(datetime.timedelta(seconds=int(voiceReturn)))
+                    chat += str(datetime.timedelta(seconds=int(ttime)))
                     chat += "` ㅤ`"
                     chat += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     chat += "`\n"
