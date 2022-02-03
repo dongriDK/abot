@@ -369,12 +369,6 @@ async def on_message(message):
             #     await message.delete()
             DbReturn = DbLogin(message.author.id, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
-            if "초벽" in message.content and "섹시" in message.content:
-                print(message.content)
-                await message.delete()
-            if "초벽오빠" in message.content and "초벽 오빠":
-                print(message.content)
-                await message.delete()
             if message.channel.id == 926118022245142538 and (message.author.id != 263662225309433857 and message.author.id != 903288998577983530 and message.author.id != 397084939897667584):
                 await message.delete()
                 if len(message.attachments) == 1:
