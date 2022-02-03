@@ -370,7 +370,10 @@ async def on_message(message):
             DbReturn = DbLogin(message.author.id, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
             if "초벽" in message.content and "섹시" in message.content:
-                print(message)
+                print(message.content)
+                await message.delete()
+            if "초벽오빠" in message.content:
+                print(message.content)
                 await message.delete()
             if message.channel.id == 926118022245142538 and (message.author.id != 263662225309433857 and message.author.id != 903288998577983530 and message.author.id != 397084939897667584):
                 await message.delete()
@@ -379,7 +382,6 @@ async def on_message(message):
                 msg = "**신고자** ㅤ: ㅤ" + MakeMension(message.author.id, 1) + "```" + message.content + "```"
                 await SendMessage(DeclarRoom, msg)
                 await SendMessage(DeclarRoom, picture_url)
-
 
     await bot.process_commands(message)
     return 0
