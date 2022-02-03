@@ -683,9 +683,9 @@ async def 채팅만(ctx):
                     chat += str(ttext)
                     chat += "** ㅤ`"
                     chat += str(datetime.timedelta(seconds=int(ttime)))
-                    chat += "` ㅤ**"
+                    chat += "` ㅤ"
                     chat += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
-                    chat += "**\n"
+                    chat += "\n"
                     chatList.append(chat)
         pages = MakePageList(0, chatList, 2, rest)
 
