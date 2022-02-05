@@ -586,7 +586,7 @@ async def 인원정리(ctx):
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
-                    rest += MakeMention(member.name, 4)
+                    rest += member.mention
                     rest += " ㅤ"
                     flag = True
                     break
@@ -599,7 +599,7 @@ async def 인원정리(ctx):
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if (ttext == 0 and ttime == 0):
                     ghost = ""
-                    ghost += MakeMention(member.name, 4)
+                    ghost += member.mention
                     ghost += " ㅤ**"
                     abc = DbSearchTime_byid(member.id, con, cur)
                     ghost += abc[0][0].decode()
@@ -654,7 +654,7 @@ async def 채팅만(ctx):
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
-                    rest += MakeMention(member.name, 4)
+                    rest += member.mention
                     rest += " ㅤ"
                     flag = True
                     continue
@@ -667,7 +667,7 @@ async def 채팅만(ctx):
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if (ttext != 0 and ttime < 1800):
                     chat = ""
-                    chat += MakeMention(member.name, 4)
+                    chat += member.mention
                     chat += " ㅤ**"
                     chat += str(ttext)
                     chat += "** ㅤ`"
