@@ -15,18 +15,6 @@ intents = discord.Intents.default()
 intents.members = True
 intents.guilds = True
 bot = commands.Bot(command_prefix = '!ㅌ ', intents=intents)
-voiceChannels = {"수다방":"👥＿수다방＿٩( ᐛ )", "스트리밍1":"📺＿스트리밍1", "스트리밍2":"📺＿스트리밍2", "스트리밍3":"📺＿스트리밍3",
-                    "스트리밍4":"📺＿스트리밍4",  "스트리밍5":"📺＿스트리밍5", "스트리밍6":"📺＿스트리밍6",
-                    "대기중":"👀＿대기중", "일반1":"⭐＿일반1", "일반2":"🌙＿일반2", "일반3":"🌕＿일반3", "랭크1":"⭐＿랭크1", "랭크2":"🌙＿랭크2",
-                    "랭크3":"🌕＿랭크3", "랭크4":"🪐＿랭크4", "랭크5":"🌎＿랭크5", "듀오1":"⭐＿듀오1", "듀오2":"🌙＿듀오2", "기타게임방1":"⭐＿기타게임방1",
-                    "기타게임방2":"🌙＿기타게임방2", "기타게임방3":"🌕＿기타게임방3", "히드라전용＊감상":"🎧＿히드라전용＊감상", "하리보전용＊감상":"🎧＿하리보전용＊감상", "회의":"회의＿운영진맨날모여!쫄?",
-                    "자유채팅방":"💬＿자유채팅방", "에펙＊구인방":"📝＿에펙＊구인방", "에펙＊닉넴방":"🚀＿에펙＊닉넴방", "에펙＊자랑방":"👑＿에펙＊자랑방",
-                    "일상＆게임사진방":"📸＿일상＆게임사진방", "스트리밍채팅방":"💬＿스트리밍채팅방", "히드라＊노래추가":"🎵＿히드라＊노래추가",
-                    "하리보＊노래추가":"🎵＿하리보＊노래추가", "채팅방":"운영＿채팅방", "인원기록＆관리":"운영＿인원기록＆관리", "탈주자관리":"운영＿탈주자관리", "인원정리공유":"운영＿인원정리공유",
-                    "태준이방":"📡⚡＿태준이방", "신입가입양식":"운영＿신입가입양식", "공지양식":"운영＿양식＿매뉴얼", "잠수":"🌛💤＿잠수＿쿨쿨", "봇사용＊기본":"👾＿봇사용＊기본", "봇사용＊마냥":"🐱＿봇사용＊마냥",
-                    "운영진맨날모여!쫄?":"회의＿운영진맨날모여!쫄?", "공지및채널관리":"🟥디렉터：공지및채널관리", "경고＆누적기록":"🟩오피스：경고＆누적기록",
-                    "칼부림의그현장":"칼부림의그현장", "탈주자관리":"탈주자관리", "현생휴식유저":"현생휴식유저", "에펙질문방":"❓＿에펙질문방",
-                    "에펙＊클럽방":"🎲＿에펙＊클럽방", "회의티비":"회의＿회의티비", "마니또":"이벤트║마니또＊🎉"}
 config = {
     'user' : os.environ["user"],
     'password' : os.environ["password"],
@@ -219,7 +207,7 @@ def MakeEmbed(text):
     return embed
 
 # tag : 1 = user, 2 = channel, 3 = role
-def MakeMension(id, tag):
+def MakeMention(id, tag):
     if tag == 1:
         return "<@!" + str(id) + ">"
     elif tag == 2:
@@ -244,19 +232,19 @@ def MakePageList(channel, list_, flag, arg):
             disc_list[page] += " ㅤ"
 
             if i[1].decode() != "없음":
-                disc_list[page] += MakeMension(i[1].decode(), 2)
+                disc_list[page] += MakeMention(i[1].decode(), 2)
             else:
                 disc_list[page] += "없음"
 
             disc_list[page] += " -> "
 
             if i[2].decode() != "없음":
-                disc_list[page] += MakeMension(i[2].decode(), 2)
+                disc_list[page] += MakeMention(i[2].decode(), 2)
             else:
                 disc_list[page] += "없음"
 
             disc_list[page] += " ㅤ"
-            disc_list[page] += MakeMension(i[0].decode(), 1)
+            disc_list[page] += MakeMention(i[0].decode(), 1)
             disc_list[page] += "\n"
             count += 1
             if (count % 20 == 0 or count == total_len):
@@ -353,7 +341,7 @@ async def on_voice_state_update(member, before, after):
         runChannel_id = bot.get_channel(before.channel.id)
         runChannel_members = runChannel_id.members
         if len(runChannel_members) > 0:
-            await SendMessage(taejunRoom, MakeMension(beChannel, 2) + "에서 " + MakeMension(member.id, 1) + " " + "`" + str(retTime) + "`" + "초 벨튀 탐지")
+            await SendMessage(taejunRoom, MakeMention(beChannel, 2) + "에서 " + MakeMention(member.id, 1) + " " + "`" + str(retTime) + "`" + "초 벨튀 탐지")
 
     return 0
     
@@ -365,7 +353,7 @@ async def on_message(message):
         if("!ㅌ" not in message.content):
             # if message.author.id == 925004142831874119 or message.author.id == "915102187548446751":
             #     print(message.author.id)
-            #     print(message, dir(message))
+        #     print(message, dir(message))
             #     await message.delete()
             DbReturn = DbLogin(message.author.id, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
@@ -373,7 +361,7 @@ async def on_message(message):
                 await message.delete()
                 if len(message.attachments) == 1:
                     picture_url = message.attachments[0].url
-                msg = "**신고자** ㅤ: ㅤ" + MakeMension(message.author.id, 1) + "```" + message.content + "```"
+                msg = "**신고자** ㅤ: ㅤ" + MakeMention(message.author.id, 1) + "```" + message.content + "```"
                 await SendMessage(DeclarRoom, msg)
                 await SendMessage(DeclarRoom, picture_url)
 
@@ -390,7 +378,7 @@ async def on_member_update(before, after):
     beNick = before.display_name
     afNick = after.display_name
     if(beNick != afNick):
-        msg = MakeMension(after.id, 1) + " ㅤ`" + beNick + "` -> `" + afNick + "` 별명 변경."
+        msg = MakeMention(after.id, 1) + " ㅤ`" + beNick + "` -> `" + afNick + "` 별명 변경."
         await SendMessage(taejunRoom, msg)
 
 # 프로필 변경 시 호출
@@ -402,9 +390,9 @@ async def on_user_update(before, after):
     beDis = before.discriminator
     afDis = after.discriminator
     if (beName != afName):
-        msg = MakeMension(after.id, 1) + " ㅤ`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
+        msg = MakeMention(after.id, 1) + " ㅤ`" + beName + "` -> `" + afName + "` 디스코드 아이디 변경"
         if (beDis != afDis):
-            msg = MakeMension(after.id, 1) + " ㅤ`" + beName + "` " + "`" + beDis + "` -> `" + afDis + "` 디스코드 태그 변경"
+            msg = MakeMention(after.id, 1) + " ㅤ`" + beName + "` " + "`" + beDis + "` -> `" + afDis + "` 디스코드 태그 변경"
         await SendMessage(taejunRoom, msg)
 
 @bot.event
@@ -419,7 +407,7 @@ async def on_member_join(member):
     elif count[0][0] >= 3:
         print("join exc", member)
         channel = bot.get_channel(taejunRoom)
-        ret = MakeMension(STAFFROLE, 3) + " ㅤ" + MakeMension(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 3회 탐지"
+        ret = MakeMention(STAFFROLE, 3) + " ㅤ" + MakeMention(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 3회 탐지"
         await channel.send(ret)
         cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
         con.commit()
@@ -437,7 +425,7 @@ async def on_member_remove(member):
     if count[0][0] >= 2:
         print("remove if", member)
         channel = bot.get_channel(taejunRoom)
-        ret = MakeMension(STAFFROLE, 3) + " ㅤ" + MakeMension(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 후 탈퇴"
+        ret = MakeMention(STAFFROLE, 3) + " ㅤ" + MakeMention(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 후 탈퇴"
         await channel.send(ret)
     else:
         print("remove else", member)
@@ -553,7 +541,7 @@ async def 검색(ctx, *args):
         for j in textReturn:
             textAnswer += j[3].decode()
             textAnswer += " ㅤ"
-            textAnswer += MakeMension(j[2].decode(), 2)
+            textAnswer += MakeMention(j[2].decode(), 2)
             textAnswer += " ㅤ"
             textAnswer += j[1].decode()
             textAnswer += "\n"
@@ -563,7 +551,7 @@ async def 검색(ctx, *args):
             voiceAnswer += j[3].decode()
             voiceAnswer += " ㅤ"
             if j[1].decode() != "없음":
-                voiceAnswer += MakeMension(j[1].decode(), 2)
+                voiceAnswer += MakeMention(j[1].decode(), 2)
             else:
                 voiceAnswer += "없음"
             voiceAnswer += " -> "
@@ -596,7 +584,7 @@ async def 인원정리(ctx):
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
-                    rest += MakeMension(member.id, 1)
+                    rest += member.mention
                     rest += " ㅤ"
                     flag = True
                     break
@@ -609,7 +597,7 @@ async def 인원정리(ctx):
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if (ttext == 0 and ttime == 0):
                     ghost = ""
-                    ghost += MakeMension(member.id, 1)
+                    ghost += member.mention
                     ghost += " ㅤ**"
                     abc = DbSearchTime_byid(member.id, con, cur)
                     ghost += abc[0][0].decode()
@@ -664,7 +652,7 @@ async def 채팅만(ctx):
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
-                    rest += MakeMension(member.id, 1)
+                    rest += member.mention
                     rest += " ㅤ"
                     flag = True
                     continue
@@ -677,7 +665,7 @@ async def 채팅만(ctx):
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if (ttext != 0 and ttime < 1800):
                     chat = ""
-                    chat += MakeMension(member.id, 1)
+                    chat += member.mention
                     chat += " ㅤ**"
                     chat += str(ttext)
                     chat += "** ㅤ`"
@@ -703,7 +691,7 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
             voice = ""
             voice += str(rank)
             voice += ".ㅤ "
-            voice += MakeMension(i[0].decode(), 1)
+            voice += MakeMention(i[0].decode(), 1)
             voice += "ㅤ `"
             voice += str(datetime.timedelta(seconds=int(i[4])))
             voice += "`\n"
@@ -724,7 +712,7 @@ async def 채팅순위(ctx):
             text = ""
             text += str(rank)
             text += ".ㅤ "
-            text += MakeMension(i[0].decode(), 1)
+            text += MakeMention(i[0].decode(), 1)
             text += "ㅤ `"
             text += str(i[3])
             text += "`\n"
