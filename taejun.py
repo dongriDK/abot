@@ -214,6 +214,8 @@ def MakeMention(id, tag):
         return "<#" + str(id) + ">"
     elif tag == 3:
         return "<@&" + str(id) + ">"
+    elif tag == 4:
+        return "@" + str(id)
     
 
 def MakePageList(channel, list_, flag, arg):
@@ -584,7 +586,7 @@ async def 인원정리(ctx):
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
-                    rest += member.mention
+                    rest += MakeMention(member.name, 4)
                     rest += " ㅤ"
                     flag = True
                     break
@@ -597,7 +599,7 @@ async def 인원정리(ctx):
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if (ttext == 0 and ttime == 0):
                     ghost = ""
-                    ghost += member.mention
+                    ghost += MakeMention(member.name, 4)
                     ghost += " ㅤ**"
                     abc = DbSearchTime_byid(member.id, con, cur)
                     ghost += abc[0][0].decode()
@@ -652,7 +654,7 @@ async def 채팅만(ctx):
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
-                    rest += member.mention
+                    rest += MakeMention(member.name, 4)
                     rest += " ㅤ"
                     flag = True
                     continue
@@ -665,7 +667,7 @@ async def 채팅만(ctx):
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if (ttext != 0 and ttime < 1800):
                     chat = ""
-                    chat += member.mention
+                    chat += MakeMention(member.name, 4)
                     chat += " ㅤ**"
                     chat += str(ttext)
                     chat += "** ㅤ`"
