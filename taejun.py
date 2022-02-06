@@ -691,6 +691,7 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
         # print(voiceRankReturn[0])
         rank = 1
         for i in Return:
+            print(i)
             voice = ""
             voice += str(rank)
             voice += ".ㅤ "
