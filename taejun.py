@@ -131,13 +131,13 @@ def DbSearchTime_byid(id, con, cur):
     return cur.fetchall()
 
 def DbSearchText_member(id, con, cur):
-    cur.execute("SELECT * from Text_info where id=%s order by time desc limit 15", (id,))
+    cur.execute("SELECT * from Text_info where id=%s order by time desc limit 12", (id,))
     textList = cur.fetchall()
 
     return textList
 
 def DbSearchVoice_member(id, con, cur):
-    cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 15", (id,))
+    cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 10", (id,))
     voiceList = cur.fetchall()
 
     return voiceList
