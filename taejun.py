@@ -504,11 +504,13 @@ async def 검색(ctx, *args):
                 name = splittext[0]
                 tag = splittext[1]
             else:
+                print("A")
                 embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
                 await ctx.channel.send(embed=embed)
                 return
                 
         else:
+            print("B")
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
             await ctx.channel.send(embed=embed)
             return
@@ -516,10 +518,12 @@ async def 검색(ctx, *args):
         allMember = bot.get_guild(ServerRoom).members
         flag = False
         for i in allMember:
+            print(i.name)
             if name in i.name and tag in i.discriminator:
                 memberId = i.id
                 flag = True
         if not flag:
+            print("C")
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
             await ctx.channel.send(embed=embed)
             return    
