@@ -601,7 +601,7 @@ async def 인원정리(ctx):
                 if (ttext == 0 and ttime == 0):
                     ghost = ""
                     ghost += member.mention
-                    ghost += " ㅤ(" + member.name + ")"
+                    ghost += " (" + member.name + ")"
                     ghost += " ㅤ**"
                     abc = DbSearchTime_byid(member.id, con, cur)
                     ghost += abc[0][0].decode()
@@ -670,7 +670,7 @@ async def 채팅만(ctx):
                 if (ttext != 0 and ttime < 1800):
                     chat = ""
                     chat += member.mention
-                    chat += " ㅤ(" + member.name + ")"
+                    chat += " (" + member.name + ")"
                     chat += " ㅤ**"
                     chat += str(ttext)
                     chat += "** ㅤ`"
