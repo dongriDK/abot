@@ -515,11 +515,13 @@ async def 검색(ctx, *args):
             await ctx.channel.send(embed=embed)
             return
 
+        name = name.replace(" ", "")
+        print(name)
         allMember = bot.get_guild(ServerRoom).members
         flag = False
         for i in allMember:
-            print(i.name)
-            if name in i.name and tag in i.discriminator:
+            print(i.name.replace(" ", ""))
+            if name in i.name.replace(" ", "") and tag in i.discriminator:
                 memberId = i.id
                 flag = True
         if not flag:
