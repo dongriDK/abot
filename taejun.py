@@ -130,14 +130,20 @@ def DbSearchTime_byid(id, con, cur):
 
     return cur.fetchall()
 
-def DbSearchText_member(id, con, cur):
-    cur.execute("SELECT * from Text_info where id=%s order by time desc limit 12", (id,))
+def DbSearchText_member(id, con, cur, flag):
+    if flag:
+        cur.execute("SELECT * from Text_info where id=%s order by time desc limit 12", (id,))
+    else:
+        cur.execute("SELECT * from Text_info where id=%s order by time desc", (id,))
     textList = cur.fetchall()
 
     return textList
 
-def DbSearchVoice_member(id, con, cur):
-    cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 10", (id,))
+def DbSearchVoice_member(id, con, cur, flag):
+    if flag:
+        cur.execute("SELECT * from Voice_info where id=%s order by time desc limit 10", (id,))
+    else:
+        cur.execute("SELECT * from Voice_info where id=%s order by time desc", (id,))
     voiceList = cur.fetchall()
 
     return voiceList
@@ -222,7 +228,6 @@ def MakePageList(channel, list_, flag, arg):
     disc_list = []
     pages = []
     total_len = len(list_)
-    print(list_)
     total_page = total_len // 20 + 1 if total_len / 20 > total_len // 20 else total_len // 20
     for i in range(total_page):
         disc_list.append("")
@@ -294,6 +299,7 @@ def MakePageList(channel, list_, flag, arg):
 
 async def Pages(ctx, pages):
     current = 0
+    print("AAAAAAAAAAAAAAAAA\n", pages)
     msg = await ctx.send(embed=pages[current])
     for button in buttons:
         await msg.add_reaction(button)
@@ -537,8 +543,8 @@ async def 검색(ctx, *args):
         textAnswer = ""
         voiceAnswer = ""
 
-        textReturn = DbSearchText_member(memberId, con, cur)
-        voiceReturn = DbSearchVoice_member(memberId, con, cur)
+        textReturn = DbSearchText_member(memberId, con, cur, True)
+        voiceReturn = DbSearchVoice_member(memberId, con, cur, True)
         ttime, ttext = DbSearchtexttime(memberId, 3, con, cur)
         jointime = DbSearchTime_byid(memberId, con, cur)
         if len(textReturn) == 0 and len(voiceReturn) == 0:
@@ -771,7 +777,7 @@ async def 채팅검색(ctx, *args):
 
         textAnswer = ""
 
-        textReturn = DbSearchText_member(memberId, con, cur)
+        textReturn = DbSearchText_member(memberId, con, cur, False)
         ttime, ttext = DbSearchtexttime(memberId, 3, con, cur)
         if len(textReturn) == 0:
             embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
@@ -790,6 +796,7 @@ async def 채팅검색(ctx, *args):
             textAnswer += "\n"
             textAnswerList.append(textAnswer)
 
+        print(len(textAnswerList))
         member = name + "#" + tag
         pages = MakePageList(member, textAnswerList, 6, "A")
         await Pages(ctx, pages) 
@@ -832,7 +839,7 @@ async def 음성검색(ctx, *args):
 
         voiceAnswer = ""
 
-        voiceReturn = DbSearchVoice_member(memberId, con, cur)
+        voiceReturn = DbSearchVoice_member(memberId, con, cur, False)
         ttime, ttext = DbSearchtexttime(memberId, 3, con, cur)
         if len(voiceReturn) == 0:
             embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
