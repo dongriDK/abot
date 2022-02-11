@@ -293,14 +293,12 @@ def MakePageList(channel, list_, flag, arg):
                     pages[page] = discord.Embed(title = channel + "님의 전체 음성 기록",
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
-                    print(disc_list[page],"\n\n")
                 page += 1
 
     return pages
 
 async def Pages(ctx, pages):
     current = 0
-    print("AAAAAAAAAAAAAAAAA\n", pages)
     msg = await ctx.send(embed=pages[current])
     for button in buttons:
         await msg.add_reaction(button)
@@ -787,8 +785,8 @@ async def 채팅검색(ctx, *args):
             return    
         
         textAnswerList = []
-        textAnswer += "총 채팅 수 : `" + str(ttext) + "`\n"
         for j in textReturn:
+            textAnswer = "총 채팅 수 : `" + str(ttext) + "`\n"
             textAnswer += j[3].decode()
             textAnswer += " ㅤ"
             textAnswer += MakeMention(j[2].decode(), 2)
@@ -848,8 +846,8 @@ async def 음성검색(ctx, *args):
             return    
         
         voiceAnswerList = []
-        voiceAnswer += "음성채널 누적 시간 : `" + str(datetime.timedelta(seconds=int(ttime))) + "`\n"
         for j in voiceReturn:
+            voiceAnswer = "음성채널 누적 시간 : `" + str(datetime.timedelta(seconds=int(ttime))) + "`\n"
             voiceAnswer += j[3].decode()
             voiceAnswer += " ㅤ"
             if j[1].decode() != "없음":
