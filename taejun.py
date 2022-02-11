@@ -222,6 +222,7 @@ def MakePageList(channel, list_, flag, arg):
     disc_list = []
     pages = []
     total_len = len(list_)
+    print(list_)
     total_page = total_len // 20 + 1 if total_len / 20 > total_len // 20 else total_len // 20
     for i in range(total_page):
         disc_list.append("")
@@ -776,6 +777,8 @@ async def 채팅검색(ctx, *args):
         
         textAnswer += "총 채팅 수 : `" + str(ttext) + "`\n"
         for j in textReturn:
+            print(j[3].decode())
+            print(j[1].decode())
             textAnswer += j[3].decode()
             textAnswer += " ㅤ"
             textAnswer += MakeMention(j[2].decode(), 2)
@@ -783,7 +786,7 @@ async def 채팅검색(ctx, *args):
             textAnswer += j[1].decode()
             textAnswer += "\n"
 
-        member = name + tag
+        member = name + "#" + tag
         pages = MakePageList(member, textAnswer, 6, "A")
         # await msg.delete()
         await Pages(ctx, pages) 
