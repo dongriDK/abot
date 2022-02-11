@@ -286,11 +286,11 @@ def MakePageList(channel, list_, flag, arg):
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
                 elif (flag == 6): # 채팅 검색
-                    pages[page] = discord.Embed(title = channel + "님의 전체 채팅 기록",
+                    pages[page] = discord.Embed(title = channel + "님의 전체 채팅 기록 " + str(page + 1) + "/" + str(total_page) ,
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
                 elif (flag == 7): # 음성 검색
-                    pages[page] = discord.Embed(title = channel + "님의 전체 음성 기록",
+                    pages[page] = discord.Embed(title = channel + "님의 전체 음성 기록 " + str(page + 1) + "/" + str(total_page),
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
                 page += 1
