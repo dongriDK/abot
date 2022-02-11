@@ -293,6 +293,7 @@ def MakePageList(channel, list_, flag, arg):
                     pages[page] = discord.Embed(title = channel + "님의 전체 음성 기록",
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
+                    print(disc_list[page],"\n\n")
                 page += 1
 
     return pages
@@ -796,7 +797,6 @@ async def 채팅검색(ctx, *args):
             textAnswer += "\n"
             textAnswerList.append(textAnswer)
 
-        print(len(textAnswerList))
         member = name + "#" + tag
         pages = MakePageList(member, textAnswerList, 6, "A")
         await Pages(ctx, pages) 
