@@ -777,8 +777,6 @@ async def 채팅검색(ctx, *args):
         
         textAnswer += "총 채팅 수 : `" + str(ttext) + "`\n"
         for j in textReturn:
-            print(j[3].decode())
-            print(j[1].decode())
             textAnswer += j[3].decode()
             textAnswer += " ㅤ"
             textAnswer += MakeMention(j[2].decode(), 2)
@@ -790,7 +788,7 @@ async def 채팅검색(ctx, *args):
         pages = MakePageList(member, textAnswer, 6, "A")
         # await msg.delete()
         await Pages(ctx, pages) 
-        await ctx.channel.send(embed=embed)
+        # await ctx.channel.send(embed=embed)
 
         return
 
