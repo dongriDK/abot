@@ -785,8 +785,9 @@ async def 채팅검색(ctx, *args):
             return    
         
         textAnswerList = []
+        textAnswer = "총 채팅 수 : `" + str(ttext) + "`\n"
         for j in textReturn:
-            textAnswer = "총 채팅 수 : `" + str(ttext) + "`\n"
+            textAnswer = ""
             textAnswer += j[3].decode()
             textAnswer += " ㅤ"
             textAnswer += MakeMention(j[2].decode(), 2)
@@ -846,8 +847,9 @@ async def 음성검색(ctx, *args):
             return    
         
         voiceAnswerList = []
+        voiceAnswer = "음성채널 누적 시간 : `" + str(datetime.timedelta(seconds=int(ttime))) + "`\n"
         for j in voiceReturn:
-            voiceAnswer = "음성채널 누적 시간 : `" + str(datetime.timedelta(seconds=int(ttime))) + "`\n"
+            voiceAnswer = ""
             voiceAnswer += j[3].decode()
             voiceAnswer += " ㅤ"
             if j[1].decode() != "없음":
