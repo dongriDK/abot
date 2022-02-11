@@ -279,6 +279,8 @@ def MakePageList(channel, list_, flag, arg):
                     pages[page] = discord.Embed(title = "채팅 Top 100",
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
+                elif (flag == 6): # 채팅 검색
+                    pages[page] = discord.Embed(title)
                 page += 1
 
     return pages
@@ -727,7 +729,71 @@ async def 채팅순위(ctx):
 
         await Pages(ctx, pages)
 
+@bot.command()
+async def 채팅검색(ctx, *args):
+    con, cur = DbConnect()
+    if WhiteList(ctx):
+        if len(args) == 2:
+            name = args[0]
+            tag = args[1]
+        elif len(args) == 1:
+            if "#" in args[0]:
+                splittext = args[0].split("#")
+                name = splittext[0]
+                tag = splittext[1]
+            else:
+                embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
+                await ctx.channel.send(embed=embed)
+                return
+        else:
+            embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
+            await ctx.channel.send(embed=embed)
+            return
 
+        name = name.replace(" ", "")
+        allMember = bot.get_guild(ServerRoom).members
+        flag = False
+        for i in allMember:
+            if name in i.name.replace(" ", "") and tag in i.discriminator:
+                memberId = i.id
+                flag = True
+        if not flag:
+            embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
+            await ctx.channel.send(embed=embed)
+            return    
+
+        textAnswer = ""
+
+        textReturn = DbSearchText_member(memberId, con, cur)
+        ttime, ttext = DbSearchtexttime(memberId, 3, con, cur)
+        # jointime = DbSearchTime_byid(memberId, con, cur)
+        if len(textReturn) == 0:
+            embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
+                                    description="없습니다.")
+            await ctx.channel.send(embed=embed)
+            return    
+        
+        textFlag = False
+        textAnswer += "총 채팅 수 : `" + str(ttext) + "`\n"
+        for j in textReturn:
+            textAnswer += j[3].decode()
+            textAnswer += " ㅤ"
+            textAnswer += MakeMention(j[2].decode(), 2)
+            textAnswer += " ㅤ"
+            textAnswer += j[1].decode()
+            textAnswer += "\n"
+            # textFlag = True
+
+        # embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
+        #                         color=0x00aaaa)
+        # embed.add_field(name="서버 입장", value = "`" + str(jointime[0][0].decode()) + "`\n", inline=False)
+        # if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
+        pages = MakePageList(memberId, textAnswer, 6, "A")
+        # await msg.delete()
+        await Pages(ctx, pages) 
+        await ctx.channel.send(embed=embed)
+
+        return
 
 # @bot.command()
 # async def 채팅만(ctx):
