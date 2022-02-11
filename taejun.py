@@ -284,6 +284,10 @@ def MakePageList(channel, list_, flag, arg):
                     pages[page] = discord.Embed(title = channel + "님의 전체 채팅 기록",
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
+                elif (flag == 7): # 음성 검색
+                    pages[page] = discord.Embed(title = channel + "님의 전체 음성 기록",
+                                                description = disc_list[page],
+                                                color = 0x00aaaa)
                 page += 1
 
     return pages
@@ -775,6 +779,7 @@ async def 채팅검색(ctx, *args):
             await ctx.channel.send(embed=embed)
             return    
         
+        textAnswerList = []
         textAnswer += "총 채팅 수 : `" + str(ttext) + "`\n"
         for j in textReturn:
             textAnswer += j[3].decode()
@@ -783,15 +788,81 @@ async def 채팅검색(ctx, *args):
             textAnswer += " ㅤ"
             textAnswer += j[1].decode()
             textAnswer += "\n"
+            textAnswerList.append(textAnswer)
 
         member = name + "#" + tag
-        pages = MakePageList(member, textAnswer, 6, "A")
-        # await msg.delete()
+        pages = MakePageList(member, textAnswerList, 6, "A")
         await Pages(ctx, pages) 
-        # await ctx.channel.send(embed=embed)
 
         return
 
+@bot.command()
+async def 음성검색(ctx, *args):
+    con, cur = DbConnect()
+    if WhiteList(ctx):
+        if len(args) == 2:
+            name = args[0]
+            tag = args[1]
+        elif len(args) == 1:
+            if "#" in args[0]:
+                splittext = args[0].split("#")
+                name = splittext[0]
+                tag = splittext[1]
+            else:
+                embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
+                await ctx.channel.send(embed=embed)
+                return
+                
+        else:
+            embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
+            await ctx.channel.send(embed=embed)
+            return
+
+        name = name.replace(" ", "")
+        allMember = bot.get_guild(ServerRoom).members
+        flag = False
+        for i in allMember:
+            if name in i.name.replace(" ", "") and tag in i.discriminator:
+                memberId = i.id
+                flag = True
+        if not flag:
+            embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
+            await ctx.channel.send(embed=embed)
+            return    
+
+        voiceAnswer = ""
+
+        voiceReturn = DbSearchVoice_member(memberId, con, cur)
+        ttime, ttext = DbSearchtexttime(memberId, 3, con, cur)
+        if len(voiceReturn) == 0:
+            embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
+                                    description="없습니다.")
+            await ctx.channel.send(embed=embed)
+            return    
+        
+        voiceAnswerList = []
+        voiceAnswer += "음성채널 누적 시간 : `" + str(datetime.timedelta(seconds=int(ttime))) + "`\n"
+        for j in voiceReturn:
+            voiceAnswer += j[3].decode()
+            voiceAnswer += " ㅤ"
+            if j[1].decode() != "없음":
+                voiceAnswer += MakeMention(j[1].decode(), 2)
+            else:
+                voiceAnswer += "없음"
+            voiceAnswer += " -> "
+            if j[2].decode() != "없음":
+                voiceAnswer += "<#" + j[2].decode() + ">"
+            else:
+                voiceAnswer += "없음"
+
+            voiceAnswer += "\n"
+            voiceAnswerList.append(voiceAnswer)
+
+        member = name + "#" + tag
+        pages = MakePageList(member, voiceAnswerList, 7, "A")
+        await Pages(ctx, pages) 
+
+        return
 # @bot.command()
 # async def 채팅만(ctx):
 #     con, cur = DbConnect()
