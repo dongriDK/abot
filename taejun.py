@@ -599,6 +599,7 @@ async def 인원정리(ctx):
         flag = False
         guild = bot.get_guild(875392692014694450)
         for member in guild.members:
+            print(member)
             for roles in member.roles:
                 if roles.id == 893155020499988490:
                     rest += member.mention
