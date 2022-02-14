@@ -599,7 +599,6 @@ async def 인원정리(ctx):
         flag = False
         guild = bot.get_guild(875392692014694450)
         for member in guild.members:
-            print(member)
             for roles in member.roles:
                 if roles.id == 893155020499988490:
                     rest += member.mention
@@ -681,6 +680,7 @@ async def 채팅만(ctx):
                 continue
 
             if (member.bot != True):
+                print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if (ttext != 0 and ttime < 1800):
                     chat = ""
