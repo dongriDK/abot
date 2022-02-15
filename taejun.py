@@ -611,6 +611,7 @@ async def 인원정리(ctx):
                 continue
 
             if (member.bot != True):
+                print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if (ttext == 0 and ttime == 0):
                     ghost = ""
