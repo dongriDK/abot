@@ -618,8 +618,14 @@ async def 인원정리(ctx):
                     ghost += member.mention
                     ghost += " (" + member.name + ")"
                     ghost += " ㅤ**"
-                    abc = DbSearchTime_byid(member.id, con, cur)
-                    ghost += abc[0][0].decode()
+                    jointime = DbSearchTime_byid(member.id, con, cur)
+                    try:
+                        ghost += jointime[0][0].decode()
+                    except:
+                        print(member, "인원정리 except")
+                        cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
+                        con.commit()
+                        ghost += CurDay()
                     ghost += "**\n"
                     ghostList.append(ghost)
 
