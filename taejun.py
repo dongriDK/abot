@@ -10,6 +10,7 @@ from discord.ext import commands
 from discord.ext.commands.errors import CommandInvokeError
 from discord.ext.commands import CommandNotFound
 from discord.ext import tasks
+import requests
 
 intents = discord.Intents.default()
 intents.members = True
@@ -68,7 +69,6 @@ def DbLogin(id, tag, con, cur):
 
 def DbInit():
     con, cur = DbConnect()
-
     cur.execute("DROP TABLE Voice_info")
     cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id varchar(128), be_channel TEXT, af_channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE Text_info")
@@ -878,6 +878,11 @@ async def 음성검색(ctx, *args):
         await Pages(ctx, pages) 
 
         return
+
+@bot.command()
+async def test(ctx):
+    req = requests.get("https://discord.com/api/path/to/the/endpoint")
+    print(req.headers)
 # @bot.command()
 # async def 채팅만(ctx):
 #     con, cur = DbConnect()
