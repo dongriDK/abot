@@ -627,7 +627,7 @@ async def 인원정리(ctx):
 
                         # cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
                         # con.commit()
-                        ghost += " : 기록 확인 안됨"
+                        ghost += "기록 확인 안됨"
                     ghost += "**\n"
                     ghostList.append(ghost)
 
@@ -706,7 +706,7 @@ async def 채팅만(ctx):
                         print(member, "채팅만 except")
                         # cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
                         # con.commit()
-                        chat += " : 기록 확인 안됨"
+                        chat += "기록 확인 안됨"
                         chat += CurDay()
                     chat += "\n"
                     chatList.append(chat)
