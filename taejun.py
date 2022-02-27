@@ -624,9 +624,10 @@ async def 인원정리(ctx):
                         ghost += jointime[0][0].decode()
                     except:
                         print(member, "인원정리 except")
-                        cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
-                        con.commit()
-                        ghost += CurDay()
+
+                        # cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
+                        # con.commit()
+                        ghost += member + " : 기록 확인 안됨"
                     ghost += "**\n"
                     ghostList.append(ghost)
 
@@ -703,8 +704,9 @@ async def 채팅만(ctx):
                         chat += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     except:
                         print(member, "채팅만 except")
-                        cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
-                        con.commit()
+                        # cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
+                        # con.commit()
+                        chat += member + " : 기록 확인 안됨"
                         chat += CurDay()
                     chat += "\n"
                     chatList.append(chat)
