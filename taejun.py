@@ -699,7 +699,13 @@ async def 채팅만(ctx):
                     chat += "** ㅤ`"
                     chat += str(datetime.timedelta(seconds=int(ttime)))
                     chat += "` ㅤ"
-                    chat += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
+                    try:
+                        chat += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
+                    except:
+                        print(member, "채팅만 except")
+                        cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
+                        con.commit()
+                        chat += CurDay()
                     chat += "\n"
                     chatList.append(chat)
         pages = MakePageList(0, chatList, 2, rest)
