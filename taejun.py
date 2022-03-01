@@ -901,15 +901,16 @@ async def test(ctx):
 
 @bot.command()
 async def updateUser(ctx):
-    con, cur = DbConnect()
-    if WhiteList(ctx):
-        guild = bot.get_guild(875392692014694450)
+    print(dir(telegram))
+    # con, cur = DbConnect()
+    # if WhiteList(ctx):
+    #     guild = bot.get_guild(875392692014694450)
 
-        for member in guild.members:
-            if (member.bot != True):
-                print(member)
-                cur.execute("INSERT INTO user_info(id, tag, ttext, ttime, count, jointime) VALUES(%s, %s, %s, %s, %s, %s)", (member.id, member.discriminator, "0", "0", "1", "00.00"))
-                con.commit()
+    #     for member in guild.members:
+    #         if (member.bot != True):
+    #             print(member)
+    #             cur.execute("INSERT INTO user_info(id, tag, ttext, ttime, count, jointime) VALUES(%s, %s, %s, %s, %s, %s)", (member.id, member.discriminator, "0", "0", "1", "00.00"))
+    #             con.commit()
 
 
 bot.run(os.environ["token"])
