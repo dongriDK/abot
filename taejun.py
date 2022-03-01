@@ -11,6 +11,7 @@ from discord.ext.commands.errors import CommandInvokeError
 from discord.ext.commands import CommandNotFound
 from discord.ext import tasks
 import requests
+import telegram
 
 intents = discord.Intents.default()
 intents.members = True
