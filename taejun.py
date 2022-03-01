@@ -73,8 +73,7 @@ def DbInit():
     cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id varchar(128), be_channel TEXT, af_channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE Text_info")
     cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
-    cur.execute("DROP TABLE User_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), tag TEXT, ttext INTEGER DEFAULT '0', ttime INTEGER DEFAULT '0', count INTEGER, jointime TEXT, PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4;")
+    cur.execute("update user_info set ttime=0, ttext=0")
     con.commit()
     return 0
 
@@ -126,7 +125,7 @@ def DbModify_voice(member, before, after, con, cur):
     return retValue, beChannel, totalSeconds
 
 def DbSearchTime_byid(id, con, cur):
-    cur.execute("SELECT jointime from login where id=%s", (id,))
+    cur.execute("SELECT jointime from user_info where id=%s", (id,))
 
     return cur.fetchall()
 
@@ -415,28 +414,28 @@ async def on_user_update(before, after):
 @bot.event
 async def on_member_join(member):
     con, cur = DbConnect()
-    cur.execute("SELECT count from login where id=%s", (member.id,))
+    cur.execute("SELECT count from user_info where id=%s", (member.id,))
     count = cur.fetchall()
     if len(count) == 0:
         print("join new", member)
-        cur.execute("INSERT INTO user_info(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
+        cur.execute("INSERT INTO user_info(id, tag, ttext, ttime, count, jointime) VALUES(%s, %s, %s, %s, %s, %s)", (member.id, member.discriminator, 0, 0, 1, CurDay()))
         con.commit()
     elif count[0][0] >= 3:
         print("join exc", member)
         channel = bot.get_channel(taejunRoom)
         ret = MakeMention(STAFFROLE, 3) + " ㅤ" + MakeMention(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 3회 탐지"
         await channel.send(ret)
-        cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
+        cur.execute("UPDATE user_info SET count=count+1 where id=%s", (member.id,))
         con.commit()
     else:
         print("join again", member)
-        cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
+        cur.execute("UPDATE user_info SET count=count+1 where id=%s", (member.id,))
         con.commit()
 
 @bot.event
 async def on_member_remove(member):
     con, cur = DbConnect()
-    cur.execute("SELECT count from login where id=%s", (member.id,))
+    cur.execute("SELECT count from user_info where id=%s", (member.id,))
     count = cur.fetchall()
     print(count)
     if count[0][0] >= 2:
@@ -446,7 +445,7 @@ async def on_member_remove(member):
         await channel.send(ret)
     else:
         print("remove else", member)
-        cur.execute("UPDATE login SET count=count+1 where id=%s", (member.id,))
+        cur.execute("UPDATE user_info SET count=count+1 where id=%s", (member.id,))
         con.commit()
 
 # @bot.event
