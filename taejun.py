@@ -74,7 +74,7 @@ def DbInit():
     cur.execute("DROP TABLE Text_info")
     cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE User_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), tag TEXT, ttext INTEGER DEFAULT '0', ttime INTEGER DEFAULT '0', PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4;")
+    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), tag TEXT, ttext INTEGER DEFAULT '0', ttime INTEGER DEFAULT '0', count INTEGER, jointime TEXT, PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4;")
     con.commit()
     return 0
 
@@ -419,7 +419,7 @@ async def on_member_join(member):
     count = cur.fetchall()
     if len(count) == 0:
         print("join new", member)
-        cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
+        cur.execute("INSERT INTO user_info(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
         con.commit()
     elif count[0][0] >= 3:
         print("join exc", member)
@@ -901,33 +901,10 @@ async def updateUser(ctx):
 
         for member in guild.members:
             if (member.bot != True):
-                cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, "1", "00.00"))
+                print(member)
+                cur.execute("INSERT INTO user_info(id, tag, ttext, ttime, count, jointime) VALUES(%s, %s, %s, %s, %s, %s)", (member.id, member.discriminator, "0", "0", "1", "00.00"))
                 con.commit()
 
-# @bot.command()
-# async def 채팅만(ctx):
-#     con, cur = DbConnect()
-#     if WhiteList(ctx):
-#         msg = await ctx.send("채팅기록 정리중...")
-#         guild = bot.get_guild(875392692014694450)
-#         chatList = ""
-#         for member in guild.members:
-#             if (member.bot != True):
-#                 textReturn = DbSearchText_member(member.id, con, cur)
-#                 voiceReturn = DbSearchVoice_member(member.id, con, cur)
-
-#                 if (len(textReturn) != 0 and len(voiceReturn) == 0):
-#                     chatList += member.name
-#                     chatList += " ㅤ"
-#                     chatList += member.discriminator
-#                     chatList += "\n"
-
-#         embed = discord.Embed(title="채팅만 쓴 유저",
-#                                         description=chatList,
-#                                         color=0x00aaaa)
-#         await msg.delete()            
-#         await ctx.channel.send(embed=embed)
-    
 
 bot.run(os.environ["token"])
 
