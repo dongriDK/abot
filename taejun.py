@@ -25,6 +25,10 @@ config = {
     'database' : os.environ["database"],
     'raise_on_warnings' : True
 }
+
+TELEGRAM_TOKEN = os.environ["telegram_token"]
+CHAT_ID = os.environ["chat_id"]
+TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
 taejunRoom = 905813712886198273
 DeclarRoom = 926123278584651806
 ServerRoom = 875392692014694450
@@ -463,9 +467,11 @@ async def on_member_remove(member):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
+        TEL_BOT.sendMessage(chat_id=CHAT_ID, text=str(ctx) + " " + str(error)+" 없는 명령어")
         await ctx.channel.send(embed=MakeEmbed("없는 명령어입니다."))
 
     elif isinstance(error, CommandInvokeError):
+        TEL_BOT.sendMessage(chat_id=CHAT_ID, text=str(ctx) + " " + str(error)+"없는 채널")
         await ctx.channel.send(embed=MakeEmbed("없는 채널입니다."))
     raise error
 
