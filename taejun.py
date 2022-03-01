@@ -74,7 +74,7 @@ def DbInit():
     cur.execute("DROP TABLE Text_info")
     cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
     cur.execute("DROP TABLE User_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), tag TEXT, ttext MEDIUMINT(9) DEFAULT '0', ttime MEDIUMINT(9) DEFAULT '0', PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4")
+    cur.execute("CREATE TABLE IF NOT EXISTS User_info(id VARCHAR(128), tag TEXT, ttext INTEGER DEFAULT '0', ttime INTEGER DEFAULT '0', PRIMARY KEY(id)) DEFAULT CHARSET=utf8mb4;")
     con.commit()
     return 0
 
@@ -892,6 +892,18 @@ async def 음성검색(ctx, *args):
 async def test(ctx):
     req = requests.get("https://discord.com/api/path/to/the/endpoint")
     print(req.headers)
+
+@bot.command()
+async def updateUser(ctx):
+    con, cur = DbConnect()
+    if WhiteList(ctx):
+        guild = bot.get_guild(875392692014694450)
+
+        for member in guild.members:
+            if (member.bot != True):
+                cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, "1", "00.00"))
+                con.commit()
+
 # @bot.command()
 # async def 채팅만(ctx):
 #     con, cur = DbConnect()
