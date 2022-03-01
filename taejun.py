@@ -28,11 +28,7 @@ config = {
 
 TELEGRAM_TOKEN = os.environ["telegram_token"]
 CHAT_ID = os.environ["chat_id"]
-try:
-    TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
-    print("A")
-except:
-    pass
+TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
 taejunRoom = 905813712886198273
 DeclarRoom = 926123278584651806
 ServerRoom = 875392692014694450
@@ -903,9 +899,9 @@ async def test(ctx):
     req = requests.get("https://discord.com/api/path/to/the/endpoint")
     print(req.headers)
 
-@bot.command()
-async def updateUser(ctx):
-    print(dir(telegram))
+# @bot.command()
+# async def updateUser(ctx):
+#     print(dir(telegram))
     # con, cur = DbConnect()
     # if WhiteList(ctx):
     #     guild = bot.get_guild(875392692014694450)
