@@ -28,7 +28,7 @@ config = {
 
 TELEGRAM_TOKEN = os.environ["telegram_token"]
 CHAT_ID = os.environ["chat_id"]
-TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
+# TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
 taejunRoom = 905813712886198273
 DeclarRoom = 926123278584651806
 ServerRoom = 875392692014694450
