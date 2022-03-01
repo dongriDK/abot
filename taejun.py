@@ -341,7 +341,7 @@ def WhiteList(ctx):
 @bot.event
 async def on_ready():
     print(f'부팅 성공:{bot.user.name}!')
-    game = discord.Game("Scan")
+    game = discord.Game("탐지")
     await bot.change_presence(status = discord.Status.online, activity = game)
 
     return 0
