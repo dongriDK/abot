@@ -422,7 +422,7 @@ async def on_message(message):
                 
                 res = requests.get(APEX_URL + name + APEX_TOKEN)
                 json_data = json.loads(res.text)
-                ParsingJson(name, json_data)
+                await ParsingJson(name, json_data)
         
         
 
