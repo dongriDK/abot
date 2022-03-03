@@ -361,8 +361,7 @@ async def ParsingJson(name, data):
     embed.add_field(name = "Level", value = level)
     embed.add_field(name="RankScore", value = rankscore, inline = False)
 
-    channel = bot.get_channel(taejunRoom)
-    await channel.send(embed = embed)
+    return embed
 
 
 def WhiteList(ctx):
@@ -422,7 +421,8 @@ async def on_message(message):
                 
                 res = requests.get(APEX_URL + name + APEX_TOKEN)
                 json_data = json.loads(res.text)
-                await ParsingJson(name, json_data)
+                embed = await ParsingJson(name, json_data)
+                await message.channel.send(embed = embed)
         
         
 
