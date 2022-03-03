@@ -336,10 +336,10 @@ async def Pages(ctx, pages):
                 await msg.edit(embed=pages[current])
     return
 
-async def ParsingJson(name, data):
+async def ParsingJson(name, data, channel):
     try:
         data["Error"]
-        await SendMessage(taejunRoom, "`" + name + "` 플레이어에 대한 검색 결과가 없습니다.\n>>> 1. 스팀에서 플레이하는 경우 스팀 계정에 연결된 오리진 계정 이름을 사용하세요.\n2. 한글 닉네임은 검색이 불가합니다.")
+        await channel.send("`" + name + "` 플레이어에 대한 검색 결과가 없습니다.\n>>> 1. 스팀에서 플레이하는 경우 스팀 계정에 연결된 오리진 계정 이름을 사용하세요.\n2. 한글 닉네임은 검색이 불가합니다.")
         return 0
     except:
         pass
@@ -416,12 +416,12 @@ async def on_message(message):
                 try:
                     name = msg[1]
                 except:
-                    await SendMessage(taejunRoom, "검색할 아이디를 입력하세요.")
+                    await message.channel.send("검색할 아이디를 입력하세요.")
                     return 0
                 
                 res = requests.get(APEX_URL + name + APEX_TOKEN)
                 json_data = json.loads(res.text)
-                embed = await ParsingJson(name, json_data)
+                embed = await ParsingJson(name, json_data, message.channel)
                 await message.channel.send(embed = embed)
         
         
