@@ -422,7 +422,8 @@ async def on_message(message):
                 res = requests.get(APEX_URL + name + APEX_TOKEN)
                 json_data = json.loads(res.text)
                 embed = await ParsingJson(name, json_data, message.channel)
-                await message.channel.send(embed = embed)
+                if (embed != 0):
+                    await message.channel.send(embed = embed)
         
         
 
