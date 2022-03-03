@@ -339,7 +339,7 @@ async def Pages(ctx, pages):
 async def ParsingJson(name, data):
     try:
         data["Error"]
-        await SendMessage(taejunRoom, "`" + name + "` 플레이어에 대한 검색 결과가 없습니다.\n 스팀에서 플레이하는 경우 스팀 계정에 연결된 오리진 계정 이름을 사용하세요.")
+        await SendMessage(taejunRoom, "`" + name + "` 플레이어에 대한 검색 결과가 없습니다.\n**스팀에서 플레이하는 경우 스팀 계정에 연결된 오리진 계정 이름을 사용하세요.**\n**한글 닉네임은 검색이 불가합니다.**")
         return 0
     except:
         pass
