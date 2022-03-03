@@ -1,16 +1,13 @@
 # -*- coding:utf-8 -*-
-from operator import le
 import discord
 import asyncio
 import time
 import datetime
-from discord import team
 import mysql.connector
 import os
 from discord.ext import commands
 from discord.ext.commands.errors import CommandInvokeError
 from discord.ext.commands import CommandNotFound
-from discord.ext import tasks
 import requests
 import telegram
 import json
@@ -424,7 +421,7 @@ async def on_message(message):
                     return 0
                 
                 res = requests.get(APEX_URL + name + APEX_TOKEN)
-                json_data = json.load(res.text)
+                json_data = json.loads(res.text)
                 ParsingJson(name, json_data)
         
         
