@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from operator import le
 import discord
 import asyncio
 import time
@@ -12,6 +13,7 @@ from discord.ext.commands import CommandNotFound
 from discord.ext import tasks
 import requests
 import telegram
+import json
 
 intents = discord.Intents.default()
 intents.members = True
@@ -28,6 +30,8 @@ config = {
 
 TELEGRAM_TOKEN = os.environ["telegram_token"]
 CHAT_ID = os.environ["chat_id"]
+APEX_TOKEN = os.environ["apex_token"]
+APEX_URL = os.environ["apex_url"]
 TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
 taejunRoom = 905813712886198273
 DeclarRoom = 926123278584651806
@@ -335,6 +339,35 @@ async def Pages(ctx, pages):
                 await msg.edit(embed=pages[current])
     return
 
+async def ParsingJson(name, data):
+    try:
+        data["Error"]
+        await SendMessage(taejunRoom, name + " 플레이어에 대한 검색 결과가 없습니다.")
+        return 0
+    except:
+        pass
+
+    info = data["global"]
+
+    level = info["level"]
+    rank = info["rank"]
+    rankscore = rank["rankScore"]
+    rankimg = rank["rankImg"]
+
+    arena = info["arena"]
+    arena_rank = arena["rankScore"]
+    arena_img = arena["rankImg"]
+
+    embed = discord.Embed(title = "Apex Legends 전적 검색", color=0x00aaaa)
+    embed.set_thumbnail(url = rankimg)
+    embed.add_field(name = "ID", value = name)
+    embed.add_field(name = "Level", value = level)
+    embed.add_field(name="RankScore", value = rankscore, inline = False)
+
+    channel = bot.get_channel(taejunRoom)
+    await channel.send(embed = embed)
+
+
 def WhiteList(ctx):
     # if (ctx.author.name == "노우리"):
     #     return False
@@ -371,10 +404,6 @@ async def on_message(message):
     con, cur = DbConnect()
     if (message.author.name != "태준이" and message.author.name != "InFi-EYE"):
         if("!ㅌ" not in message.content):
-            # if message.author.id == 925004142831874119 or message.author.id == "915102187548446751":
-            #     print(message.author.id)
-        #     print(message, dir(message))
-            #     await message.delete()
             DbReturn = DbLogin(message.author.id, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
             if message.channel.id == 926118022245142538 and (message.author.id != 263662225309433857 and message.author.id != 903288998577983530 and message.author.id != 397084939897667584):
@@ -385,6 +414,21 @@ async def on_message(message):
                     # await SendMessage(DeclarRoom, picture_url)
                 msg = "**신고자** ㅤ: ㅤ" + MakeMention(message.author.id, 1) + "```" + message.content + "```"
                 await SendMessage(DeclarRoom, msg + "\n" + picture_url)
+
+            if(message.content.startswith("!전적 ")):
+                msg = message.content.split(" ")
+                try:
+                    name = msg[1]
+                except:
+                    await SendMessage(taejunRoom, "검색할 아이디를 입력하세요.")
+                    return 0
+                
+                res = requests.get(APEX_URL + name + APEX_TOKEN)
+                json_data = json.load(res.text)
+                ParsingJson(name, json_data)
+        
+        
+
 
     await bot.process_commands(message)
     return 0
