@@ -584,6 +584,7 @@ async def 검색(ctx, *args):
                 memberId = i.id
                 flag = True
         if not flag:
+            # here
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
             await ctx.channel.send(embed=embed)
             return    
@@ -739,7 +740,7 @@ async def 채팅만(ctx):
             if (member.bot != True):
                 print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
-                if (ttext != 0 and ttime < 1800):
+                if (ttime < 1800):
                     chat = ""
                     chat += member.mention
                     chat += " (" + member.name + ")"
