@@ -427,7 +427,8 @@ async def on_message(message):
                 res = requests.get(APEX_URL + name + APEX_TOKEN)
                 json_data = json.loads(res.text)
                 embed = await ParsingJson(name, json_data, message.channel)
-                await message.channel.send(embed = embed)
+                if (embed != 0):
+                    await message.channel.send(embed = embed)
         
         
 
@@ -530,7 +531,7 @@ async def 초기화(ctx):
         await msg.delete()
         embed = discord.Embed(description="초기화가 완료되었습니다.")
         await ctx.send(embed=embed)
-        return
+    return 0
 
 @bot.command()
 async def 검색(ctx, *args): 
@@ -615,7 +616,7 @@ async def 검색(ctx, *args):
         if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
         await ctx.channel.send(embed=embed)
 
-        return
+    return 0
 
 @bot.command()
 async def 인원정리(ctx):
@@ -666,7 +667,7 @@ async def 인원정리(ctx):
         await msg.delete()
         await Pages(ctx, pages) 
 
-        return
+    return 0
 
 @bot.command()
 async def 벨튀(ctx, *args):
@@ -696,7 +697,7 @@ async def 벨튀(ctx, *args):
                 pages = MakePageList(channel, DbReturn, 1, 0)
                 await Pages(ctx, pages)
 
-    return 
+    return 0
 
 @bot.command()
 async def 채팅만(ctx):
