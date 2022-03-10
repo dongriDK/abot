@@ -422,7 +422,7 @@ async def on_message(message):
                     name = msg[1]
                 except:
                     await message.channel.send("검색할 아이디를 입력하세요.")
-                    return 0
+                    await bot.process_commands(message)
                 
                 res = requests.get(APEX_URL + name + APEX_TOKEN)
                 json_data = json.loads(res.text)
