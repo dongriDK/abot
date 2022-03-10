@@ -621,12 +621,16 @@ async def 검색(ctx, *args):
 @bot.command()
 async def 인원정리(ctx):
     con, cur = DbConnect()
+    print("A")
     if WhiteList(ctx):
+        print("B")
         msg = await ctx.send("인원 정리중...")
+        print("C")
         ghostList = []
         rest = ""
         flag = False
         guild = bot.get_guild(875392692014694450)
+        print("D")
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
