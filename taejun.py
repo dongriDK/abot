@@ -401,9 +401,6 @@ async def on_voice_state_update(member, before, after):
 # 메시지 생성 시 호출
 @bot.event
 async def on_message(message):
-    # pdb.set_trace()
-    print(message)
-    print(message.content)
     con, cur = DbConnect()
     if (message.author.name != "태준이" and message.author.name != "InFi-EYE"):
         if("!ㅌ" not in message.content):
@@ -623,16 +620,12 @@ async def 검색(ctx, *args):
 @bot.command()
 async def 인원정리(ctx):
     con, cur = DbConnect()
-    print("A")
     if WhiteList(ctx):
-        print("B")
         msg = await ctx.send("인원 정리중...")
-        print("C")
         ghostList = []
         rest = ""
         flag = False
         guild = bot.get_guild(875392692014694450)
-        print("D")
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 893155020499988490:
