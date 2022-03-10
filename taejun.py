@@ -718,7 +718,7 @@ async def 채팅만(ctx):
             if (member.bot != True):
                 print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
-                if (ttext != 0 and ttime < 1800):
+                if (ttime < 1800):
                     chat = ""
                     chat += member.mention
                     chat += " (" + member.name + ")"
