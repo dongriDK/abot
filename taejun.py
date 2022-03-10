@@ -402,6 +402,7 @@ async def on_voice_state_update(member, before, after):
 async def on_message(message):
     con, cur = DbConnect()
     if (message.author.name != "태준이" and message.author.name != "InFi-EYE"):
+        print(message.content)
         if("!ㅌ" not in message.content):
             DbReturn = DbLogin(message.author.id, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
