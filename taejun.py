@@ -13,7 +13,7 @@ import requests
 import telegram
 import json
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 intents.guilds = True
 bot = commands.Bot(command_prefix = '!ㅌ ', intents=intents)
