@@ -400,9 +400,9 @@ async def on_voice_state_update(member, before, after):
 # 메시지 생성 시 호출
 @bot.event
 async def on_message(message):
+    print(message)
     con, cur = DbConnect()
     if (message.author.name != "태준이" and message.author.name != "InFi-EYE"):
-        print(message.content)
         if("!ㅌ" not in message.content):
             DbReturn = DbLogin(message.author.id, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
@@ -520,32 +520,6 @@ async def on_command_error(ctx, error):
         TEL_BOT.sendMessage(chat_id=CHAT_ID, text=str(ctx) + " " + str(error)+"없는 채널")
         await ctx.channel.send(embed=MakeEmbed("없는 채널입니다."))
     raise error
-
-# @bot.command()
-# async def test(ctx):
-#     if WhiteList(ctx):
-#         guild = ctx.message.guild
-
-#         print(guild.channels)
-#         try:
-#             for i in guild.channels:
-#                 print(i)
-#         except:
-#             pass
-        # for i in bot.get_all_channels():
-            # print(i)
-#         guild = bot.get_guild(875392692014694450)
-#         for member in guild.members:
-#             if(member.bot != True):
-#                 print(member)
-#                 con, cur = DbConnect()
-#                 try:
-#                     cur.execute("INSERT INTO login(id, name, tag, count) VALUES(%s, %s, %s, %s)", (member.id, member.name, member.discriminator, 1))
-#                     con.commit()
-#                 except:
-#                     print("error", member)
-#                     pass
-                
 
 @bot.command()
 async def 초기화(ctx):
