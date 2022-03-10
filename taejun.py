@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+import pdb
 import discord
 import asyncio
 import time
@@ -400,6 +401,7 @@ async def on_voice_state_update(member, before, after):
 # 메시지 생성 시 호출
 @bot.event
 async def on_message(message):
+    pdb.set_trace()
     print(message)
     print(message.content)
     con, cur = DbConnect()
