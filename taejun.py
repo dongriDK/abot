@@ -35,6 +35,7 @@ taejunRoom = 905813712886198273
 DeclarRoom = 926123278584651806
 ServerRoom = 875392692014694450
 STAFFROLE = 875396480381382706
+BOT_DEFAULTROOM = 928607862027079690
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
@@ -414,23 +415,20 @@ async def on_message(message):
                     # await SendMessage(DeclarRoom, picture_url)
                 msg = "**신고자** ㅤ: ㅤ" + MakeMention(message.author.id, 1) + "```" + message.content + "```"
                 await SendMessage(DeclarRoom, msg + "\n" + picture_url)
-
-            if(message.content.startswith("!전적 ")):
-                msg = message.content.split(" ")
-                try:
-                    name = msg[1]
-                except:
-                    await message.channel.send("검색할 아이디를 입력하세요.")
-                    await bot.process_commands(message)
-                
-                res = requests.get(APEX_URL + name + APEX_TOKEN)
-                json_data = json.loads(res.text)
-                embed = await ParsingJson(name, json_data, message.channel)
-                if (embed != 0):
-                    await message.channel.send(embed = embed)
-        
-        
-
+            if(message.channel.id == BOT_DEFAULTROOM):
+                if(message.content.startswith("!전적 ")):
+                    msg = message.content.split(" ")
+                    try:
+                        name = msg[1]
+                    except:
+                        await message.channel.send("검색할 아이디를 입력하세요.")
+                        await bot.process_commands(message)
+                    
+                    res = requests.get(APEX_URL + name + APEX_TOKEN)
+                    json_data = json.loads(res.text)
+                    embed = await ParsingJson(name, json_data, message.channel)
+                    if (embed != 0):
+                        await message.channel.send(embed = embed)
 
     await bot.process_commands(message)
     return 0
