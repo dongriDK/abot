@@ -555,14 +555,11 @@ async def 검색(ctx, *args):
         name = name.replace(" ", "")
         allMember = bot.get_guild(ServerRoom).members
         flag = False
-        print("AAAAAAAAAA", name, tag)
         for i in allMember:
-            print(i)
             if name in i.name.replace(" ", "") and tag in i.discriminator:
                 memberId = i.id
                 flag = True
         if not flag:
-            print("A")
             # here
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
             await ctx.channel.send(embed=embed)
@@ -645,7 +642,7 @@ async def 인원정리(ctx):
                 if (ttext == 0 and ttime == 0):
                     ghost = ""
                     ghost += member.mention
-                    ghost += " (" + member.name + ")"
+                    ghost += " (" + member.name + "#" + member.discriminator + ") "
                     ghost += " ㅤ**"
                     jointime = DbSearchTime_byid(member.id, con, cur)
                     try:
@@ -722,7 +719,7 @@ async def 채팅만(ctx):
                 if (ttime > 0 and ttime < 7200):
                     chat = ""
                     chat += member.mention
-                    chat += " (" + member.name + ")"
+                    chat += " (" + member.name + "#" + member.discriminator + ") "
                     chat += " ㅤ**"
                     chat += str(ttext)
                     chat += "** ㅤ`"
@@ -752,11 +749,14 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
         # print(voiceRankReturn[0])
         rank = 1
         for i in Return:
+            id = i[0].decode()
+            user = bot.get_user(id)
             voice = ""
             voice += str(rank)
             voice += ".ㅤ "
-            voice += MakeMention(i[0].decode(), 1)
-            voice += "ㅤ `"
+            voice += MakeMention(id, 1)
+            voice += "ㅤ (" + user.name + "#" + user.discriminator
+            voice += ")ㅤ `"
             voice += str(datetime.timedelta(seconds=int(i[3])))
             voice += "`\n"
             voiceRankList.append(voice)
@@ -773,11 +773,14 @@ async def 채팅순위(ctx):
         Return = DbSearchTextRank(con, cur)
         rank = 1
         for i in Return:
+            id = i[0].decode()
+            user = bot.get_user(id)
             text = ""
             text += str(rank)
             text += ".ㅤ "
-            text += MakeMention(i[0].decode(), 1)
-            text += "ㅤ `"
+            text += MakeMention(id, 1)
+            text += "ㅤ (" + user.name + "#" + user.discriminator
+            text += ")ㅤ `"
             text += str(i[2])
             text += "`\n"
             textRankList.append(text)
