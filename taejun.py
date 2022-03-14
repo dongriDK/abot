@@ -555,11 +555,14 @@ async def 검색(ctx, *args):
         name = name.replace(" ", "")
         allMember = bot.get_guild(ServerRoom).members
         flag = False
+        print("AAAAAAAAAA", name, tag)
         for i in allMember:
+            print(i)
             if name in i.name.replace(" ", "") and tag in i.discriminator:
                 memberId = i.id
                 flag = True
         if not flag:
+            print("A")
             # here
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
             await ctx.channel.send(embed=embed)
