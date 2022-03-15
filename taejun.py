@@ -734,7 +734,6 @@ async def 채팅만(ctx):
                 # print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if ((ttime > 0 and ttime < 7200) or (ttext != 0 and ttime == 0)):
-                    print(member)
                     try:
                         jointime = DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     except:
@@ -759,6 +758,7 @@ async def 채팅만(ctx):
                         if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
                             newjoinList += chat
                     else:
+                        print(member)
                         chatList.append(chat)
         pages = MakePageList(0, chatList, 2, rest, newjoinList)
 
