@@ -655,16 +655,18 @@ async def 인원정리(ctx):
                     curday = curday[1:].split(".") if curday[0] == "0" else curday.split(".")
                     jointime1 = jointime[1:].split(".").split(".") if jointime[0] == "0" else jointime.split(".")
 
-                    if ((datetime.datetime(cur_year, curday[0], curday[1]) - datetime.datetime(cur_year, jointime1[0], jointime1[1])).days < 15):
-                        newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
-                    else:
-                        ghost = ""
-                        ghost += member.mention
-                        ghost += " (" + member.name + "#" + member.discriminator + ") "
-                        ghost += " ㅤ**"
-                        ghost += jointime
-                        ghost += "**\n"
-                        ghostList.append(ghost)
+                    if (curday[0] != "0"):
+                        if ((datetime.datetime(cur_year, curday[0], curday[1]) - datetime.datetime(cur_year, jointime1[0], jointime1[1])).days < 15):
+                            newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
+                            continue
+
+                    ghost = ""
+                    ghost += member.mention
+                    ghost += " (" + member.name + "#" + member.discriminator + ") "
+                    ghost += " ㅤ**"
+                    ghost += jointime
+                    ghost += "**\n"
+                    ghostList.append(ghost)
 
         pages = MakePageList(member, ghostList, 3, rest, newjoinList)
         await msg.delete()
@@ -735,25 +737,28 @@ async def 채팅만(ctx):
                         jointime = "00.00"
                     curday = CurDay()
                     print("before : ", curday)
-                    curday =curday[1:].split(".") if curday[0] == "0" else curday.split(".")
+                    curday = curday[1:].split(".") if curday[0] == "0" else curday.split(".")
                     print("after : ", curday)
                     print("before : ", jointime)
                     jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
                     print("before : ", jointime1)
-                    if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
-                        newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
-                    else:
-                        chat = ""
-                        chat += member.mention
-                        chat += " (" + member.name + "#" + member.discriminator + ") "
-                        chat += " ㅤ**"
-                        chat += str(ttext)
-                        chat += "** ㅤ`"
-                        chat += str(datetime.timedelta(seconds=int(ttime)))
-                        chat += "` ㅤ"
-                        chat += jointime
-                        chat += "\n"
-                        chatList.append(chat)
+
+                    if (curday[0] != "0"):
+                        if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
+                            newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
+                            continue
+                
+                    chat = ""
+                    chat += member.mention
+                    chat += " (" + member.name + "#" + member.discriminator + ") "
+                    chat += " ㅤ**"
+                    chat += str(ttext)
+                    chat += "** ㅤ`"
+                    chat += str(datetime.timedelta(seconds=int(ttime)))
+                    chat += "` ㅤ"
+                    chat += jointime
+                    chat += "\n"
+                    chatList.append(chat)
         pages = MakePageList(0, chatList, 2, rest, newjoinList)
 
         await msg.delete()
