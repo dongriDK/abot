@@ -645,16 +645,16 @@ async def 인원정리(ctx):
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
 
                 if (ttext == 0 and ttime == 0):
-                    curday = CurDay()
-                    curday[1:].split(".") if curday[0] == "0" else curday
-                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime
-
                     try:
                         jointime = DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     except:
                         print(member, "인원정리 except")
                         jointime = "기록 확인 안 됨"
-                        
+
+                    curday = CurDay()
+                    curday[1:].split(".") if curday[0] == "0" else curday
+                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime
+
                     if (datetime.datetime(cur_year, curday[0], curday[1]) - datetime.dateimte(cur_year, jointime1[0], jointime1[1]) < 15):
                         newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
                     else:
@@ -728,16 +728,16 @@ async def 채팅만(ctx):
                 print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if (ttime > 0 and ttime < 7200):
-                    curday = CurDay()
-                    curday[1:].split(".") if curday[0] == "0" else curday
-                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime
-
                     try:
                         jointime = DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     except:
                         print(member, "채팅만 except")
                         jointime = "기록 확인 안 됨"
-                        
+
+                    curday = CurDay()
+                    curday[1:].split(".") if curday[0] == "0" else curday
+                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime
+
                     if (datetime.datetime(cur_year, curday[0], curday[1]) - datetime.dateimte(cur_year, jointime1[0], jointime1[1]) < 15):
                         newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
                     else:
