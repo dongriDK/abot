@@ -733,7 +733,7 @@ async def 채팅만(ctx):
             if (member.bot != True):
                 print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
-                if (ttime > 0 and ttime < 7200):
+                if ((ttime > 0 and ttime < 7200) or (ttext != 0 and ttime == 0)):
                     try:
                         jointime = DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     except:
