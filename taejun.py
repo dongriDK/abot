@@ -312,6 +312,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
 
 async def Pages(ctx, pages):
     current = 0
+    print(pages)
     msg = await ctx.send(embed=pages[current])
     for button in buttons:
         await msg.add_reaction(button)
@@ -624,7 +625,7 @@ async def 인원정리(ctx):
     if WhiteList(ctx):
         msg = await ctx.send("인원 정리중...")
         ghostList = []
-        newjoinList = []
+        newjoinList = ""
         rest = ""
         flag = False
         guild = bot.get_guild(875392692014694450)
@@ -663,7 +664,7 @@ async def 인원정리(ctx):
                     ghost += "**\n"
                     if (jointime1[0] != "0"):
                         if ((datetime.datetime(cur_year, curday[0], curday[1]) - datetime.datetime(cur_year, jointime1[0], jointime1[1])).days < 15):
-                            newjoinList.append(ghost)
+                            newjoinList += ghost
                     else:
                         ghostList.append(ghost)
 
@@ -710,7 +711,7 @@ async def 채팅만(ctx):
         msg = await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = []
-        newjoinList = []
+        newjoinList = ""
         rest = ""
         flag = False
         for member in guild.members:
@@ -751,7 +752,7 @@ async def 채팅만(ctx):
                     chat += "\n"
                     if (jointime1[0] != "0"):
                         if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
-                            newjoinList.append(chat)
+                            newjoinList += chat
                     else:
                         chatList.append(chat)
         pages = MakePageList(0, chatList, 2, rest, newjoinList)
