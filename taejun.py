@@ -736,6 +736,7 @@ async def 채팅만(ctx):
                     print(jointime)
                     curday = CurDay()
                     curday[1:].split(".") if curday[0] == "0" else curday.split(".")
+                    print(curday)
                     jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
                     print(jointime1)
                     if (datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.dateimte(int(cur_year), int(jointime1[0]), int(jointime1[1])) < 15):
