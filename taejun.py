@@ -757,9 +757,12 @@ async def 채팅만(ctx):
                     if (jointime1[0] != "0"):
                         if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
                             newjoinList += chat
+                        else:
+                            chatList.append(chat)
                     else:
                         print(member)
                         chatList.append(chat)
+                        
         pages = MakePageList(0, chatList, 2, rest, newjoinList)
 
         await msg.delete()
