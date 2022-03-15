@@ -743,8 +743,8 @@ async def 채팅만(ctx):
                     jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
                     print("before : ", jointime1)
 
-                    if (curday[0] != "0"):
-                        print("B", curday[0])
+                    if (jointime1[0] != "0"):
+                        print("B", jointime1[0])
                         if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
                             newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
                             continue
