@@ -653,7 +653,7 @@ async def 인원정리(ctx):
 
                     curday = CurDay()
                     curday[1:].split(".") if curday[0] == "0" else curday
-                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime
+                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
 
                     if (datetime.datetime(cur_year, curday[0], curday[1]) - datetime.dateimte(cur_year, jointime1[0], jointime1[1]) < 15):
                         newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
@@ -733,11 +733,11 @@ async def 채팅만(ctx):
                     except:
                         print(member, "채팅만 except")
                         jointime = "00.00"
-
+                    print(jointime)
                     curday = CurDay()
                     curday[1:].split(".") if curday[0] == "0" else curday
-                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime
-
+                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
+                    print(jointime1)
                     if (datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.dateimte(int(cur_year), int(jointime1[0]), int(jointime1[1])) < 15):
                         newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
                     else:
