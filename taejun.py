@@ -312,7 +312,6 @@ def MakePageList(channel, list_, flag, arg, arg1):
 
 async def Pages(ctx, pages):
     current = 0
-    print(pages)
     msg = await ctx.send(embed=pages[current])
     for button in buttons:
         await msg.add_reaction(button)
@@ -668,6 +667,7 @@ async def 인원정리(ctx):
                     else:
                         ghostList.append(ghost)
 
+        print(ghostList)
         pages = MakePageList(member, ghostList, 3, rest, newjoinList)
         await msg.delete()
         await Pages(ctx, pages) 
