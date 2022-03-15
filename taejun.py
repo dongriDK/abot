@@ -664,6 +664,8 @@ async def 인원정리(ctx):
                     if (jointime1[0] != "0"):
                         if ((datetime.datetime(cur_year, curday[0], curday[1]) - datetime.datetime(cur_year, jointime1[0], jointime1[1])).days < 15):
                             newjoinList += ghost
+                        else:
+                            ghostList.append(ghost)
                     else:
                         ghostList.append(ghost)
         
@@ -762,7 +764,7 @@ async def 채팅만(ctx):
                     else:
                         print(member)
                         chatList.append(chat)
-                        
+
         pages = MakePageList(0, chatList, 2, rest, newjoinList)
 
         await msg.delete()
