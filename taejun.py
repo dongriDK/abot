@@ -36,6 +36,7 @@ DeclarRoom = 926123278584651806
 ServerRoom = 875392692014694450
 STAFFROLE = 875396480381382706
 BOT_DEFAULTROOM = 875754970769678376
+cur_year = "2022"
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
@@ -234,7 +235,7 @@ def MakeMention(id, tag):
         return "@" + str(id)
     
 
-def MakePageList(channel, list_, flag, arg):
+def MakePageList(channel, list_, flag, arg, arg1):
     disc_list = []
     pages = []
     total_len = len(list_)
@@ -276,16 +277,18 @@ def MakePageList(channel, list_, flag, arg):
             count += 1
             if (count % 20 == 0 or count == total_len):
                 if (flag == 2): # 채팅만
-                    embed = discord.Embed(title = "채팅과 음성 30분 미만 유저 " + str(page + 1) + "/" + str(total_page),
+                    embed = discord.Embed(title = "채팅과 음성 2시간 미만 유저 " + str(page + 1) + "/" + str(total_page),
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
-                    embed.add_field(name="휴식회원", value = arg, inline=False)
+                    embed.add_field(name="신입회원", value = arg1, inline = False)
+                    embed.add_field(name="휴식회원", value = arg, inline = False)
                     pages[page] = embed
                 elif (flag == 3): # 인원정리
                     embed = discord.Embed(title = "유령회원 목록 " + str(page + 1) + "/" + str(total_page),
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
-                    embed.add_field(name="휴식회원", value = arg, inline=False)
+                    embed.add_field(name="신입회원", value = arg1, inline = False)
+                    embed.add_field(name="휴식회원", value = arg, inline = False)
                     pages[page] = embed
                 elif (flag == 4): # 음성 순위
                     pages[page] = discord.Embed(title = "음성채널 거주 시간 Top 100",
@@ -621,6 +624,7 @@ async def 인원정리(ctx):
     if WhiteList(ctx):
         msg = await ctx.send("인원 정리중...")
         ghostList = []
+        newjoinList = []
         rest = ""
         flag = False
         guild = bot.get_guild(875392692014694450)
@@ -639,24 +643,30 @@ async def 인원정리(ctx):
             if (member.bot != True):
                 print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
+
                 if (ttext == 0 and ttime == 0):
-                    ghost = ""
-                    ghost += member.mention
-                    ghost += " (" + member.name + "#" + member.discriminator + ") "
-                    ghost += " ㅤ**"
-                    jointime = DbSearchTime_byid(member.id, con, cur)
+                    curday = CurDay()
+                    curday[1:].split(".") if curday[0] == "0" else curday
+                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime
+
                     try:
-                        ghost += jointime[0][0].decode()
+                        jointime = DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     except:
                         print(member, "인원정리 except")
+                        jointime = "기록 확인 안 됨"
+                        
+                    if (datetime.datetime(cur_year, curday[0], curday[1]) - datetime.dateimte(cur_year, jointime1[0], jointime1[1]) < 15):
+                        newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
+                    else:
+                        ghost = ""
+                        ghost += member.mention
+                        ghost += " (" + member.name + "#" + member.discriminator + ") "
+                        ghost += " ㅤ**"
+                        ghost += jointime
+                        ghost += "**\n"
+                        ghostList.append(ghost)
 
-                        # cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
-                        # con.commit()
-                        ghost += "기록 확인 안됨"
-                    ghost += "**\n"
-                    ghostList.append(ghost)
-
-        pages = MakePageList(member, ghostList, 3, rest)
+        pages = MakePageList(member, ghostList, 3, rest, newjoinList)
         await msg.delete()
         await Pages(ctx, pages) 
 
@@ -687,7 +697,7 @@ async def 벨튀(ctx, *args):
             if len(DbReturn) == 0:
                 await ctx.channel.send(embed=MakeEmbed("결과가 없습니다."))
             else:
-                pages = MakePageList(channel, DbReturn, 1, 0)
+                pages = MakePageList(channel, DbReturn, 1, 0, 0)
                 await Pages(ctx, pages)
 
     return 0
@@ -699,6 +709,7 @@ async def 채팅만(ctx):
         msg = await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(875392692014694450)
         chatList = []
+        newjoinList = []
         rest = ""
         flag = False
         for member in guild.members:
@@ -717,25 +728,31 @@ async def 채팅만(ctx):
                 print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 if (ttime > 0 and ttime < 7200):
-                    chat = ""
-                    chat += member.mention
-                    chat += " (" + member.name + "#" + member.discriminator + ") "
-                    chat += " ㅤ**"
-                    chat += str(ttext)
-                    chat += "** ㅤ`"
-                    chat += str(datetime.timedelta(seconds=int(ttime)))
-                    chat += "` ㅤ"
+                    curday = CurDay()
+                    curday[1:].split(".") if curday[0] == "0" else curday
+                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime
+
                     try:
-                        chat += DbSearchTime_byid(member.id, con, cur)[0][0].decode()
+                        jointime = DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     except:
                         print(member, "채팅만 except")
-                        # cur.execute("INSERT INTO login(id, tag, count, jointime) VALUES(%s, %s, %s, %s)", (member.id, member.discriminator, 1, CurDay()))
-                        # con.commit()
-                        chat += "기록 확인 안됨"
-                        chat += CurDay()
-                    chat += "\n"
-                    chatList.append(chat)
-        pages = MakePageList(0, chatList, 2, rest)
+                        jointime = "기록 확인 안 됨"
+                        
+                    if (datetime.datetime(cur_year, curday[0], curday[1]) - datetime.dateimte(cur_year, jointime1[0], jointime1[1]) < 15):
+                        newjoinList.append(member.mention + " (" + member.name + "#" + member.discriminator + ") " + " ㅤ**" + jointime + "**\n")
+                    else:
+                        chat = ""
+                        chat += member.mention
+                        chat += " (" + member.name + "#" + member.discriminator + ") "
+                        chat += " ㅤ**"
+                        chat += str(ttext)
+                        chat += "** ㅤ`"
+                        chat += str(datetime.timedelta(seconds=int(ttime)))
+                        chat += "` ㅤ"
+                        chat += jointime
+                        chat += "\n"
+                        chatList.append(chat)
+        pages = MakePageList(0, chatList, 2, rest, newjoinList)
 
         await msg.delete()
         await Pages(ctx, pages)
@@ -761,7 +778,7 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
             voice += "`\n"
             voiceRankList.append(voice)
             rank += 1
-        pages = MakePageList(0, voiceRankList, 4, 0)
+        pages = MakePageList(0, voiceRankList, 4, 0, 0)
 
         await Pages(ctx, pages)
 
@@ -785,7 +802,7 @@ async def 채팅순위(ctx):
             text += "`\n"
             textRankList.append(text)
             rank += 1
-        pages = MakePageList(0, textRankList, 5, 0)
+        pages = MakePageList(0, textRankList, 5, 0,0)
 
         await Pages(ctx, pages)
 
@@ -845,7 +862,7 @@ async def 채팅검색(ctx, *args):
             textAnswerList.append(textAnswer)
 
         member = name + "#" + tag
-        pages = MakePageList(member, textAnswerList, 6, "A")
+        pages = MakePageList(member, textAnswerList, 6, "A", 0)
         await Pages(ctx, pages) 
 
         return
@@ -914,7 +931,7 @@ async def 음성검색(ctx, *args):
             voiceAnswerList.append(voiceAnswer)
 
         member = name + "#" + tag
-        pages = MakePageList(member, voiceAnswerList, 7, "A")
+        pages = MakePageList(member, voiceAnswerList, 7, "A", 0)
         await Pages(ctx, pages) 
 
         return
