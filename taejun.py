@@ -669,7 +669,7 @@ async def 인원정리(ctx):
         
         if len(ghostList) == 0:
             await msg.delete()
-            SendMessage(taejunRoom, "인원정리 대상이 없습니다.")
+            await SendMessage(taejunRoom, "인원정리 대상이 없습니다.")
         else:
             pages = MakePageList(member, ghostList, 3, rest, newjoinList)
             await msg.delete()
