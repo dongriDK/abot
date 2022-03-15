@@ -652,7 +652,7 @@ async def 인원정리(ctx):
                         jointime = "00.00"
 
                     curday = CurDay()
-                    curday[1:].split(".") if curday[0] == "0" else curday
+                    curday[1:].split(".") if curday[0] == "0" else curday.split(".")
                     jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
 
                     if (datetime.datetime(cur_year, curday[0], curday[1]) - datetime.dateimte(cur_year, jointime1[0], jointime1[1]) < 15):
@@ -735,7 +735,7 @@ async def 채팅만(ctx):
                         jointime = "00.00"
                     print(jointime)
                     curday = CurDay()
-                    curday[1:].split(".") if curday[0] == "0" else curday
+                    curday[1:].split(".") if curday[0] == "0" else curday.split(".")
                     jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
                     print(jointime1)
                     if (datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.dateimte(int(cur_year), int(jointime1[0]), int(jointime1[1])) < 15):
