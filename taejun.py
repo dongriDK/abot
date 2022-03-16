@@ -326,6 +326,7 @@ async def Pages(ctx, pages):
             embed = pages[current]
             await msg.clear_reactions()
             embed.set_footer(text="Timed Out.")
+            return 0
 
         else:
             previous_page = current
@@ -678,7 +679,7 @@ async def 인원정리(ctx):
             pages = MakePageList(member, ghostList, 3, rest, newjoinList)
             await msg.delete()
             embed = MakeEmbed(newjoinList)
-
+            print("embed : ", embed)
             await Pages(ctx, pages) 
             print("AAA")
             await ctx.send(embed=embed)
