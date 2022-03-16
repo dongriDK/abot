@@ -679,10 +679,8 @@ async def 인원정리(ctx):
             pages = MakePageList(member, ghostList, 3, rest, newjoinList)
             await msg.delete()
             embed = MakeEmbed(newjoinList)
-            print("embed : ", embed)
-            await Pages(ctx, pages) 
-            print("AAA")
             await ctx.send(embed=embed)
+            await Pages(ctx, pages) 
 
 
     return 0
@@ -773,12 +771,11 @@ async def 채팅만(ctx):
                         chatList.append(chat)
 
         pages = MakePageList(0, chatList, 2, rest, newjoinList)
-
         await msg.delete()
-        await Pages(ctx, pages)
-        
         embed = MakeEmbed(newjoinList)
         await ctx.send(embed=embed)
+        await Pages(ctx, pages)
+        
 
 @bot.command()
 async def 음성순위(ctx): # 음성채널 거주 시간 순위
