@@ -291,7 +291,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
                     embed = discord.Embed(title = "유령회원 목록 " + str(page + 1) + "/" + str(total_page),
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
-                    # embed.add_field(name="신입회원", value = arg1, inline = False)
+                    embed.add_field(name="신입회원", value = arg1, inline = False)
                     # embed.add_field(name="휴식회원", value = arg, inline = False)
                     pages[page] = embed
                     page += 1
