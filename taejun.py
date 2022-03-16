@@ -240,6 +240,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
     showlist1 = 5
     disc_list = []
     pages = []
+    print("AAA")
     total_len = len(list_)
     if (flag == 3):
         total_page = total_len // showlist1 + 1 if total_len / showlist1 > total_len // showlist1 else total_len // showlist1
@@ -248,6 +249,11 @@ def MakePageList(channel, list_, flag, arg, arg1):
     for i in range(total_page):
         disc_list.append("")
         pages.append("")
+    
+    print("total_len : ", total_len)
+    print("total_page : ", total_page)
+    print("disc_list : ", disc_list)
+    
     count = 0
     page = 0 
     if flag == 1: # 벨튀
@@ -286,7 +292,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
                     embed.add_field(name="신입회원", value = arg1, inline = False)
-                    embed.add_field(name="휴식회원", value = arg, inline = False)
+                    # embed.add_field(name="휴식회원", value = arg, inline = False)
                     pages[page] = embed
             else:
                 if (count % showlist == 0 or count == total_len):
@@ -636,12 +642,12 @@ async def 인원정리(ctx):
         flag = False
         guild = bot.get_guild(875392692014694450)
         for member in guild.members:
-            for roles in member.roles:
-                if roles.id == 893155020499988490:
-                    rest += member.mention
-                    rest += " ㅤ"
-                    flag = True
-                    break
+            # for roles in member.roles:
+            #     if roles.id == 893155020499988490:
+            #         rest += member.mention
+            #         rest += " ㅤ"
+            #         flag = True
+            #         break
             
             if flag:
                 flag = False
