@@ -676,14 +676,16 @@ async def 인원정리(ctx):
                     else:
                         ghostList.append(ghost)
         
-        print(ghostList, rest, newjoinList)
+        print("ghostList : ",ghostList)
+        print("rest : ", rest)
+        print("newjoinList : ", newjoinList)
 
         if len(ghostList) == 0:
             await msg.delete()
             await SendMessage(taejunRoom, "인원정리 대상이 없습니다.")
         else:
             pages = MakePageList(member, ghostList, 3, rest, newjoinList)
-            print(pages)
+            print("pages : ", pages)
             await msg.delete()
             await Pages(ctx, pages) 
 
