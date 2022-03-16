@@ -677,10 +677,12 @@ async def 인원정리(ctx):
         else:
             pages = MakePageList(member, ghostList, 3, rest, newjoinList)
             await msg.delete()
-            await Pages(ctx, pages) 
-
             embed = MakeEmbed(newjoinList)
+
+            await Pages(ctx, pages) 
+            print("AAA")
             await ctx.send(embed=embed)
+
 
     return 0
 
