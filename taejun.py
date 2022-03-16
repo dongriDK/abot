@@ -236,13 +236,15 @@ def MakeMention(id, tag):
     
 
 def MakePageList(channel, list_, flag, arg, arg1):
+    showlist = 20
+    showlist1 = 5
     disc_list = []
     pages = []
     total_len = len(list_)
     if (flag == 3):
-        total_page = total_len // 10 + 1 if total_len / 10 > total_len // 10 else total_len // 10
+        total_page = total_len // showlist1 + 1 if total_len / showlist1 > total_len // showlist1 else total_len // showlist1
     else:
-        total_page = total_len // 20 + 1 if total_len / 20 > total_len // 20 else total_len // 20
+        total_page = total_len // showlist + 1 if total_len / showlist > total_len // showlist else total_len // showlist
     for i in range(total_page):
         disc_list.append("")
         pages.append("")
@@ -672,11 +674,14 @@ async def 인원정리(ctx):
                     else:
                         ghostList.append(ghost)
         
+        print(ghostList, rest, newjoinList)
+
         if len(ghostList) == 0:
             await msg.delete()
             await SendMessage(taejunRoom, "인원정리 대상이 없습니다.")
         else:
             pages = MakePageList(member, ghostList, 3, rest, newjoinList)
+            print(pages)
             await msg.delete()
             await Pages(ctx, pages) 
 
