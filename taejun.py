@@ -239,7 +239,10 @@ def MakePageList(channel, list_, flag, arg, arg1):
     disc_list = []
     pages = []
     total_len = len(list_)
-    total_page = total_len // 20 + 1 if total_len / 20 > total_len // 20 else total_len // 20
+    if (flag == 3):
+        total_page = total_len // 10 + 1 if total_len / 10 > total_len // 10 else total_len // 10
+    else:
+        total_page = total_len // 20 + 1 if total_len / 20 > total_len // 20 else total_len // 20
     for i in range(total_page):
         disc_list.append("")
         pages.append("")
