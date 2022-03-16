@@ -237,7 +237,7 @@ def MakeMention(id, tag):
 
 def MakePageList(channel, list_, flag, arg, arg1):
     showlist = 20
-    showlist1 = 5
+    showlist1 = 1
     disc_list = []
     pages = []
     print("AAA")
