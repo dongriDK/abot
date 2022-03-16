@@ -662,7 +662,7 @@ async def 인원정리(ctx):
                     ghost += jointime
                     ghost += "**\n"
                     if (jointime1[0] != "0"):
-                        if ((datetime.datetime(cur_year, curday[0], curday[1]) - datetime.datetime(cur_year, jointime1[0], jointime1[1])).days < 15):
+                        if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
                             newjoinList += ghost
                         else:
                             ghostList.append(ghost)
