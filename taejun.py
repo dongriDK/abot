@@ -236,24 +236,16 @@ def MakeMention(id, tag):
     
 
 def MakePageList(channel, list_, flag, arg, arg1):
-    showlist = 20
+    showlist = 30
     showlist1 = 1
     disc_list = []
     pages = []
-    print("AAA")
     total_len = len(list_)
-    if (flag == 3):
-        total_page = total_len // showlist1 + 1 if total_len / showlist1 > total_len // showlist1 else total_len // showlist1
-    else:
-        total_page = total_len // showlist + 1 if total_len / showlist > total_len // showlist else total_len // showlist
+    total_page = total_len // showlist + 1 if total_len / showlist > total_len // showlist else total_len // showlist
     for i in range(total_page):
         disc_list.append("")
         pages.append("")
-    
-    print("total_len : ", total_len)
-    print("total_page : ", total_page)
-    print("disc_list : ", disc_list)
-    
+        
     count = 0
     page = 0 
     if flag == 1: # 벨튀
@@ -286,41 +278,37 @@ def MakePageList(channel, list_, flag, arg, arg1):
         for i in list_:
             disc_list[page] += i
             count += 1
-            if flag == 3: # 인원정리
-                if (count % showlist1 == 0 or count == total_len):
-                    embed = discord.Embed(title = "유령회원 목록 " + str(page + 1) + "/" + str(total_page),
+
+            if (count % showlist == 0 or count == total_len):
+                if (flag == 2): # 채팅만
+                    embed = discord.Embed(title = "채팅과 음성 2시간 미만 유저 " + str(page + 1) + "/" + str(total_page),
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
-                    embed.add_field(name="신입회원", value = arg1, inline = False)
                     # embed.add_field(name="휴식회원", value = arg, inline = False)
                     pages[page] = embed
-                    page += 1
-            else:
-                if (count % showlist == 0 or count == total_len):
-                    if (flag == 2): # 채팅만
-                        embed = discord.Embed(title = "채팅과 음성 2시간 미만 유저 " + str(page + 1) + "/" + str(total_page),
-                                                    description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
-                                                    color = 0x00aaaa)
-                        embed.add_field(name="신입회원", value = arg1, inline = False)
-                        embed.add_field(name="휴식회원", value = arg, inline = False)
-                        pages[page] = embed
-                    elif (flag == 4): # 음성 순위
-                        pages[page] = discord.Embed(title = "음성채널 거주 시간 Top 100",
-                                                    description = disc_list[page],
-                                                    color = 0x00aaaa)
-                    elif (flag == 5): # 채팅 순위
-                        pages[page] = discord.Embed(title = "채팅 Top 100",
-                                                    description = disc_list[page],
-                                                    color = 0x00aaaa)
-                    elif (flag == 6): # 채팅 검색
-                        pages[page] = discord.Embed(title = channel + "님의 전체 채팅 기록 " + str(page + 1) + "/" + str(total_page) ,
-                                                    description = disc_list[page],
-                                                    color = 0x00aaaa)
-                    elif (flag == 7): # 음성 검색
-                        pages[page] = discord.Embed(title = channel + "님의 전체 음성 기록 " + str(page + 1) + "/" + str(total_page),
-                                                    description = disc_list[page],
-                                                    color = 0x00aaaa)
-                    page += 1
+                elif (flag == 3): # 인원정리
+                    embed = discord.Embed(title = "유령회원 목록 " + str(page + 1) + "/" + str(total_page),
+                                            description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
+                                            color = 0x00aaaa)
+                    # embed.add_field(name="휴식회원", value = arg, inline = False)
+                    pages[page] = embed
+                elif (flag == 4): # 음성 순위
+                    pages[page] = discord.Embed(title = "음성채널 거주 시간 Top 100",
+                                                description = disc_list[page],
+                                                color = 0x00aaaa)
+                elif (flag == 5): # 채팅 순위
+                    pages[page] = discord.Embed(title = "채팅 Top 100",
+                                                description = disc_list[page],
+                                                color = 0x00aaaa)
+                elif (flag == 6): # 채팅 검색
+                    pages[page] = discord.Embed(title = channel + "님의 전체 채팅 기록 " + str(page + 1) + "/" + str(total_page) ,
+                                                description = disc_list[page],
+                                                color = 0x00aaaa)
+                elif (flag == 7): # 음성 검색
+                    pages[page] = discord.Embed(title = channel + "님의 전체 음성 기록 " + str(page + 1) + "/" + str(total_page),
+                                                description = disc_list[page],
+                                                color = 0x00aaaa)
+                page += 1
 
     return pages
 
@@ -682,19 +670,17 @@ async def 인원정리(ctx):
                             ghostList.append(ghost)
                     else:
                         ghostList.append(ghost)
-        
-        print("ghostList : ",ghostList)
-        print("rest : ", rest)
-        print("newjoinList : ", newjoinList)
 
         if len(ghostList) == 0:
             await msg.delete()
             await SendMessage(taejunRoom, "인원정리 대상이 없습니다.")
         else:
             pages = MakePageList(member, ghostList, 3, rest, newjoinList)
-            print("pages : ", pages)
             await msg.delete()
             await Pages(ctx, pages) 
+
+            embed = MakeEmbed(newjoinList)
+            await ctx.send(embed=embed)
 
     return 0
 
@@ -787,6 +773,9 @@ async def 채팅만(ctx):
 
         await msg.delete()
         await Pages(ctx, pages)
+        
+        embed = MakeEmbed(newjoinList)
+        await ctx.send(embed=embed)
 
 @bot.command()
 async def 음성순위(ctx): # 음성채널 거주 시간 순위
