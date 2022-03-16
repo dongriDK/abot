@@ -678,7 +678,7 @@ async def 인원정리(ctx):
         else:
             pages = MakePageList(member, ghostList, 3, rest, newjoinList)
             await msg.delete()
-            embed = MakeEmbed(newjoinList)
+            embed = discord.Embed(title="신입회원", description = newjoinList)
             await ctx.send(embed=embed)
             await Pages(ctx, pages) 
 
@@ -772,7 +772,7 @@ async def 채팅만(ctx):
 
         pages = MakePageList(0, chatList, 2, rest, newjoinList)
         await msg.delete()
-        embed = MakeEmbed(newjoinList)
+        embed = discord.Embed(title="신입회원", description = newjoinList)
         await ctx.send(embed=embed)
         await Pages(ctx, pages)
         
