@@ -650,10 +650,10 @@ async def 인원정리(ctx):
                     except:
                         print(member, "인원정리 except")
                         jointime = "00.00"
-
+                    
                     curday = CurDay()
                     curday = curday[1:].split(".") if curday[0] == "0" else curday.split(".")
-                    jointime1 = jointime[1:].split(".").split(".") if jointime[0] == "0" else jointime.split(".")
+                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
 
                     ghost = ""
                     ghost += member.mention
