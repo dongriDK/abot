@@ -361,16 +361,17 @@ async def ParsingJson(name, data, channel):
     rank = info["rank"]
     rankscore = rank["rankScore"]
     rankimg = rank["rankImg"]
+    ladderPos = rank["ladderPosPlatform"]
 
-    arena = info["arena"]
-    arena_rank = arena["rankScore"]
-    arena_img = arena["rankImg"]
 
-    embed = discord.Embed(title = "Apex Legends 전적 검색", color=0x00aaaa)
+    embed = discord.Embed(title = "Apex Legends 티어 검색", color=0x00aaaa)
     embed.set_thumbnail(url = rankimg)
     embed.add_field(name = "ID", value = name)
     embed.add_field(name = "Level", value = level)
     embed.add_field(name="RankScore", value = rankscore, inline = False)
+    if ladderPos != -1:
+        ladderPos = "#" + str(ladderPos)
+        embed.add_field(name="Ladder", value=ladderPos, inline=False)
 
     return embed
 
