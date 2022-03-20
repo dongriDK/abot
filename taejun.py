@@ -413,7 +413,8 @@ async def on_message(message):
         if("!ㅌ" not in message.content):
             DbReturn = DbLogin(message.author.id, message.author.discriminator, con, cur)
             DbModify_text(message, con, cur)
-            if message.channel.id == 926118022245142538 and (message.author.id != 263662225309433857 and message.author.id != 903288998577983530 and message.author.id != 397084939897667584):
+            # 휴식 신청 
+            if message.channel.id == 926118022245142538 and (message.author.id != 581632092148989993 and message.author.id != 389659172158832644 and message.author.id != 364855162663075850):
                 await message.delete()
                 picture_url = ""
                 if len(message.attachments) == 1:
