@@ -794,7 +794,10 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
             voice += str(rank)
             voice += ".ㅤ "
             voice += MakeMention(id, 1)
-            voice += "ㅤ (" + user.name + "#" + user.discriminator
+            try:
+                voice += "ㅤ (" + user.name + "#" + user.discriminator
+            except:
+                voce += "ㅤ (없는 회원"
             voice += ")ㅤ `"
             voice += str(datetime.timedelta(seconds=int(i[3])))
             voice += "`\n"
@@ -818,7 +821,10 @@ async def 채팅순위(ctx):
             text += str(rank)
             text += ".ㅤ "
             text += MakeMention(id, 1)
-            text += "ㅤ (" + user.name + "#" + user.discriminator
+            try:
+                text += "ㅤ (" + user.name + "#" + user.discriminator
+            except:
+                text + "ㅤ (없는 회원"
             text += ")ㅤ `"
             text += str(i[2])
             text += "`\n"
