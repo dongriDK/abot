@@ -815,7 +815,7 @@ async def 채팅순위(ctx):
         Return = DbSearchTextRank(con, cur)
         rank = 1
         for i in Return:
-            id = i[0].decode()
+            id = int(i[0].decode())
             print(id, type(id))
             user = bot.get_user(id)
             print(user)
