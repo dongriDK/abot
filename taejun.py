@@ -797,7 +797,7 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
             try:
                 voice += "ㅤ (" + user.name + "#" + user.discriminator
             except:
-                voce += "ㅤ (없는 회원"
+                voice + "ㅤ (없는 회원"
             voice += ")ㅤ `"
             voice += str(datetime.timedelta(seconds=int(i[3])))
             voice += "`\n"
@@ -816,7 +816,9 @@ async def 채팅순위(ctx):
         rank = 1
         for i in Return:
             id = i[0].decode()
+            print(id, type(id))
             user = bot.get_user(id)
+            print(user)
             text = ""
             text += str(rank)
             text += ".ㅤ "
