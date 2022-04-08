@@ -241,6 +241,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
     pages = []
     total_len = len(list_)
     total_page = total_len // showlist + 1 if total_len / showlist > total_len // showlist else total_len // showlist
+    print("total_page", total_page)
     for i in range(total_page):
         disc_list.append("")
         pages.append("")
@@ -252,6 +253,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
             print(list_)
             print("C", i[3].decode())
             print("B", page)
+            print("F", disc_list)
             print("A", disc_list[page])
             disc_list[page] += i[3].decode()
             disc_list[page] += " ㅤ"
@@ -272,7 +274,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
             disc_list[page] += MakeMention(i[0].decode(), 1)
             disc_list[page] += "\n"
             count += 1
-            if (count % 20 == 0 or count == total_len):
+            if (count % showlist == 0 or count == total_len):
                 pages[page] = discord.Embed(title = channel + " 입장 기록 " + str(page + 1) + "/" + str(total_page), 
                                             description = disc_list[page], 
                                             color = 0x00aaaa)
