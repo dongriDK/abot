@@ -250,6 +250,8 @@ def MakePageList(channel, list_, flag, arg, arg1):
     page = 0 
     if flag == 1: # 벨튀
         for i in list_:
+            print(list_)
+            print(i)
             disc_list[page] += i[3].decode()
             disc_list[page] += " ㅤ"
 
