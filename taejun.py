@@ -241,7 +241,6 @@ def MakePageList(channel, list_, flag, arg, arg1):
     pages = []
     total_len = len(list_)
     total_page = total_len // showlist + 1 if total_len / showlist > total_len // showlist else total_len // showlist
-    print("total_page", total_page)
     for i in range(total_page):
         disc_list.append("")
         pages.append("")
@@ -250,11 +249,6 @@ def MakePageList(channel, list_, flag, arg, arg1):
     page = 0 
     if flag == 1: # 벨튀
         for i in list_:
-            print(list_)
-            print("C", i[3].decode())
-            print("B", page)
-            print("F", disc_list)
-            print("A", disc_list[page])
             disc_list[page] += i[3].decode()
             disc_list[page] += " ㅤ"
 
