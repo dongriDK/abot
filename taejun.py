@@ -124,7 +124,7 @@ def DbModify_voice(member, before, after, con, cur):
             except:
                 bef_cat_id = 0
 
-            if (bef_cat_id == 875392692014694452 or bef_cat_id == 875416181077577809):
+            if (bef_cat_id == 875392692014694452 or bef_cat_id == 875416181077577809 or bef_cat_id == 875457125063733289 or bef_cat_id == 875392692014694451):
                 cur.execute("UPDATE user_info SET ttime=ttime+%s where id=%s", (totalSeconds, member.id,))
                 con.commit()
 
