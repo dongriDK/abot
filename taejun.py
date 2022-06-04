@@ -31,7 +31,7 @@ CHAT_ID = os.environ["chat_id"]
 APEX_TOKEN = os.environ["apex_token"]
 APEX_URL = os.environ["apex_url"]
 TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
-taejunRoom = 905813712886198273
+taejunRoom = 982617639203524628
 DeclarRoom = 926123278584651806
 ServerRoom = 875392692014694450
 STAFFROLE = 875396480381382706
