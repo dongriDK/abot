@@ -376,14 +376,11 @@ async def ParsingJson(name, data, channel):
 
 
 def WhiteList(ctx):
-    print("A")
     # if (ctx.author.name == "노우리"):
     #     return False
     for i in ctx.author.roles:
-        print(i.name)
         if (i.name == "ADMIN"):
             return True
-    print("C")
     return False
 
 @bot.event
@@ -542,11 +539,8 @@ async def 초기화(ctx):
 
 @bot.command()
 async def 검색(ctx, *args): 
-    print("A")
     con, cur = DbConnect()
-    print("BB")
     if WhiteList(ctx):
-        print("CC")
         if len(args) == 2:
             name = args[0]
             tag = args[1]
@@ -984,8 +978,11 @@ async def updateUser(ctx):
         for member in guild.members:
             if (member.bot != True):
                 print(member)
-                cur.execute("INSERT INTO user_info(id, tag, ttext, ttime, count, jointime) VALUES(%s, %s, %s, %s, %s, %s)", (member.id, member.discriminator, "0", "0", "1", "00.00"))
-                con.commit()
+                try:
+                    cur.execute("INSERT INTO user_info(id, tag, ttext, ttime, count, jointime) VALUES(%s, %s, %s, %s, %s, %s)", (member.id, member.discriminator, "0", "0", "1", "00.00"))
+                except:
+                    pass
+        con.commit()
 
 
 bot.run(os.environ["token"])
