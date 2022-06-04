@@ -376,11 +376,14 @@ async def ParsingJson(name, data, channel):
 
 
 def WhiteList(ctx):
+    print("A")
     # if (ctx.author.name == "노우리"):
     #     return False
     for i in ctx.author.roles:
+        print(i.name)
         if (i.name == "ADMIN"):
             return True
+    print("C")
     return False
 
 @bot.event
