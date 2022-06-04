@@ -542,6 +542,7 @@ async def 초기화(ctx):
 
 @bot.command()
 async def 검색(ctx, *args): 
+    print("A")
     con, cur = DbConnect()
     if WhiteList(ctx):
         if len(args) == 2:
