@@ -544,6 +544,7 @@ async def 초기화(ctx):
 async def 검색(ctx, *args): 
     print("A")
     con, cur = DbConnect()
+    print("BB")
     if WhiteList(ctx):
         if len(args) == 2:
             name = args[0]
