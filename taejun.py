@@ -33,7 +33,7 @@ APEX_URL = os.environ["apex_url"]
 TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
 taejunRoom = 982617639203524628
 DeclarRoom = 926123278584651806
-ServerRoom = 875392692014694450
+ServerRoom = 954687635157311588
 STAFFROLE = 875396480381382706
 BOT_DEFAULTROOM = 982617639203524628
 cur_year = "2022"
@@ -631,7 +631,7 @@ async def 인원정리(ctx):
         newjoinList = ""
         rest = ""
         flag = False
-        guild = bot.get_guild(875392692014694450)
+        guild = bot.get_guild(954687635157311588)
         for member in guild.members:
             # for roles in member.roles:
             #     if roles.id == 893155020499988490:
@@ -721,7 +721,7 @@ async def 채팅만(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
         msg = await ctx.send("채팅, 음성기록 정리중...")
-        guild = bot.get_guild(875392692014694450)
+        guild = bot.get_guild(954687635157311588)
         chatList = []
         newjoinList = ""
         rest = ""
