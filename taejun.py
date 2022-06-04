@@ -546,6 +546,7 @@ async def 검색(ctx, *args):
     con, cur = DbConnect()
     print("BB")
     if WhiteList(ctx):
+        print("CC")
         if len(args) == 2:
             name = args[0]
             tag = args[1]
