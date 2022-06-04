@@ -34,7 +34,7 @@ TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
 taejunRoom = 982617639203524628
 DeclarRoom = 926123278584651806
 ServerRoom = 954687635157311588
-STAFFROLE = 875396480381382706
+STAFFROLE = 954714443139407872
 BOT_DEFAULTROOM = 982617639203524628
 cur_year = "2022"
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
@@ -686,35 +686,35 @@ async def 인원정리(ctx):
 
     return 0
 
-@bot.command()
-async def 벨튀(ctx, *args):
-    con, cur = DbConnect()
-    if WhiteList(ctx):
-        try:
-            channel = args[0]
-        except:
-            channel = ""
-        try:
-            time = args[1]
-        except:
-            time = ""
+# @bot.command()
+# async def 벨튀(ctx, *args):
+#     con, cur = DbConnect()
+#     if WhiteList(ctx):
+#         try:
+#             channel = args[0]
+#         except:
+#             channel = ""
+#         try:
+#             time = args[1]
+#         except:
+#             time = ""
 
-        if channel == "" or time == "":
-            embed = discord.Embed(description="!ㅌ 벨튀 [채널이름] [날짜]\n ex) !ㅌ 벨튀 랭크1 11.15")
-            await ctx.channel.send(embed=embed)
-        else:
-            retChannel = FindChannelName(channel)
-            if retChannel == 0:
-                await ctx.channel.send(embed=MakeEmbed("채널 이름 검색이 안됨"))
-            DbReturn = DbSearchbellrun(retChannel, time, con, cur)
+#         if channel == "" or time == "":
+#             embed = discord.Embed(description="!ㅌ 벨튀 [채널이름] [날짜]\n ex) !ㅌ 벨튀 랭크1 11.15")
+#             await ctx.channel.send(embed=embed)
+#         else:
+#             retChannel = FindChannelName(channel)
+#             if retChannel == 0:
+#                 await ctx.channel.send(embed=MakeEmbed("채널 이름 검색이 안됨"))
+#             DbReturn = DbSearchbellrun(retChannel, time, con, cur)
 
-            if len(DbReturn) == 0:
-                await ctx.channel.send(embed=MakeEmbed("결과가 없습니다."))
-            else:
-                pages = MakePageList(channel, DbReturn, 1, 0, 0)
-                await Pages(ctx, pages)
+#             if len(DbReturn) == 0:
+#                 await ctx.channel.send(embed=MakeEmbed("결과가 없습니다."))
+#             else:
+#                 pages = MakePageList(channel, DbReturn, 1, 0, 0)
+#                 await Pages(ctx, pages)
 
-    return 0
+#     return 0
 
 @bot.command()
 async def 채팅만(ctx):
@@ -778,60 +778,60 @@ async def 채팅만(ctx):
         await Pages(ctx, pages)
         
 
-@bot.command()
-async def 음성순위(ctx): # 음성채널 거주 시간 순위
-    con, cur = DbConnect()
-    if (WhiteList(ctx)):
-        voiceRankList = []
-        Return = DbSearchVoiceRank(con, cur)
-        # print(voiceRankReturn[0])
-        rank = 1
-        for i in Return:
-            id = int(i[0].decode())
-            user = bot.get_user(id)
-            voice = ""
-            voice += str(rank)
-            voice += ".ㅤ "
-            voice += MakeMention(id, 1)
-            try:
-                voice += "ㅤ (" + user.name + "#" + user.discriminator
-            except:
-                voice += "ㅤ (검색안됨"
-            voice += ")ㅤ `"
-            voice += str(datetime.timedelta(seconds=int(i[3])))
-            voice += "`\n"
-            voiceRankList.append(voice)
-            rank += 1
-        pages = MakePageList(0, voiceRankList, 4, 0, 0)
+# @bot.command()
+# async def 음성순위(ctx): # 음성채널 거주 시간 순위
+#     con, cur = DbConnect()
+#     if (WhiteList(ctx)):
+#         voiceRankList = []
+#         Return = DbSearchVoiceRank(con, cur)
+#         # print(voiceRankReturn[0])
+#         rank = 1
+#         for i in Return:
+#             id = int(i[0].decode())
+#             user = bot.get_user(id)
+#             voice = ""
+#             voice += str(rank)
+#             voice += ".ㅤ "
+#             voice += MakeMention(id, 1)
+#             try:
+#                 voice += "ㅤ (" + user.name + "#" + user.discriminator
+#             except:
+#                 voice += "ㅤ (검색안됨"
+#             voice += ")ㅤ `"
+#             voice += str(datetime.timedelta(seconds=int(i[3])))
+#             voice += "`\n"
+#             voiceRankList.append(voice)
+#             rank += 1
+#         pages = MakePageList(0, voiceRankList, 4, 0, 0)
 
-        await Pages(ctx, pages)
+#         await Pages(ctx, pages)
 
-@bot.command()
-async def 채팅순위(ctx):
-    con, cur = DbConnect()
-    if (WhiteList(ctx)):
-        textRankList = []
-        Return = DbSearchTextRank(con, cur)
-        rank = 1
-        for i in Return:
-            id = int(i[0].decode())
-            user = bot.get_user(id)
-            text = ""
-            text += str(rank)
-            text += ".ㅤ "
-            text += MakeMention(id, 1)
-            try:
-                text += "ㅤ (" + user.name + "#" + user.discriminator
-            except:
-                text += "ㅤ (검색안됨"
-            text += ")ㅤ `"
-            text += str(i[2])
-            text += "`\n"
-            textRankList.append(text)
-            rank += 1
-        pages = MakePageList(0, textRankList, 5, 0,0)
+# @bot.command()
+# async def 채팅순위(ctx):
+#     con, cur = DbConnect()
+#     if (WhiteList(ctx)):
+#         textRankList = []
+#         Return = DbSearchTextRank(con, cur)
+#         rank = 1
+#         for i in Return:
+#             id = int(i[0].decode())
+#             user = bot.get_user(id)
+#             text = ""
+#             text += str(rank)
+#             text += ".ㅤ "
+#             text += MakeMention(id, 1)
+#             try:
+#                 text += "ㅤ (" + user.name + "#" + user.discriminator
+#             except:
+#                 text += "ㅤ (검색안됨"
+#             text += ")ㅤ `"
+#             text += str(i[2])
+#             text += "`\n"
+#             textRankList.append(text)
+#             rank += 1
+#         pages = MakePageList(0, textRankList, 5, 0,0)
 
-        await Pages(ctx, pages)
+#         await Pages(ctx, pages)
 
 @bot.command()
 async def 채팅검색(ctx, *args):
