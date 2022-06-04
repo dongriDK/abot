@@ -974,18 +974,18 @@ async def test(ctx):
     req = requests.get("https://discord.com/api/path/to/the/endpoint")
     print(req.headers)
 
-# @bot.command()
-# async def updateUser(ctx):
-#     print(dir(telegram))
-    # con, cur = DbConnect()
-    # if WhiteList(ctx):
-    #     guild = bot.get_guild(875392692014694450)
+@bot.command()
+async def updateUser(ctx):
+    print(dir(telegram))
+    con, cur = DbConnect()
+    if WhiteList(ctx):
+        guild = bot.get_guild(954687635157311588)
 
-    #     for member in guild.members:
-    #         if (member.bot != True):
-    #             print(member)
-    #             cur.execute("INSERT INTO user_info(id, tag, ttext, ttime, count, jointime) VALUES(%s, %s, %s, %s, %s, %s)", (member.id, member.discriminator, "0", "0", "1", "00.00"))
-    #             con.commit()
+        for member in guild.members:
+            if (member.bot != True):
+                print(member)
+                cur.execute("INSERT INTO user_info(id, tag, ttext, ttime, count, jointime) VALUES(%s, %s, %s, %s, %s, %s)", (member.id, member.discriminator, "0", "0", "1", "00.00"))
+                con.commit()
 
 
 bot.run(os.environ["token"])
