@@ -379,7 +379,7 @@ def WhiteList(ctx):
     # if (ctx.author.name == "노우리"):
     #     return False
     for i in ctx.author.roles:
-        if (i.name == "STAFF"):
+        if (i.name == "ADMIN"):
             return True
     return False
 
