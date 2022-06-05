@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from locale import strcoll
 import pdb
 import discord
 import asyncio
@@ -479,7 +480,7 @@ async def on_member_join(member):
     elif count[0][0] >= 3:
         print("join exc", member)
         channel = bot.get_channel(taejunRoom)
-        ret = MakeMention(STAFFROLE, 3) + " ㅤ" + MakeMention(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 "+ count[0][0] +"회 탐지"
+        ret = MakeMention(STAFFROLE, 3) + " ㅤ" + MakeMention(member.id, 1) + " ㅤ`" + str(member.name) + "` `" + str(member.discriminator) + "` 서버 재입장 "+ str(count[0][0]) +"회 탐지"
         await channel.send(ret)
         cur.execute("UPDATE user_info SET count=count+1 where id=%s", (member.id,))
         con.commit()
