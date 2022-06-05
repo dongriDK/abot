@@ -280,7 +280,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
 
             if (count % showlist == 0 or count == total_len):
                 if (flag == 2): # 채팅만
-                    embed = discord.Embed(title = "채팅과 음성 1시간 미만 유저 " + str(page + 1) + "/" + str(total_page),
+                    embed = discord.Embed(title = "음성 1시간 미만 유저 " + str(page + 1) + "/" + str(total_page),
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
                     # embed.add_field(name="휴식회원", value = arg, inline = False)
@@ -742,7 +742,7 @@ async def 인원정리(ctx):
                 # print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 # if ((ttime > 0 and ttime < 7200) or (ttext != 0 and ttime == 0)):
-                if (ttime < 7200):
+                if (ttime < 3600):
                     try:
                         jointime = DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     except:
@@ -779,33 +779,33 @@ async def 인원정리(ctx):
         await Pages(ctx, pages)
         
 
-# @bot.command()
-# async def 음성순위(ctx): # 음성채널 거주 시간 순위
-#     con, cur = DbConnect()
-#     if (WhiteList(ctx)):
-#         voiceRankList = []
-#         Return = DbSearchVoiceRank(con, cur)
-#         # print(voiceRankReturn[0])
-#         rank = 1
-#         for i in Return:
-#             id = int(i[0].decode())
-#             user = bot.get_user(id)
-#             voice = ""
-#             voice += str(rank)
-#             voice += ".ㅤ "
-#             voice += MakeMention(id, 1)
-#             try:
-#                 voice += "ㅤ (" + user.name + "#" + user.discriminator
-#             except:
-#                 voice += "ㅤ (검색안됨"
-#             voice += ")ㅤ `"
-#             voice += str(datetime.timedelta(seconds=int(i[3])))
-#             voice += "`\n"
-#             voiceRankList.append(voice)
-#             rank += 1
-#         pages = MakePageList(0, voiceRankList, 4, 0, 0)
+@bot.command()
+async def 음성순위(ctx): # 음성채널 거주 시간 순위
+    con, cur = DbConnect()
+    if (WhiteList(ctx)):
+        voiceRankList = []
+        Return = DbSearchVoiceRank(con, cur)
+        # print(voiceRankReturn[0])
+        rank = 1
+        for i in Return:
+            id = int(i[0].decode())
+            user = bot.get_user(id)
+            voice = ""
+            voice += str(rank)
+            voice += ".ㅤ "
+            voice += MakeMention(id, 1)
+            try:
+                voice += "ㅤ (" + user.name + "#" + user.discriminator
+            except:
+                voice += "ㅤ (검색안됨"
+            voice += ")ㅤ `"
+            voice += str(datetime.timedelta(seconds=int(i[3])))
+            voice += "`\n"
+            voiceRankList.append(voice)
+            rank += 1
+        pages = MakePageList(0, voiceRankList, 4, 0, 0)
 
-#         await Pages(ctx, pages)
+        await Pages(ctx, pages)
 
 # @bot.command()
 # async def 채팅순위(ctx):
