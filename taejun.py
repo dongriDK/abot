@@ -756,12 +756,12 @@ async def 인원정리(ctx):
                     chat = ""
                     chat += member.mention
                     chat += " (" + member.name + "#" + member.discriminator + ") "
-                    chat += " ㅤ\n**"
-                    chat += ":speech_ballon:" + ":" + str(ttext)
-                    chat += "** ㅤ`"
-                    chat += ":microphone2:" + ":" + str(datetime.timedelta(seconds=int(ttime)))
-                    chat += "` ㅤ"
-                    chat += ":new:" + ":" + jointime
+                    chat += " ㅤ\n"
+                    chat += ":speech_balloon:" + " : " + str(ttext)
+                    chat += " ㅤ"
+                    chat += ":microphone2:" + " : " + str(datetime.timedelta(seconds=int(ttime)))
+                    chat += " ㅤ"
+                    chat += ":new:" + " : " + jointime
                     chat += "\n"
                     if (jointime1[0] != "0"):
                         if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
