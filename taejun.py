@@ -757,7 +757,7 @@ async def 인원정리(ctx):
                     chat = ""
                     chat += member.mention
                     chat += " (" + member.name + "#" + member.discriminator + ") "
-                    chat += " ㅤ\n"
+                    chat += " ㅤ"
                     chat += ":speech_balloon:" + " : " + str(ttext)
                     chat += " ㅤ"
                     chat += ":microphone2:" + " : " + str(datetime.timedelta(seconds=int(ttime)))
