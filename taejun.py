@@ -237,7 +237,7 @@ def MakeMention(id, tag):
     
 
 def MakePageList(channel, list_, flag, arg, arg1):
-    showlist = 20
+    showlist = 30
     disc_list = []
     pages = []
     total_len = len(list_)
@@ -763,7 +763,7 @@ async def 인원정리(ctx):
                     chat += ":microphone2:" + " : " + str(datetime.timedelta(seconds=int(ttime)))
                     chat += " ㅤ"
                     chat += jointime
-                    chat += "\n\n"
+                    chat += "\n"
                     if (jointime1[0] != "0"):
                         if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
                             newjoinList += chat
