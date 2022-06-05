@@ -280,7 +280,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
 
             if (count % showlist == 0 or count == total_len):
                 if (flag == 2): # 채팅만
-                    embed = discord.Embed(title = "채팅과 음성 2시간 미만 유저 " + str(page + 1) + "/" + str(total_page),
+                    embed = discord.Embed(title = "채팅과 음성 1시간 미만 유저 " + str(page + 1) + "/" + str(total_page),
                                                 description = "총 `" + str(total_len) + "`명\n" + disc_list[page],
                                                 color = 0x00aaaa)
                     # embed.add_field(name="휴식회원", value = arg, inline = False)
@@ -623,7 +623,7 @@ async def 검색(ctx, *args):
     return 0
 
 @bot.command()
-async def 인원정리(ctx):
+async def 인원정리1(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
         msg = await ctx.send("인원 정리중...")
@@ -717,7 +717,7 @@ async def 인원정리(ctx):
 #     return 0
 
 @bot.command()
-async def 채팅만(ctx):
+async def 인원정리(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
         msg = await ctx.send("채팅, 음성기록 정리중...")
@@ -728,7 +728,7 @@ async def 채팅만(ctx):
         flag = False
         for member in guild.members:
             for roles in member.roles:
-                if roles.id == 893155020499988490:
+                if roles.id == 973907691628019722:
                     rest += member.mention
                     rest += " ㅤ"
                     flag = True
@@ -741,7 +741,8 @@ async def 채팅만(ctx):
             if (member.bot != True):
                 # print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
-                if ((ttime > 0 and ttime < 7200) or (ttext != 0 and ttime == 0)):
+                # if ((ttime > 0 and ttime < 7200) or (ttext != 0 and ttime == 0)):
+                if (ttime < 7200):
                     try:
                         jointime = DbSearchTime_byid(member.id, con, cur)[0][0].decode()
                     except:
