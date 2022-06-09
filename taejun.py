@@ -530,6 +530,11 @@ async def on_command_error(ctx, error):
 @bot.command()
 async def 초기화(ctx):
     if WhiteList(ctx):
+        try:
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="초기화 사용")
+        except:
+            pass
+
         embed = discord.Embed(description="초기화 중입니다... \n잠시만 기다려주세요...")
         msg = await ctx.send(embed=embed)
         DbInit()
@@ -559,6 +564,11 @@ async def 검색(ctx, *args):
             embed = discord.Embed(description="ID와 TAG를 한번 더 확인해 주세요.")
             await ctx.channel.send(embed=embed)
             return
+
+        try:
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="검색 사용 " + name)
+        except:
+            pass
 
         name = name.replace(" ", "")
         allMember = bot.get_guild(ServerRoom).members
@@ -721,6 +731,11 @@ async def 인원정리1(ctx):
 async def 인원정리(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
+        try:
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="인원정리 사용")
+        except:
+            pass
+
         msg = await ctx.send("채팅, 음성기록 정리중...")
         guild = bot.get_guild(954687635157311588)
         chatList = []
@@ -784,6 +799,11 @@ async def 인원정리(ctx):
 async def 음성순위(ctx): # 음성채널 거주 시간 순위
     con, cur = DbConnect()
     if (WhiteList(ctx)):
+        try:
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="음성 순위 사용 ")
+        except:
+            pass
+
         voiceRankList = []
         Return = DbSearchVoiceRank(con, cur)
         # print(voiceRankReturn[0])
@@ -856,6 +876,11 @@ async def 채팅검색(ctx, *args):
             await ctx.channel.send(embed=embed)
             return
 
+        try:
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="채팅 검색 사용" + name)
+        except:
+            pass
+
         name = name.replace(" ", "")
         allMember = bot.get_guild(ServerRoom).members
         flag = False
@@ -918,6 +943,11 @@ async def 음성검색(ctx, *args):
             await ctx.channel.send(embed=embed)
             return
 
+        try:
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="음성 검색 사용 " + name)
+        except:
+            pass
+
         name = name.replace(" ", "")
         allMember = bot.get_guild(ServerRoom).members
         flag = False
@@ -968,6 +998,8 @@ async def 음성검색(ctx, *args):
 @bot.command()
 async def test(ctx):
     req = requests.get("https://discord.com/api/path/to/the/endpoint")
+    print(ctx)
+    print(dir(ctx))
     print(req.headers)
 
 @bot.command()
