@@ -998,7 +998,7 @@ async def 음성검색(ctx, *args):
 @bot.command()
 async def test(ctx):
     req = requests.get("https://discord.com/api/path/to/the/endpoint")
-    print(ctx)
+    print(ctx.author)
     print(dir(ctx))
     print(req.headers)
 
