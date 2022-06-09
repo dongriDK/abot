@@ -531,7 +531,7 @@ async def on_command_error(ctx, error):
 async def 초기화(ctx):
     if WhiteList(ctx):
         try:
-            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="초기화 사용")
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text= ctx.author + "초기화 사용")
         except:
             pass
 
@@ -566,7 +566,7 @@ async def 검색(ctx, *args):
             return
 
         try:
-            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="검색 사용 " + name)
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text= ctx.author + "검색 사용 " + name)
         except:
             pass
 
@@ -732,7 +732,7 @@ async def 인원정리(ctx):
     con, cur = DbConnect()
     if WhiteList(ctx):
         try:
-            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="인원정리 사용")
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text= ctx.author + "인원정리 사용")
         except:
             pass
 
@@ -800,7 +800,7 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
     con, cur = DbConnect()
     if (WhiteList(ctx)):
         try:
-            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="음성 순위 사용 ")
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text= ctx.author + "음성 순위 사용 ")
         except:
             pass
 
@@ -877,7 +877,7 @@ async def 채팅검색(ctx, *args):
             return
 
         try:
-            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="채팅 검색 사용" + name)
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text= ctx.author + "채팅 검색 사용" + name)
         except:
             pass
 
@@ -944,7 +944,7 @@ async def 음성검색(ctx, *args):
             return
 
         try:
-            TEL_BOT.sendMessage(chat_id=CHAT_ID, text="음성 검색 사용 " + name)
+            TEL_BOT.sendMessage(chat_id=CHAT_ID, text=ctx.author + "음성 검색 사용 " + name)
         except:
             pass
 
