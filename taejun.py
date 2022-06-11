@@ -566,8 +566,10 @@ async def 검색(ctx, *args):
             return
 
         try:
+            print("A")
             TEL_BOT.sendMessage(chat_id=CHAT_ID, text= ctx.author + "검색 사용 " + name)
         except:
+            print("B")
             pass
 
         name = name.replace(" ", "")
@@ -877,8 +879,10 @@ async def 채팅검색(ctx, *args):
             return
 
         try:
+            print("A")
             TEL_BOT.sendMessage(chat_id=CHAT_ID, text= ctx.author + "채팅 검색 사용" + name)
         except:
+            print("B")
             pass
 
         name = name.replace(" ", "")
