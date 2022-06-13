@@ -383,9 +383,12 @@ def WhiteList(ctx):
         if (i.name == "ADMIN"):
             return True
     try:
+        print(type(ctx.author))
         if (ctx.author == "이십초벽#5811"):
             print("이십초벽 FreePass")
             return True
+        else:
+            print("이십초벽 else")
     except:
         print("이십초벽 오류")
         pass
