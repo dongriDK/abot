@@ -384,7 +384,7 @@ def WhiteList(ctx):
             return True
     try:
         print(type(ctx.author))
-        if (ctx.author == "이십초벽#5811"):
+        if (str(ctx.author) == "이십초벽#5811"):
             print("이십초벽 FreePass")
             return True
         else:
