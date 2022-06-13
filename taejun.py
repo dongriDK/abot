@@ -383,7 +383,7 @@ def WhiteList(ctx):
         if (i.name == "ADMIN"):
             return True
     try:
-        if (ctx.author == "이십초벽"):
+        if (ctx.author == "이십초벽#5811"):
             print("이십초벽 FreePass")
             return True
     except:
