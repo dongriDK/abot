@@ -382,6 +382,13 @@ def WhiteList(ctx):
     for i in ctx.author.roles:
         if (i.name == "ADMIN"):
             return True
+    try:
+        if (ctx.author == "이십초벽"):
+            print("이십초벽 FreePass")
+            return True
+    except:
+        print("이십초벽 오류")
+        pass
     return False
 
 @bot.event
