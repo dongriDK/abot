@@ -553,6 +553,7 @@ async def 초기화(ctx):
 @bot.command()
 async def 검색(ctx, *args): 
     con, cur = DbConnect()
+    print("검색 사용")
     if WhiteList(ctx):
         if len(args) == 2:
             name = args[0]
