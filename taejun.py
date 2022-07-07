@@ -237,7 +237,7 @@ def MakeMention(id, tag):
     
 
 def MakePageList(channel, list_, flag, arg, arg1):
-    showlist = 10
+    showlist = 2
     disc_list = []
     pages = []
     total_len = len(list_)
@@ -280,7 +280,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
         for i in list_:
             # print("AAAAA", list_)
             disc_list[page] += i
-            print("BBBBB", disc_list[page])
+            print("BBBBB", pages[page])
             count += 1
 
             if (count % showlist == 0 or count == total_len):
