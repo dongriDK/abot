@@ -278,7 +278,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
                 page += 1
     else:
         for i in list_:
-            print("AAAAA", list_)
+            # print("AAAAA", list_)
             disc_list[page] += i
             print("BBBBB", disc_list[page])
             count += 1
@@ -314,7 +314,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
                                                 color = 0x00aaaa)
                 page += 1
             
-    print(pages)
+    print("pages", pages)
     return pages
 
 async def Pages(ctx, pages):
@@ -775,9 +775,7 @@ async def 인원정리(ctx):
                 continue
 
             if (member.bot != True):
-                print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
-                print(ttime, ttext)
                 # if ((ttime > 0 and ttime < 7200) or (ttext != 0 and ttime == 0)):
                 if (ttime < 3600):
                     try:
