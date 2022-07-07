@@ -770,6 +770,7 @@ async def 인원정리(ctx):
             if (member.bot != True):
                 print(member)
                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
+                print(ttime, ttext)
                 # if ((ttime > 0 and ttime < 7200) or (ttext != 0 and ttime == 0)):
                 if (ttime < 3600):
                     try:
@@ -792,6 +793,7 @@ async def 인원정리(ctx):
                     chat += " ㅤ"
                     chat += jointime
                     chat += "\n"
+                    print(chat)
                     if (jointime1[0] != "0"):
                         if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
                             newjoinList += chat
@@ -800,7 +802,7 @@ async def 인원정리(ctx):
                     else:
                         print(member)
                         chatList.append(chat)
-
+        print("정리 end")
         pages = MakePageList(0, chatList, 2, rest, newjoinList)
         await msg.delete()
         embed = discord.Embed(title="신입회원", description = newjoinList)
