@@ -278,6 +278,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
                 page += 1
     else:
         for i in list_:
+            print(i)
             disc_list[page] += i
             count += 1
 
@@ -311,8 +312,8 @@ def MakePageList(channel, list_, flag, arg, arg1):
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
                 page += 1
-            print(pages[page])
-
+            
+    print(pages)
     return pages
 
 async def Pages(ctx, pages):
