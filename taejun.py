@@ -241,7 +241,9 @@ def MakePageList(channel, list_, flag, arg, arg1):
     disc_list = []
     pages = []
     total_len = len(list_)
+    print("total_len", total_len)
     total_page = total_len // showlist + 1 if total_len / showlist > total_len // showlist else total_len // showlist
+    print("total_page", total_page)
     for i in range(total_page):
         disc_list.append("")
         pages.append("")
@@ -309,11 +311,14 @@ def MakePageList(channel, list_, flag, arg, arg1):
                                                 description = disc_list[page],
                                                 color = 0x00aaaa)
                 page += 1
+            print(pages[page])
 
     return pages
 
 async def Pages(ctx, pages):
+    
     current = 0
+    print(pages)
     msg = await ctx.send(embed=pages[current])
     for button in buttons:
         await msg.add_reaction(button)
