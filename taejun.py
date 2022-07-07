@@ -278,8 +278,9 @@ def MakePageList(channel, list_, flag, arg, arg1):
                 page += 1
     else:
         for i in list_:
-            print(i)
+            print("AAAAA", list_)
             disc_list[page] += i
+            print("BBBBB", disc_list[page])
             count += 1
 
             if (count % showlist == 0 or count == total_len):
@@ -809,8 +810,9 @@ async def 인원정리(ctx):
                         print(member)
                         chatList.append(chat)
         print("정리 end")
-        pages = MakePageList(0, chatList, 2, rest, newjoinList)
+        pages = MakePageList(0, chatList, 3, rest, newjoinList)
         await msg.delete()
+        print("here")
         embed = discord.Embed(title="신입회원", description = newjoinList)
         await ctx.send(embed=embed)
         await Pages(ctx, pages)
