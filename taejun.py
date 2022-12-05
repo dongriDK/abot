@@ -73,7 +73,7 @@ def CurDay():
 def DbConnect():
     # con = mysql.connector.connect(**config)
     # cur = con.cursor(prepared=True)
-    con = psycopg2.connect(host=host, dbname=database, user=user, password=password, port=port)
+    con = psycopg2.connect(host=host, dbname=database, user=user, password=password, port=port_db)
     cur = con.cursor()
 
     return con, cur
