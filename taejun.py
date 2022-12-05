@@ -20,12 +20,12 @@ intents.members = True
 intents.guilds = True
 bot = commands.Bot(command_prefix = '!ㅌ ', intents=intents)
 
-host="dpg-ce6kvoen6mpk2bmk0db0-a.oregon-postgres.render.com"
-user="taejun"
-password="PVLf75Wu9epD4MRQ9lG69NXa0Hw0eamE"
-database="taejundb"
-port="5432"
-token="OTA1ODA0MzEzMjY2MzcyNjQ4.G_SVy0.dyebR_8KwKoOE4gLPQaA3FwyMVsLs14MjVbaAI"
+host = os.environ["host"]
+user = os.environ["user"]
+password = os.environ["password"]
+database = os.environ["database"]
+port = os.environ["port"]
+token = os.environ["token"]
 # config = {
 #     'user' : os.environ["user"],
 #     'password' : os.environ["password"],
@@ -35,10 +35,8 @@ token="OTA1ODA0MzEzMjY2MzcyNjQ4.G_SVy0.dyebR_8KwKoOE4gLPQaA3FwyMVsLs14MjVbaAI"
 #     'raise_on_warnings' : True
 # }
 
-# APEX_TOKEN = os.environ["apex_token"]
-# APEX_URL = os.environ["apex_url"]
-CHAT_ID = "1725009131"
-TELEGRAM_TOKEN = "1784423752:AAHJVtMr3oFbG_BjtnPeVVSMuzBUpNnPW2w"
+APEX_TOKEN = os.environ["apex_token"]
+APEX_URL = os.environ["apex_url"]
 TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
 taejunRoom = 982617639203524628
 DeclarRoom = 926123278584651806
