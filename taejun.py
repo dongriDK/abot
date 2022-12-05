@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-from locale import strcoll
 import pdb
 import discord
 import asyncio
