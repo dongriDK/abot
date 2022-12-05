@@ -49,11 +49,11 @@ buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 
 def CurTime():
     # year = str(time.localtime(time.time() + 32400).tm_year)
-    mon = str(time.localtime(time.time() ).tm_mon)
-    day = str(time.localtime(time.time() ).tm_mday)
-    hour = str(time.localtime(time.time() ).tm_hour)
-    min = str(time.localtime(time.time() ).tm_min)
-    sec = str(time.localtime(time.time() ).tm_sec)
+    mon = str(time.localtime(time.time() + 32400).tm_mon)
+    day = str(time.localtime(time.time() + 32400).tm_mday)
+    hour = str(time.localtime(time.time() + 32400).tm_hour)
+    min = str(time.localtime(time.time() + 32400).tm_min)
+    sec = str(time.localtime(time.time() + 32400).tm_sec)
     if (len(mon) == 1): mon = "0" + mon
     if (len(day) == 1): day = "0" + day
     if (len(hour) == 1): hour = "0" + hour
@@ -63,8 +63,8 @@ def CurTime():
     return strTime
 
 def CurDay():
-    mon = str(time.localtime(time.time() ).tm_mon)
-    day = str(time.localtime(time.time() ).tm_mday)
+    mon = str(time.localtime(time.time() + 32400 ).tm_mon)
+    day = str(time.localtime(time.time() + 32400 ).tm_mday)
     if (len(mon) == 1): mon = "0" + mon
     if (len(day) == 1): day = "0" + day
     strTime = mon + "." + day
