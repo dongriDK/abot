@@ -25,6 +25,8 @@ password = os.environ["password"]
 database = os.environ["database"]
 port = os.environ["port"]
 token = os.environ["token"]
+TELEGRAM_TOKEN = os.environ["telegram_token"]
+CHAT_ID = os.environ["chat_id"]
 # config = {
 #     'user' : os.environ["user"],
 #     'password' : os.environ["password"],
