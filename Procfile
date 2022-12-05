@@ -1,1 +1,1 @@
-worker: python "taejun.py"
+python "taejun.py"
