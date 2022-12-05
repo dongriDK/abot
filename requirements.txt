@@ -1,0 +1,5 @@
+git+https://github.com/Rapptz/discord.py
+mysql.connector
+requests
+telegram
+python-telegram-bot==13.0
