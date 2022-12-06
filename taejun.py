@@ -60,14 +60,11 @@ def run():
 @app.route('/start')
 def start():
     global FLAG
-    print("CC")
     if FLAG:
-        print("DD")
         FLAG = False
         t = threading.Thread(target=bot.run(token))
         t.daemon = True
         t.start()
-        print("EE")
         # bot.run(token)
     return '<h1>START</h1>'
 
@@ -293,9 +290,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
     disc_list = []
     pages = []
     total_len = len(list_)
-    print("total_len", total_len)
     total_page = total_len // showlist + 1 if total_len / showlist > total_len // showlist else total_len // showlist
-    print("total_page", total_page)
     for i in range(total_page):
         disc_list.append("")
         pages.append("")
@@ -330,9 +325,7 @@ def MakePageList(channel, list_, flag, arg, arg1):
                 page += 1
     else:
         for i in list_:
-            # print("AAAAA", list_)
             disc_list[page] += i
-            print("BBBBB", pages[page])
             count += 1
 
             if (count % showlist == 0 or count == total_len):
@@ -366,13 +359,11 @@ def MakePageList(channel, list_, flag, arg, arg1):
                                                 color = 0x00aaaa)
                 page += 1
             
-    print("pages", pages)
     return pages
 
 async def Pages(ctx, pages):
     
     current = 0
-    print(pages)
     msg = await ctx.send(embed=pages[current])
     for button in buttons:
         await msg.add_reaction(button)
@@ -636,10 +627,8 @@ async def 검색(ctx, *args):
             return
 
         try:
-            print("A")
             TEL_BOT.sendMessage(chat_id=CHAT_ID, text= str(ctx.author) + "검색 사용 " + name)
         except:
-            print("B")
             pass
 
         name = name.replace(" ", "")
@@ -658,9 +647,7 @@ async def 검색(ctx, *args):
         textAnswer = ""
         voiceAnswer = ""
 
-        print("AAAAA")
         textReturn = DbSearchText_member(memberId, con, cur, True)
-        print(textReturn)
         voiceReturn = DbSearchVoice_member(memberId, con, cur, True)
         ttime, ttext = DbSearchtexttime(memberId, 3, con, cur)
         jointime = DbSearchTime_byid(memberId, con, cur)
@@ -707,69 +694,69 @@ async def 검색(ctx, *args):
 
     return 0
 
-@bot.command()
-async def 인원정리1(ctx):
-    con, cur = DbConnect()
-    if WhiteList(ctx):
-        msg = await ctx.send("인원 정리중...")
-        ghostList = []
-        newjoinList = ""
-        rest = ""
-        flag = False
-        guild = bot.get_guild(954687635157311588)
-        for member in guild.members:
-            # for roles in member.roles:
-            #     if roles.id == 893155020499988490:
-            #         rest += member.mention
-            #         rest += " ㅤ"
-            #         flag = True
-            #         break
+# @bot.command()
+# async def 인원정리1(ctx):
+#     con, cur = DbConnect()
+#     if WhiteList(ctx):
+#         msg = await ctx.send("인원 정리중...")
+#         ghostList = []
+#         newjoinList = ""
+#         rest = ""
+#         flag = False
+#         guild = bot.get_guild(954687635157311588)
+#         for member in guild.members:
+#             # for roles in member.roles:
+#             #     if roles.id == 893155020499988490:
+#             #         rest += member.mention
+#             #         rest += " ㅤ"
+#             #         flag = True
+#             #         break
             
-            if flag:
-                flag = False
-                continue
+#             if flag:
+#                 flag = False
+#                 continue
 
-            if (member.bot != True):
-                print(member)
-                ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
+#             if (member.bot != True):
+#                 print(member)
+#                 ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
 
-                if (ttext == 0 and ttime == 0):
-                    try:
-                        jointime = DbSearchTime_byid(member.id, con, cur)[0][0]
-                    except:
-                        print(member, "인원정리 except")
-                        jointime = "00.00"
+#                 if (ttext == 0 and ttime == 0):
+#                     try:
+#                         jointime = DbSearchTime_byid(member.id, con, cur)[0][0]
+#                     except:
+#                         print(member, "인원정리 except")
+#                         jointime = "00.00"
                     
-                    curday = CurDay()
-                    curday = curday[1:].split(".") if curday[0] == "0" else curday.split(".")
-                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
+#                     curday = CurDay()
+#                     curday = curday[1:].split(".") if curday[0] == "0" else curday.split(".")
+#                     jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
 
-                    ghost = ""
-                    ghost += member.mention
-                    ghost += " (" + member.name + "#" + member.discriminator + ") "
-                    ghost += " ㅤ**"
-                    ghost += jointime
-                    ghost += "**\n"
-                    if (jointime1[0] != "0"):
-                        if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
-                            newjoinList += ghost
-                        else:
-                            ghostList.append(ghost)
-                    else:
-                        ghostList.append(ghost)
+#                     ghost = ""
+#                     ghost += member.mention
+#                     ghost += " (" + member.name + "#" + member.discriminator + ") "
+#                     ghost += " ㅤ**"
+#                     ghost += jointime
+#                     ghost += "**\n"
+#                     if (jointime1[0] != "0"):
+#                         if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
+#                             newjoinList += ghost
+#                         else:
+#                             ghostList.append(ghost)
+#                     else:
+#                         ghostList.append(ghost)
 
-        if len(ghostList) == 0:
-            await msg.delete()
-            await SendMessage(taejunRoom, "인원정리 대상이 없습니다.")
-        else:
-            pages = MakePageList(member, ghostList, 3, rest, newjoinList)
-            await msg.delete()
-            embed = discord.Embed(title="신입회원", description = newjoinList)
-            await ctx.send(embed=embed)
-            await Pages(ctx, pages) 
+#         if len(ghostList) == 0:
+#             await msg.delete()
+#             await SendMessage(taejunRoom, "인원정리 대상이 없습니다.")
+#         else:
+#             pages = MakePageList(member, ghostList, 3, rest, newjoinList)
+#             await msg.delete()
+#             embed = discord.Embed(title="신입회원", description = newjoinList)
+#             await ctx.send(embed=embed)
+#             await Pages(ctx, pages) 
 
 
-    return 0
+#     return 0
 
 # @bot.command()
 # async def 벨튀(ctx, *args):
@@ -838,8 +825,6 @@ async def 인원정리(ctx):
                         print(member, "채팅만 except")
                         jointime = "00.00"
 
-                    print(member)
-                    print("jointime : ", jointime)
                     curday = CurDay()
                     curday = curday[1:].split(".") if curday[0] == "0" else curday.split(".")
                     jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
@@ -854,19 +839,16 @@ async def 인원정리(ctx):
                     chat += " ㅤ"
                     chat += jointime
                     chat += "\n"
-                    print(chat)
                     if (jointime1[0] != "0"):
                         if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
                             newjoinList += chat
                         else:
                             chatList.append(chat)
                     else:
-                        print(member)
                         chatList.append(chat)
         print("정리 end")
         pages = MakePageList(0, chatList, 3, rest, newjoinList)
         await msg.delete()
-        print("here")
         embed = discord.Embed(title="신입회원", description = newjoinList)
         await ctx.send(embed=embed)
         await Pages(ctx, pages)
@@ -883,7 +865,6 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
 
         voiceRankList = []
         Return = DbSearchVoiceRank(con, cur)
-        # print(voiceRankReturn[0])
         rank = 1
         for i in Return:
             id = int(i[0])
@@ -954,10 +935,8 @@ async def 채팅검색(ctx, *args):
             return
 
         try:
-            print("A")
             TEL_BOT.sendMessage(chat_id=CHAT_ID, text= str(ctx.author) + "채팅 검색 사용" + name)
         except:
-            print("B")
             pass
 
         name = name.replace(" ", "")
