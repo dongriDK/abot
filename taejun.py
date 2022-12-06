@@ -13,6 +13,8 @@ from discord.ext.commands import CommandNotFound
 import requests
 import telegram
 import json
+from flask import Flask
+import threading
 
 intents = discord.Intents.all()
 intents.members = True
@@ -27,6 +29,7 @@ port_db = os.environ["port_db"]
 token = os.environ["token"]
 TELEGRAM_TOKEN = os.environ["telegram_token"]
 CHAT_ID = os.environ["chat_id"]
+
 # config = {
 #     'user' : os.environ["user"],
 #     'password' : os.environ["password"],
@@ -45,7 +48,28 @@ ServerRoom = 954687635157311588
 STAFFROLE = 954714443139407872
 BOT_DEFAULTROOM = 982617639203524628
 cur_year = "2022"
+FLAG = True
 buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
+
+app = Flask(__name__)
+@app.route('/')
+def run():
+    # bot.run(token)
+    return '<h1>Taejun</h1>'
+
+@app.route('/start')
+def start():
+    global FLAG
+    print("CC")
+    if FLAG:
+        print("DD")
+        FLAG = False
+        t = threading.Thread(target=bot.run(token))
+        t.daemon = True
+        t.start()
+        print("EE")
+        # bot.run(token)
+    return '<h1>START</h1>'
 
 def CurTime():
     # year = str(time.localtime(time.time() + 32400).tm_year)
@@ -1074,7 +1098,7 @@ async def updateUser(ctx):
         con.commit()
 
 
-# bot.run(os.environ["token"])
-bot.run(token)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0',port=8000, threaded=True)
 
 
