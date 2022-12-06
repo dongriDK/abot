@@ -21,15 +21,6 @@ intents.members = True
 intents.guilds = True
 bot = commands.Bot(command_prefix = '!ㅌ ', intents=intents)
 
-host = os.environ["host"]
-user = os.environ["user"]
-password = os.environ["password"]
-database = os.environ["database"]
-port_db = os.environ["port_db"]
-token = os.environ["token"]
-TELEGRAM_TOKEN = os.environ["telegram_token"]
-CHAT_ID = os.environ["chat_id"]
-
 # config = {
 #     'user' : os.environ["user"],
 #     'password' : os.environ["password"],
@@ -39,8 +30,17 @@ CHAT_ID = os.environ["chat_id"]
 #     'raise_on_warnings' : True
 # }
 
+host = os.environ["host"]
+user = os.environ["user"]
+password = os.environ["password"]
+database = os.environ["database"]
+port_db = os.environ["port_db"]
+token = os.environ["token"]
+TELEGRAM_TOKEN = os.environ["telegram_token"]
+CHAT_ID = os.environ["chat_id"]
 APEX_TOKEN = os.environ["apex_token"]
 APEX_URL = os.environ["apex_url"]
+
 TEL_BOT = telegram.Bot(token=TELEGRAM_TOKEN)
 taejunRoom = 982617639203524628
 DeclarRoom = 926123278584651806
@@ -116,6 +116,14 @@ def DbInit():
     cur.execute("update user_info set ttime=0, ttext=0")
     con.commit()
     return 0
+
+def DbGet_AllMember(con, cur):
+    cur.execute("SELECT * from user_info")
+    return cur.fetchall()
+
+def DbGet_Member(id, con, cur):
+    cur.execute("SELECT * FROM user_info where id=%s", (str(id),))
+    return cur.fetchall()
 
 def DbModify_text(message, con, cur):
     print(message.content)
@@ -433,7 +441,6 @@ def WhiteList(ctx):
         if (i.name == "ADMIN"):
             return True
     try:
-        print(type(ctx.author))
         if (str(ctx.author) == "이십초벽#5811"):
             print("이십초벽 FreePass")
             return True
@@ -649,13 +656,19 @@ async def 검색(ctx, *args):
 
         textReturn = DbSearchText_member(memberId, con, cur, True)
         voiceReturn = DbSearchVoice_member(memberId, con, cur, True)
-        ttime, ttext = DbSearchtexttime(memberId, 3, con, cur)
-        jointime = DbSearchTime_byid(memberId, con, cur)
+        getMember = DbGet_Member(memberId, con, cur)
+        # import pdb
+        # pdb.set_trace()
+        ttext = getMember[0][2]
+        ttime = getMember[0][3]
+        jointime = getMember[0][5]
+        # ttime, ttext = DbSearchtexttime(memberId, 3, con, cur)
+        # jointime = DbSearchTime_byid(memberId, con, cur)
         if len(textReturn) == 0 and len(voiceReturn) == 0:
             embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                     description="없습니다.")
             await ctx.channel.send(embed=embed)
-            return    
+            return
         
         textFlag = False
         voiceFlag = False
@@ -687,7 +700,7 @@ async def 검색(ctx, *args):
 
         embed = discord.Embed(title=name + "(" + tag + ")" + "님에 대한 기록",
                                 color=0x00aaaa)
-        embed.add_field(name="서버 입장", value = "`" + str(jointime[0][0]) + "`\n", inline=False)
+        embed.add_field(name="서버 입장", value = "`" + str(jointime) + "`\n", inline=False)
         if (textFlag): embed.add_field(name="채팅 기록", value=textAnswer, inline=False)
         if (voiceFlag): embed.add_field(name="음성 채널 기록", value=voiceAnswer, inline=False)
         await ctx.channel.send(embed=embed)
@@ -803,6 +816,8 @@ async def 인원정리(ctx):
         newjoinList = ""
         rest = ""
         flag = False
+        
+        mem_all = DbGet_AllMember(con, cur)
         for member in guild.members:
             for roles in member.roles:
                 if roles.id == 973907691628019722:
@@ -816,36 +831,42 @@ async def 인원정리(ctx):
                 continue
 
             if (member.bot != True):
-                ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
+                for i, j in enumerate(mem_all):
+                    if str(member.id) == j[0]:
+                        ttext = j[2]
+                        ttime = j[3]
+                        jointime = j[5]
+                        mem_all.pop(i)
+                # ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 # if ((ttime > 0 and ttime < 7200) or (ttext != 0 and ttime == 0)):
-                if (ttime < 3600):
-                    try:
-                        jointime = DbSearchTime_byid(member.id, con, cur)[0][0]
-                    except:
-                        print(member, "채팅만 except")
-                        jointime = "00.00"
+                        if (ttime < 3600):
+                            # try:
+                            #     jointime = DbSearchTime_byid(member.id, con, cur)[0][0]
+                            # except:
+                            #     print(member, "채팅만 except")
+                            #     jointime = "00.00"
 
-                    curday = CurDay()
-                    curday = curday[1:].split(".") if curday[0] == "0" else curday.split(".")
-                    jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
-                
-                    chat = ""
-                    chat += member.mention
-                    chat += " (" + member.name + "#" + member.discriminator + ") "
-                    chat += " ㅤ"
-                    chat += ":speech_balloon:" + " : " + str(ttext)
-                    chat += " ㅤ"
-                    chat += ":microphone2:" + " : " + str(datetime.timedelta(seconds=int(ttime)))
-                    chat += " ㅤ"
-                    chat += jointime
-                    chat += "\n"
-                    if (jointime1[0] != "0"):
-                        if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
-                            newjoinList += chat
-                        else:
-                            chatList.append(chat)
-                    else:
-                        chatList.append(chat)
+                            curday = CurDay()
+                            curday = curday[1:].split(".") if curday[0] == "0" else curday.split(".")
+                            jointime1 = jointime[1:].split(".") if jointime[0] == "0" else jointime.split(".")
+                        
+                            chat = ""
+                            chat += member.mention
+                            chat += " (" + member.name + "#" + member.discriminator + ") "
+                            chat += " ㅤ"
+                            chat += ":speech_balloon:" + " : " + str(ttext)
+                            chat += " ㅤ"
+                            chat += ":microphone2:" + " : " + str(datetime.timedelta(seconds=int(ttime)))
+                            chat += " ㅤ"
+                            chat += jointime
+                            chat += "\n"
+                            if (jointime1[0] != "0"):
+                                if ((datetime.datetime(int(cur_year), int(curday[0]), int(curday[1])) - datetime.datetime(int(cur_year), int(jointime1[0]), int(jointime1[1]))).days < 15):
+                                    newjoinList += chat
+                                else:
+                                    chatList.append(chat)
+                            else:
+                                chatList.append(chat)
         print("정리 end")
         pages = MakePageList(0, chatList, 3, rest, newjoinList)
         await msg.delete()
