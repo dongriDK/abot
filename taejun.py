@@ -101,7 +101,7 @@ def DbConnect():
     
 def DbLogin(id, tag, con, cur):
     try:
-        cur.execute("insert into User_info values(%s, %s, %s, %s)", (id, tag, 0, 0))
+        cur.execute("insert into User_info values(%s, %s, %s, %s, %s)", (id, tag, 0, 0, 1))
         con.commit()
     except:
         return 1
@@ -109,10 +109,12 @@ def DbLogin(id, tag, con, cur):
 
 def DbInit():
     con, cur = DbConnect()
-    cur.execute("DROP TABLE Voice_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id varchar(128), be_channel TEXT, af_channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
-    cur.execute("DROP TABLE Text_info")
-    cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
+    # cur.execute("DROP TABLE Voice_info")
+    # cur.execute("CREATE TABLE IF NOT EXISTS Voice_info(id varchar(128), be_channel TEXT, af_channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
+    # cur.execute("DROP TABLE Text_info")
+    # cur.execute("CREATE TABLE IF NOT EXISTS Text_info(id VARCHAR(128), text TEXT, channel TEXT, time TEXT) DEFAULT CHARSET=utf8mb4")
+    cur.execute("truncate table text_info")
+    cur.execute("truncate table voice_info")
     cur.execute("update user_info set ttime=0, ttext=0")
     con.commit()
     return 0
@@ -450,6 +452,11 @@ def WhiteList(ctx):
         print("이십초벽 오류")
         pass
     return False
+
+def PopUserInfo(ins, lis):
+    for i, j in enumerate(lis):
+        if j.id == ins:
+            return j
 
 @bot.event
 async def on_ready():
@@ -886,18 +893,26 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
 
         voiceRankList = []
         Return = DbSearchVoiceRank(con, cur)
+        members = bot.get_guild(ServerRoom).members
         rank = 1
         for i in Return:
             id = int(i[0])
             user = bot.get_user(id)
+            if (user == None): continue
+            userInfo = PopUserInfo(id, list(members))
+            for j in userInfo.roles:
+                if 954714443139407872 == j.id:
+                    FLAG = True
+            if FLAG: continue
+            try:
+                name_Disc += "ㅤ (" + user.name + "#" + user.discriminator
+            except:
+                continue
             voice = ""
             voice += str(rank)
             voice += ".ㅤ "
             voice += MakeMention(id, 1)
-            try:
-                voice += "ㅤ (" + user.name + "#" + user.discriminator
-            except:
-                voice += "ㅤ (검색안됨"
+            voice += name_Disc
             voice += ")ㅤ `"
             voice += str(datetime.timedelta(seconds=int(i[3])))
             voice += "`\n"
@@ -913,18 +928,27 @@ async def 채팅순위(ctx):
     if (WhiteList(ctx)):
         textRankList = []
         Return = DbSearchTextRank(con, cur)
+        members = bot.get_guild(ServerRoom).members
         rank = 1
         for i in Return:
+            FLAG = False
             id = int(i[0])
             user = bot.get_user(id)
+            if (user == None): conitnue
+            userInfo = PopUserInfo(id, list(members))
+            for j in userInfo.roles:
+                if 954714443139407872 == j.id:
+                    FLAG = True
+            if FLAG: continue
+            try:
+                name_Disc += "ㅤ (" + user.name + "#" + user.discriminator
+            except:
+                continue
             text = ""
             text += str(rank)
             text += ".ㅤ "
             text += MakeMention(id, 1)
-            try:
-                text += "ㅤ (" + user.name + "#" + user.discriminator
-            except:
-                text += "ㅤ (검색안됨"
+            text += name_Disc
             text += ")ㅤ `"
             text += str(i[2])
             text += "`\n"
@@ -1092,7 +1116,7 @@ async def updateUser(ctx):
             if (member.bot != True):
                 print(member)
                 try:
-                    cur.execute("INSERT INTO user_info(id, tag, ttext, ttime, count, jointime) VALUES(%s, %s, %s, %s, %s, %s)", (member.id, member.discriminator, "0", "0", "1", "00.00"))
+                    cur.execute("INSERT INTO user_info(id, tag, ttext, ttime, count, jointime) VALUES(%s, %s, %s, %s, %s, %s)", (str(member.id), member.discriminator, "0", "0", "1", "00.00"))
                 except:
                     pass
         con.commit()
