@@ -847,11 +847,6 @@ async def 인원정리(ctx):
                 # ttime, ttext = DbSearchtexttime(member.id, 3, con, cur)
                 # if ((ttime > 0 and ttime < 7200) or (ttext != 0 and ttime == 0)):
                         if (ttime < 3600):
-                            # try:
-                            #     jointime = DbSearchTime_byid(member.id, con, cur)[0][0]
-                            # except:
-                            #     print(member, "채팅만 except")
-                            #     jointime = "00.00"
 
                             curday = CurDay()
                             curday = curday[1:].split(".") if curday[0] == "0" else curday.split(".")
@@ -896,6 +891,7 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
         members = bot.get_guild(ServerRoom).members
         rank = 1
         for i in Return:
+            FLAG = False
             id = int(i[0])
             user = bot.get_user(id)
             if (user == None): continue
@@ -906,7 +902,7 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
                     FLAG = True
             if FLAG: continue
             try:
-                name_Disc += "ㅤ (" + user.name + "#" + user.discriminator
+                name_Disc = "ㅤ (" + user.name + "#" + user.discriminator
             except:
                 continue
             voice = ""
@@ -939,11 +935,13 @@ async def 채팅순위(ctx):
             userInfo = PopUserInfo(id, list(members))
             if (userInfo == None): continue
             for j in userInfo.roles:
+                # ADMIN, 휴식
+                # if 954714443139407872 == j.id or 973907691628019722 == j.id:
                 if 954714443139407872 == j.id:
                     FLAG = True
             if FLAG: continue
             try:
-                name_Disc += "ㅤ (" + user.name + "#" + user.discriminator
+                name_Disc = "ㅤ (" + user.name + "#" + user.discriminator
             except:
                 continue
             text = ""
