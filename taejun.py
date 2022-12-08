@@ -900,6 +900,7 @@ async def 음성순위(ctx): # 음성채널 거주 시간 순위
             user = bot.get_user(id)
             if (user == None): continue
             userInfo = PopUserInfo(id, list(members))
+            if (userInfo == None): continue
             for j in userInfo.roles:
                 if 954714443139407872 == j.id:
                     FLAG = True
@@ -934,8 +935,9 @@ async def 채팅순위(ctx):
             FLAG = False
             id = int(i[0])
             user = bot.get_user(id)
-            if (user == None): conitnue
+            if (user == None): continue
             userInfo = PopUserInfo(id, list(members))
+            if (userInfo == None): continue
             for j in userInfo.roles:
                 if 954714443139407872 == j.id:
                     FLAG = True
