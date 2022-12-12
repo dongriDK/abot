@@ -54,17 +54,17 @@ buttons = [u"\u23EA", u"\u25C0", u"\u25B6", u"\u23E9"]
 app = Flask(__name__)
 @app.route('/')
 def run():
-    # bot.run(token)
-    return '<h1>Taejun</h1>'
-
-@app.route('/start')
-def start():
     global FLAG
     if FLAG:
         FLAG = False
         t = threading.Thread(target=bot.run(token))
         t.daemon = True
         t.start()
+    return '<h1>Taejun</h1>'
+
+@app.route('/start')
+def start():
+
         # bot.run(token)
     return '<h1>START</h1>'
 
