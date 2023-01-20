@@ -296,7 +296,7 @@ def MakeMention(id, tag):
     
 
 def MakePageList(channel, list_, flag, arg, arg1):
-    showlist = 20
+    showlist = 15
     disc_list = []
     pages = []
     total_len = len(list_)
