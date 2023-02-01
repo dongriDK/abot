@@ -296,7 +296,7 @@ def MakeMention(id, tag):
     
 
 def MakePageList(channel, list_, flag, arg, arg1):
-    showlist = 15
+    showlist = 30
     disc_list = []
     pages = []
     total_len = len(list_)
@@ -837,7 +837,7 @@ async def 인원정리(ctx):
                 flag = False
                 continue
 
-            if (member.bot != True):
+            if (member.bot == False):
                 for i, j in enumerate(mem_all):
                     if str(member.id) == j[0]:
                         ttext = j[2]
@@ -872,8 +872,8 @@ async def 인원정리(ctx):
         print("정리 end")
         pages = MakePageList(0, chatList, 3, rest, newjoinList)
         await msg.delete()
-        embed = discord.Embed(title="신입회원", description = newjoinList)
-        await ctx.send(embed=embed)
+        # embed = discord.Embed(title="신입회원", description = newjoinList)
+        # await ctx.send(embed=embed)
         await Pages(ctx, pages)
         
 
