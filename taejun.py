@@ -451,6 +451,15 @@ def WhiteList(ctx):
     except:
         print("이십초벽 오류")
         pass
+    try:
+        if (str(ctx.author) == "binda#9040"):
+            print("binda FreePass")
+            return True
+        else:
+            print("binda else")
+    except:
+        print("binda 오류")
+        pass
     return False
 
 def PopUserInfo(ins, lis):
